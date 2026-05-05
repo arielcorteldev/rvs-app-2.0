@@ -1,0 +1,25 @@
+[2026-01-06 14:31:30,576] DEBUG in connectionpool: Starting new HTTPS connection (1): api.ipify.org:443
+[2026-01-06 14:31:31,958] DEBUG in connectionpool: https://api.ipify.org:443 "GET /?format=text HTTP/1.1" 200 None
+[2026-01-06 14:31:31,960] INFO in app: Server Public IP: 216.247.26.222
+[2026-01-06 14:31:42,268] DEBUG in connectionpool: Starting new HTTPS connection (1): api.ipify.org:443
+[2026-01-06 14:31:43,205] DEBUG in connectionpool: https://api.ipify.org:443 "GET /?format=text HTTP/1.1" 200 None
+[2026-01-06 14:31:43,208] INFO in app: Server Public IP: 216.247.26.222
+[2026-01-06 14:31:57,082] DEBUG in connectionpool: Starting new HTTPS connection (1): api.ipify.org:443
+[2026-01-06 14:31:57,969] DEBUG in connectionpool: https://api.ipify.org:443 "GET /?format=text HTTP/1.1" 200 None
+[2026-01-06 14:31:57,970] INFO in app: Server Public IP: 216.247.26.222
+[2026-01-06 14:32:34,958] DEBUG in connectionpool: Starting new HTTPS connection (1): api.ipify.org:443
+[2026-01-06 14:32:35,823] DEBUG in connectionpool: https://api.ipify.org:443 "GET /?format=text HTTP/1.1" 200 None
+[2026-01-06 14:32:35,824] INFO in app: Server Public IP: 216.247.26.222
+[2026-01-06 14:32:35,835] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.254.108:5000
+[2026-01-06 14:32:35,835] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2026-01-06 14:53:25,215] DEBUG in connectionpool: Starting new HTTPS connection (1): api.ipify.org:443
+[2026-01-06 14:53:27,349] DEBUG in connectionpool: https://api.ipify.org:443 "GET /?format=text HTTP/1.1" 200 None
+[2026-01-06 14:53:27,351] INFO in app: Server Public IP: 216.247.26.222
+[2026-01-06 14:53:27,363] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.254.108:5000
+[2026-01-06 14:53:27,364] INFO in _internal: [33mPress CTRL+C to quit[0m

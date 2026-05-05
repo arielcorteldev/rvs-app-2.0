@@ -1,0 +1,30 @@
+#Python bytecode and cache files
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Local Python virtual environment
+.venv/
+
+# Build output
+build/
+dist/
+
+# Environment variables
+.env
+
+# Database files
+db/
+
+# Logs
+.log
+
+# QTDesigner files
+*.ui
+
+# OS
+.DS_Store
+Thumbs.db

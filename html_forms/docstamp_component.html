@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Doc Stamp Component</title>
+    <style>
+        /* Docstamp-specific styles */
+        .docstamp-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: none; /* Hidden by default, toggle to show */
+            cursor: move; /* Indicate draggable */
+        }
+
+        .docstamp {
+            border: 4px ridge #000;
+            width: 200px;
+            height: 80px;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .docstamp p {
+            margin: 10px 0;
+            font-weight: bold;
+            font-size: 12px;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        .inputs div label {
+            text-align: center;
+            font-weight: bold;
+            margin: 0;
+            font-size: 6px;
+            font-style: italic;
+        }
+
+        .inputs {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .inputs div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 10px;
+        }
+
+        .inputs input {
+            width: 100%;
+            margin-bottom: 5px;
+            border: none;
+            border-bottom: 1px solid #000;
+            font-size: 8px;
+        }
+
+        /* Toggle button styles */
+        .toggle-docstamp {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            z-index: 1001;
+        }
+
+        .toggle-docstamp:hover {
+            background: #0056b3;
+        }
+    </style>
+  </head>
+  <body>
+    <!-- Toggle Button -->
+    <button class="toggle-docstamp" id="toggleDocstamp">Toggle Docstamp</button>
+
+    <!-- Docstamp Component -->
+    <div class="docstamp-container" id="docstampContainer">
+        <div class="docstamp">
+            <p>Documentary Stamp Tax Paid</p>
+            <div class="inputs">
+                <div>
+                    <input type="text" id="sr-number" placeholder="Enter SR Number">
+                    <label for="sr-number">(GOR SERIAL NUMBER)</label>
+                </div>
+                <div>
+                    <input type="text" id="payment-date" placeholder="Enter Date">
+                    <label for="payment-date">(DATE OF PAYMENT)</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle functionality
+        const toggleButton = document.getElementById('toggleDocstamp');
+        const docstampContainer = document.getElementById('docstampContainer');
+
+        toggleButton.addEventListener('click', function() {
+            if (docstampContainer.style.display === 'none' || docstampContainer.style.display === '') {
+                docstampContainer.style.display = 'block';
+            } else {
+                docstampContainer.style.display = 'none';
+            }
+        });
+
+        // Drag functionality
+        let isDragging = false;
+        let offsetX, offsetY;
+
+        docstampContainer.addEventListener('mousedown', function(e) {
+            isDragging = true;
+            offsetX = e.clientX - docstampContainer.offsetLeft;
+            offsetY = e.clientY - docstampContainer.offsetTop;
+            docstampContainer.style.cursor = 'grabbing';
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            if (isDragging) {
+                docstampContainer.style.left = (e.clientX - offsetX) + 'px';
+                docstampContainer.style.top = (e.clientY - offsetY) + 'px';
+            }
+        });
+
+        document.addEventListener('mouseup', function() {
+            isDragging = false;
+            docstampContainer.style.cursor = 'move';
+        });
+    </script>
+  </body>
+</html></content>
+<parameter name="filePath">c:\ayie\PROJECTS\LGU\RVS APP\RVS dev\html_forms\docstamp_component.html

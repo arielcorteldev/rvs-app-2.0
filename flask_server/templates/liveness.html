@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Face Liveness Verification</title>
+  <script src="https://liveness.everify.gov.ph/js/everify-liveness-sdk.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f5f5f5;
+      color: #333;
+      margin: 0;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 1rem;
+      background-color: #07519C;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #FBB117;
+      color: #07519C;
+    }
+
+    #message {
+      margin-top: 1.5rem;
+      font-weight: bold;
+      display: none;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      min-width: 300px;
+    }
+
+    .modal.success {
+      border: 3px solid #07519C;
+    }
+
+    .modal.error {
+      border: 3px solid #c0392b;
+    }
+
+    .modal p {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+
+    .modal.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <button onclick="startLiveness()">Start Liveness Check</button>
+  <div id="message"></div>
+
+  <div id="popup" class="modal">
+    <p id="popupText"></p>
+  </div>
+
+  <script>
+    function showPopup(text, type = 'success') {
+      const popup = document.getElementById('popup');
+      const popupText = document.getElementById('popupText');
+
+      popupText.textContent = text;
+      popup.className = `modal show ${type}`;
+
+      // Dismiss on click
+      popup.onclick = () => popup.classList.remove('show');
+
+      // Auto-dismiss after 3 seconds
+      setTimeout(() => {
+        popup.classList.remove('show');
+      }, 3000);
+    }
+
+    function startLiveness() {
+      const message = document.getElementById('message');
+      message.style.display = 'block';
+      message.textContent = 'Checking liveness...';
+
+      window.eKYC().start({
+        pubKey: "eyJpdiI6IldLVWtVS2E2eVNZcVJUZWpvTEo3VVE9PSIsInZhbHVlIjoiMXZrdmd3OFpJdW9ZNlpxVUsvNDJ3Zz09IiwibWFjIjoiNDQ1OWUwMDYxYTllNTFmZGNmMTZiM2I5YWI3ODQ2NDZiN2VkNGU4MTc4MDk0NmRkZTAyZjNhNzk5NTQ1ODQ0MCIsInRhZyI6IiJ9" // Replace with your real one
+      }).then(data => {
+        console.log('Liveness Data:', data);
+
+        fetch('http://localhost:5000/liveness_result', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ face_liveness_session_id: data.result.session_id })
+        })
+        .then(res => res.json())
+        .then(result => {
+          console.log("Flask Server Response:", result);
+          message.style.display = 'none';
+          showPopup('✅ Liveness check successful!', 'success');
+        })
+        .catch(err => {
+          console.error("Error sending to Flask:", err);
+          message.textContent = '❌ Failed to send data to Flask.';
+          showPopup('❌ Failed to send data to server.', 'error');
+        });
+
+      }).catch(err => {
+        console.error('Liveness error:', err);
+        message.style.display = 'none';
+        showPopup('❌ Liveness check failed. Please try again.', 'error');
+      });
+    }
+  </script>
+</body>
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Face Liveness Verification</title>
+  <script src="https://liveness.everify.gov.ph/js/everify-liveness-sdk.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      background-color: #07519C;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #FBB117;
+      color: #07519C;
+    }
+
+    #message {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    pre {
+      background: #eee;
+      padding: 1rem;
+      border-radius: 5px;
+      margin-top: 1rem;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <h2>Face Liveness Verification</h2>
+  <button onclick="startLiveness()">Start Liveness</button>
+  <div id="message"></div>
+  <pre id="response"></pre>
+
+  <script>
+    function startLiveness() {
+      const message = document.getElementById('message');
+      const responseBox = document.getElementById('response');
+      message.textContent = 'Starting face liveness check...';
+      responseBox.textContent = '';
+
+      window.eKYC().start({
+        pubKey: "eyJpdiI6IldLVWtVS2E2eVNZcVJUZWpvTEo3VVE9PSIsInZhbHVlIjoiMXZrdmd3OFpJdW9ZNlpxVUsvNDJ3Zz09IiwibWFjIjoiNDQ1OWUwMDYxYTllNTFmZGNmMTZiM2I5YWI3ODQ2NDZiN2VkNGU4MTc4MDk0NmRkZTAyZjNhNzk5NTQ1ODQ0MCIsInRhZyI6IiJ9" // Replace with actual Tier 2 token
+      }).then(data => {
+        console.log('Liveness Data:', data);
+        message.textContent = 'Liveness session complete. Sending data to local server...';
+        responseBox.textContent = JSON.stringify(data, null, 2);
+
+        // ✅ Send only the session_id to Flask
+        fetch('http://localhost:5000/liveness_result', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ face_liveness_session_id: data.result.session_id })
+        })
+        .then(res => res.json())
+        .then(result => {
+          message.textContent = '✅ Successfully sent to local server!';
+          console.log("Flask Server Response:", result);
+        })
+        .catch(err => {
+          message.textContent = '❌ Failed to send data to Flask.';
+          console.error("Error sending to Flask:", err);
+        });
+
+      }).catch(err => {
+        message.textContent = '❌ Liveness check failed.';
+        console.error('Liveness error:', err);
+      });
+    }
+  </script>
+</body>
+</html>
+  -->

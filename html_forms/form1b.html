@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>No Record of Birth Certificate - Office of the City Civil Registrar</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+
+      /* On-screen wrapper to center the A4 sheet */
+      .page-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 20px;
+      }
+
+      /* Certificate styled as an A4 sheet: 210mm x 297mm */
+      .certificate {
+        width: 210mm;
+        height: 297mm;
+        background: white;
+        padding: 15mm;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        box-sizing: border-box;
+        overflow: hidden;
+        position: relative; /* Make this the positioning context for docstamp */
+      }
+
+      .header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        gap: 20px;
+        border-bottom: 2px solid #000;
+        padding-bottom: 15px;
+        margin-bottom: 30px;
+        position: relative;
+      }
+
+      .form-number {
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-size: 8px;
+      }
+
+      .header h1 {
+        font-size: 12px;
+        margin: 5px 0;
+      }
+
+      .office-title {
+        font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+        font-size: 20px !important;
+      }
+
+      .header h2 {
+        font-size: 12px;
+        font-weight: normal;
+        margin: 3px 0;
+      }
+
+      .date-field {
+        margin-top: 50px;
+        text-align: right;
+        margin-bottom: 100px;
+        font-size: 12px;
+      }
+
+      .date-field input {
+        border: none;
+        border-bottom: 1px solid #000;
+        width: 200px;
+        text-align: center;
+        font-weight: bold;
+        height: 18px;
+      }
+
+      .to-whom {
+        margin-bottom: 20px;
+        font-size: 14px;
+      }
+
+      .certification-text {
+        margin-bottom: 30px;
+        font-size: 12px;
+        line-height: 1.9;
+        text-indent: 5em;
+        word-spacing: 2px;
+        text-align: justify;
+        hyphens: auto;
+      }
+
+      .child-name,
+      .date-birth,
+      .year {
+        /* display: inline-block; */
+        border: none;
+        border-bottom: 1px solid #000;
+        padding: 2px 5px;
+        font-size: 14px;
+        text-align: center;
+        font-weight: bold;
+        height: 18px;
+      }
+
+      .child-name {
+        width: 300px;
+      }
+
+      .date-birth {
+        width: 200px;
+      }
+
+      .year {
+        width: 100px;
+      }
+
+      .issued-to {
+        margin: 20px 0 5px 0;
+        font-size: 12px;
+        font-style: italic;
+        text-indent: 5em;
+        word-spacing: 2px;
+        line-height: 1.9;
+        text-align: justify;
+      }
+
+      .issued-to input {
+        border: none;
+        border-bottom: 1px solid #000;
+        width: 250px;
+        margin: 0 5px;
+        font-size: 14px;
+        font-weight: bold;
+        text-align: center;
+        height: 18px;
+      }
+
+      .signature-section {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30mm;
+        margin-bottom: 30px;
+        height: 200px;
+      }
+
+      .verified-by,
+      .registrar {
+        font-size: 12px;
+      }
+
+      .verified-by input,
+      .registrar input {
+        border: none;
+        border-bottom: 1px solid #000;
+        width: 200px;
+        margin-left: 5px;
+        font-weight: bold;
+      }
+
+      .verified-by {
+        align-self: flex-end;
+      }
+
+      .registrar {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        align-self: flex-start;
+        margin-right: 100px;
+      }
+
+      .registrar-name {
+        font-size: 14px;
+        font-weight: bold;
+        text-decoration: underline;
+        margin-bottom: 5px;
+      }
+
+      .last-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: -10px;
+      }
+
+      .payment-info {
+        font-size: 11px;
+      }
+
+      .payment-info .info-line {
+        display: flex;
+        margin-bottom: 5px;
+      }
+
+      .payment-info label {
+        width: 100px;
+      }
+
+      .payment-info input {
+        border: none;
+        border-bottom: 1px solid #000;
+        width: 100px;
+        margin-left: -15px;
+        font-size: 10px;
+      }
+
+      .office-order {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .office-order input {
+        border: none;
+        margin-bottom: 2px;
+        background-color: hsl(345, 100%, 93%);
+      }
+
+      #for-as {
+        width: 250px;
+        font-size: 12px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      #in-charge {
+        width: 200px;
+        font-size: 12px;
+        text-align: center;
+        font-weight: bold;
+      }
+      
+      #designation {
+        width: 200px;
+        font-size: 12px;
+        text-align: center;
+      }
+
+      #order-details {
+        width: 320px;
+        font-size: 12px;
+        text-align: center;
+      }
+
+      .note {
+        margin-top: 30px;
+        padding-bottom: 5px;
+        border-bottom: 2px solid #000;
+        font-size: 11px;
+        font-weight: bold;
+        font-style: italic;
+        text-align: center;
+      }
+
+      .footer {
+        margin-top: 5px;
+        text-align: center;
+        font-size: 10px;
+      }
+
+      /* Docstamp-specific styles */
+      .docstamp-container {
+        position: absolute;
+        z-index: 1000;
+        display: none;
+        cursor: move;
+      }
+
+      .docstamp {
+        border: 2px solid #000;
+        width: 50mm;
+        height: 15mm;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background: white;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .docstamp p {
+        margin: 5px 0;
+        font-weight: bold;
+        font-size: 12px;
+        font-family: 'Times New Roman', Times, serif;
+      }
+
+      .inputs div label {
+        text-align: center;
+        font-weight: bold;
+        margin: 0;
+        font-size: 6px;
+        font-style: italic;
+      }
+
+      .inputs {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .inputs div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0 10px;
+      }
+
+      .inputs input {
+        width: 100%;
+        margin-bottom: 1px;
+        border: none;
+        border-bottom: 1px solid #000;
+        font-size: 6px;
+        text-align: center;
+      }
+
+      .inputs input::placeholder {
+        font-size: 6px;
+      }
+
+      /* Toggle button styles */
+      .toggle-docstamp {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        cursor: pointer;
+        border-radius: 4px;
+        z-index: 1001;
+      }
+
+      .toggle-docstamp:hover {
+        background: #0056b3;
+      }
+
+      /* Ensure printing uses A4 size */
+      @page {
+        size: A4 portrait;
+        margin: 0;
+      }
+
+      @media print {
+        html,
+        body {
+          width: 210mm;
+          height: 297mm;
+          margin: 0;
+          padding: 0;
+          background: white;
+        }
+
+        .page-wrapper {
+          padding: 0;
+          display: block;
+        }
+
+        .certificate {
+          width: 210mm; /* allow the page size to control final width */
+          height: 297mm;
+          padding: 15mm;
+          box-shadow: none;
+          margin: 0;
+          box-sizing: border-box;
+          page-break-after: always;
+          background: white;
+          overflow: visible;
+        }
+
+        input[type="text"] {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+          color: #000;
+          background: transparent !important;
+          box-shadow: none !important;
+          border-bottom: 1px solid #000; /* keep underline for inputs */
+          -webkit-appearance: none;
+        }
+
+        /* Print-only: ensure office-order inputs are transparent and have no autofill decoration */
+        .office-order input {
+          background: transparent !important;
+          box-shadow: none !important;
+          border: none !important;
+        }
+
+        /* Reset autofill decorations when printing */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active {
+          -webkit-box-shadow: 0 0 0 1000px white inset !important;
+          box-shadow: 0 0 0 1000px white inset !important;
+          background-color: transparent !important;
+        }
+
+        input:-moz-autofill,
+        input:-moz-autofill-preview {
+          background-color: transparent !important;
+        }
+
+        /* Remove any on-screen-only decorations */
+        .certificate { box-shadow: none; }
+
+        .toggle-docstamp { display: none; }
+
+        .docstamp-container {
+          position: absolute;
+          z-index: 10;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrapper">
+      <div class="certificate">
+        <div class="header">
+          <div class="form-number">
+            LCR Form No. 1B<br />
+            (BIRTH- Not Available)
+          </div>
+          <div>
+            <img src="../logos/city-logo.png" alt="City Logo" width="80" />
+          </div>
+          <div>
+            <h1>Republic of the Philippines</h1>
+            <h2>Province of Southern Leyte</h2>
+            <h2>CITY OF MAASIN</h2>
+            <h1 class="office-title">OFFICE OF THE CITY CIVIL REGISTRAR</h1>
+          </div>
+          <div>
+            <img src="../logos/occr-logo.png" alt="City Logo" width="80" />
+          </div>
+        </div>
+
+        <div class="date-field">
+          DATE: <input type="text" id="certificateDate" />
+        </div>
+
+        <div class="to-whom">TO WHOM IT MAY CONCERN:</div>
+
+        <div class="certification-text">
+          WE CERTIFY, that this office has no record of birth of 
+          <input type="text" class="child-name" id="childName" /> who allegedly have been born on 
+          <input type="text" class="date-birth" id="dateBirth" /> in this city. Hence, we cannot issue as requested a true copy of his/her Certificate of Birth or transcription from the Register of Births.
+        </div>
+
+        <div class="certification-text">
+          WE also certify, that the records of births for the year 
+          <input type="text" class="year" id="year" /> are still intact in the archives of this office. 
+        </div>
+
+        <div class="issued-to">
+          <i>THIS CERTIFICATION</i> is issued to
+          <input type="text" id="issuedTo" /> upon his/ her request.
+        </div>
+    
+        <div class="signature-section">
+          <div class="verified-by">
+            VERIFIED BY: <input type="text" id="verifiedBy" />
+          </div>
+
+          <div class="registrar">
+              <div class="registrar-name">JENNY F. ANG</div>
+              <div>City Civil Registrar</div>
+          </div>
+        </div>
+
+        <div class="last-section">
+          <div class="payment-info">
+            <div class="info-line">
+              <label>Amount Paid</label>
+              <input type="text" id="amountPaid" />
+            </div>
+            <div class="info-line">
+              <label>O.R. Number</label>
+              <input type="text" id="orNumber" />
+            </div>
+            <div class="info-line">
+              <label>Date Paid</label>
+              <input type="text" id="datePaid" />
+            </div>
+          </div>
+          <div class="office-order">
+            <input type="text" id="for-as" />
+            <input type="text" id="in-charge" />
+            <input type="text" id="designation" />
+            <input type="text" id="order-details" />
+          </div>
+        </div>
+
+        <div class="note">
+          NOTE: THIS CERTIFICATION is not valid if it has mark or erasure or
+          alteration of any entry.
+        </div>
+
+        <div class="footer">
+          <strong>Maasin City Hall, Tunga-tunga, Maasin City, Southern Leyte,
+          Philippines<br /></strong>
+          <strong>Email Address:</strong> ccromaasincity@gmail.com |
+          <strong>Contact No.:</strong> +63 975 297 5585
+        </div>
+        <!-- Docstamp Component (inside certificate) -->
+        <div class="docstamp-container" id="docstampContainer">
+            <div class="docstamp">
+                <p>Documentary Stamp Tax Paid</p>
+                <div class="inputs">
+                    <div>
+                        <input type="text" id="sr-number" placeholder="Enter SR Number">
+                        <label for="sr-number">(GOR SERIAL NUMBER)</label>
+                    </div>
+                    <div>
+                        <input type="text" id="payment-date" placeholder="Enter Date">
+                        <label for="payment-date">(DATE OF PAYMENT)</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toggle Button -->
+    <button class="toggle-docstamp" id="toggleDocstamp">Toggle Docstamp</button>
+
+    <script>
+      const MIN_FONT_SIZE = 8; // Minimum font size in px
+      const MAX_FONT_SIZE = 12; // Maximum font size in px
+      const MAX_HEIGHT = 100; // Max height in px
+
+      function adjustFontSize(element) {
+        let fontSize = MAX_FONT_SIZE;
+        element.style.fontSize = fontSize + 'px';
+
+        // For textareas, check scrollHeight; for inputs, use a simpler approach
+        if (element.tagName === 'TEXTAREA') {
+          // Reduce font size until content fits or reaches minimum
+          while (element.scrollHeight > MAX_HEIGHT && fontSize > MIN_FONT_SIZE) {
+            fontSize -= 0.5;
+            element.style.fontSize = fontSize + 'px';
+          }
+
+          // If still too large at minimum, ensure no scrollbar
+          if (element.scrollHeight > MAX_HEIGHT) {
+            element.style.fontSize = MIN_FONT_SIZE + 'px';
+          }
+        } else {
+          // For text inputs, reduce font size if text overflows
+          while (element.scrollWidth > element.offsetWidth && fontSize > MIN_FONT_SIZE) {
+            fontSize -= 0.5;
+            element.style.fontSize = fontSize + 'px';
+          }
+
+          // Ensure minimum font size
+          if (fontSize < MIN_FONT_SIZE) {
+            element.style.fontSize = MIN_FONT_SIZE + 'px';
+          }
+        }
+      }
+
+      // Apply auto-fit to all inputs and textareas
+      document.addEventListener('DOMContentLoaded', function() {
+        const allInputs = document.querySelectorAll('input[type="text"], textarea');
+        
+        allInputs.forEach(element => {
+          // Adjust on input/change
+          element.addEventListener('input', function() {
+            adjustFontSize(this);
+          });
+          
+          // Adjust on page load in case there's pre-filled content
+          adjustFontSize(element);
+        });
+      });
+
+      // Toggle functionality
+      const toggleButton = document.getElementById('toggleDocstamp');
+      const docstampContainer = document.getElementById('docstampContainer');
+      const certificate = document.querySelector('.certificate');
+
+      let isInitialized = false;
+
+      toggleButton.addEventListener('click', function() {
+        if (docstampContainer.style.display === 'none' || docstampContainer.style.display === '') {
+          docstampContainer.style.display = 'block';
+          
+          if (!isInitialized) {
+            // Position relative to certificate, not viewport
+            docstampContainer.style.top = '20px';
+            docstampContainer.style.right = '20px';
+            isInitialized = true;
+          }
+        } else {
+          docstampContainer.style.display = 'none';
+        }
+      });
+
+      // Drag functionality
+      let isDragging = false;
+      let offsetX, offsetY;
+
+      docstampContainer.addEventListener('mousedown', function(e) {
+        // Don't drag if clicking on an input field
+        if (e.target.tagName === 'INPUT') {
+          return;
+        }
+
+        isDragging = true;
+        // Calculate offset relative to the docstamp element itself
+        const rect = docstampContainer.getBoundingClientRect();
+        offsetX = e.clientX - rect.left;
+        offsetY = e.clientY - rect.top;
+        docstampContainer.style.cursor = 'grabbing';
+        e.preventDefault();
+      });
+
+      document.addEventListener('mousemove', function(e) {
+        if (isDragging) {
+          // Get certificate's position
+          const certRect = certificate.getBoundingClientRect();
+          
+          // Calculate new position relative to certificate
+          let newLeft = e.clientX - certRect.left - offsetX;
+          let newTop = e.clientY - certRect.top - offsetY;
+          
+          // Keep docstamp within certificate bounds
+          const maxLeft = certificate.offsetWidth - docstampContainer.offsetWidth;
+          const maxTop = certificate.offsetHeight - docstampContainer.offsetHeight;
+          
+          newLeft = Math.max(0, Math.min(newLeft, maxLeft));
+          newTop = Math.max(0, Math.min(newTop, maxTop));
+          
+          docstampContainer.style.right = 'auto';
+          docstampContainer.style.left = newLeft + 'px';
+          docstampContainer.style.top = newTop + 'px';
+        }
+      });
+
+      document.addEventListener('mouseup', function() {
+        isDragging = false;
+        docstampContainer.style.cursor = 'move';
+      });
+    </script>
+  </body>
+</html>
