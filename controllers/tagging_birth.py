@@ -800,7 +800,7 @@ class BirthTaggingWindow(QWidget):
                 if type_of_birth:
                     self.type_of_birth_combo.setCurrentText(type_of_birth)
                 else:
-                    self.type_of_birth_combo.setCurrentIndex(0)  # Set to "N/A"
+                    self.type_of_birth_combo.setCurrentText("NO ENTRY")
 
                 # Set resident combo boxes
                 self.maasin_resident_combo.setCurrentText("YES" if maasin_resident is True else "NO ENTRY" if maasin_resident is None else "NO")
