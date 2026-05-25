@@ -731,17 +731,17 @@ class DeathTaggingWindow(QWidget):
                 self.cause_of_death_input.setText(cause_of_death if cause_of_death else "")
 
                 # Set QComboBox values
-                self.sex_combo.setCurrentText(sex if sex else "")
-                self.civil_status_combo.setCurrentText(civil_status if civil_status else "")
-                self.nationality_combo.setCurrentText(nationality if nationality else "")
-                self.death_place_input.setCurrentText(place_of_death if place_of_death else "")
-                self.corpse_disposal_combo.setCurrentText(corpse_disposal if corpse_disposal else "")
-                self.late_reg_combo.setCurrentText("YES" if late_registration is True else "NO")
+                self.sex_combo.setCurrentText(sex if sex else "NO ENTRY")
+                self.civil_status_combo.setCurrentText(civil_status if civil_status else "NO ENTRY")
+                self.nationality_combo.setCurrentText(nationality if nationality else "NO ENTRY")
+                self.death_place_input.setCurrentText(place_of_death if place_of_death else "NO ENTRY")
+                self.corpse_disposal_combo.setCurrentText(corpse_disposal if corpse_disposal else "NO ENTRY")
+                self.late_reg_combo.setCurrentText("YES" if late_registration is True else "NO ENTRY" if late_registration is None else "NO")
 
                 # Set resident combo boxes
-                self.maasin_resident_combo.setCurrentText("YES" if maasin_resident is True else "NO")
-                self.soleyte_resident_combo.setCurrentText("YES" if soleyte_resident is True else "NO")
-                self.leyte_resident_combo.setCurrentText("YES" if leyte_resident is True else "NO")
+                self.maasin_resident_combo.setCurrentText("YES" if maasin_resident is True else "NO ENTRY" if maasin_resident is None else "NO")
+                self.soleyte_resident_combo.setCurrentText("YES" if soleyte_resident is True else "NO ENTRY" if soleyte_resident is None else "NO")
+                self.leyte_resident_combo.setCurrentText("YES" if leyte_resident is True else "NO ENTRY" if leyte_resident is None else "NO")
 
                 # Handle dates with checkbox states
                 if date_of_death:
@@ -760,7 +760,7 @@ class DeathTaggingWindow(QWidget):
                     self.has_date_of_reg_check.setChecked(False)
                     self.date_of_reg_input.setEnabled(False)
 
-                self.attendant_combo.setCurrentText(attendant if attendant else "")
+                self.attendant_combo.setCurrentText(attendant if attendant else "NO ENTRY")
 
                 self.set_saved_cue(True)
 
@@ -885,21 +885,30 @@ class DeathTaggingWindow(QWidget):
                 cause_of_death = self.cause_of_death_input.text()
                 # Handle date_of_death based on checkbox
                 date_of_death = self.date_of_death_input.date().toString("yyyy-MM-dd") if self.has_date_of_death_check.isChecked() else None
-                sex = self.sex_combo.currentText()
+                # Convert "NO ENTRY" to None for combo boxes
+                sex = None if self.sex_combo.currentText() == "NO ENTRY" else self.sex_combo.currentText()
                 # Handle date_of_reg based on checkbox
                 date_of_reg = self.date_of_reg_input.date().toString("yyyy-MM-dd") if self.has_date_of_reg_check.isChecked() else None
-                place_of_death = self.death_place_input.currentText()
-                civil_status = self.civil_status_combo.currentText()
-                nationality = self.nationality_combo.currentText()
-                corpse_disposal = self.corpse_disposal_combo.currentText()
-                late_registration = self.late_reg_combo.currentText().strip().lower() == "yes"
+                place_of_death = None if self.death_place_input.currentText() == "NO ENTRY" else self.death_place_input.currentText()
+                civil_status = None if self.civil_status_combo.currentText() == "NO ENTRY" else self.civil_status_combo.currentText()
+                nationality = None if self.nationality_combo.currentText() == "NO ENTRY" else self.nationality_combo.currentText()
+                corpse_disposal = None if self.corpse_disposal_combo.currentText() == "NO ENTRY" else self.corpse_disposal_combo.currentText()
+                # Handle late_registration: YES->True, NO->False, NO ENTRY->None
+                late_reg_text = self.late_reg_combo.currentText().strip()
+                if late_reg_text == "NO ENTRY":
+                    late_registration = None
+                else:
+                    late_registration = late_reg_text.lower() == "yes"
                 
-                # Get resident values
-                maasin_resident = self.maasin_resident_combo.currentText().strip().lower() == "yes"
-                soleyte_resident = self.soleyte_resident_combo.currentText().strip().lower() == "yes"
-                leyte_resident = self.leyte_resident_combo.currentText().strip().lower() == "yes"
+                # Get resident values: YES->True, NO->False, NO ENTRY->None
+                maasin_res_text = self.maasin_resident_combo.currentText().strip()
+                maasin_resident = None if maasin_res_text == "NO ENTRY" else maasin_res_text.lower() == "yes"
+                soleyte_res_text = self.soleyte_resident_combo.currentText().strip()
+                soleyte_resident = None if soleyte_res_text == "NO ENTRY" else soleyte_res_text.lower() == "yes"
+                leyte_res_text = self.leyte_resident_combo.currentText().strip()
+                leyte_resident = None if leyte_res_text == "NO ENTRY" else leyte_res_text.lower() == "yes"
                 
-                attendant = self.attendant_combo.currentText()
+                attendant = None if self.attendant_combo.currentText() == "NO ENTRY" else self.attendant_combo.currentText()
 
                 cursor.execute("""
                     INSERT INTO death_index (

@@ -784,16 +784,16 @@ class BirthTaggingWindow(QWidget):
                 self.father_name_input.setText(name_of_father if name_of_father else "")
 
                 # Set QComboBox values
-                self.sex_combo.setCurrentText(sex if sex else "")
-                self.place_of_birth_combo.setCurrentText(place_of_birth if place_of_birth else "")
-                self.mother_nationality_combo.setCurrentText(nationality_mother if nationality_mother else "")
-                self.father_nationality_combo.setCurrentText(nationality_father if nationality_father else "")
-                self.attendant_combo.setCurrentText(attendant if attendant else "")
+                self.sex_combo.setCurrentText(sex if sex else "NO ENTRY")
+                self.place_of_birth_combo.setCurrentText(place_of_birth if place_of_birth else "NO ENTRY")
+                self.mother_nationality_combo.setCurrentText(nationality_mother if nationality_mother else "NO ENTRY")
+                self.father_nationality_combo.setCurrentText(nationality_father if nationality_father else "NO ENTRY")
+                self.attendant_combo.setCurrentText(attendant if attendant else "NO ENTRY")
                 # self.late_reg_combo.setCurrentText("Yes" if late_registration else "No")
                 # self.twin_combo.setCurrentText("Yes" if twin else "No")
                 # Force reset before setting
                 self.late_reg_combo.setCurrentIndex(-1)  # This clears the selection
-                self.late_reg_combo.setCurrentText("YES" if late_registration is True else "NO")
+                self.late_reg_combo.setCurrentText("YES" if late_registration is True else "NO ENTRY" if late_registration is None else "NO")
 
 
                 # Handle type_of_birth
@@ -803,9 +803,9 @@ class BirthTaggingWindow(QWidget):
                     self.type_of_birth_combo.setCurrentIndex(0)  # Set to "N/A"
 
                 # Set resident combo boxes
-                self.maasin_resident_combo.setCurrentText("YES" if maasin_resident is True else "NO")
-                self.soleyte_resident_combo.setCurrentText("YES" if soleyte_resident is True else "NO")
-                self.leyte_resident_combo.setCurrentText("YES" if leyte_resident is True else "NO")
+                self.maasin_resident_combo.setCurrentText("YES" if maasin_resident is True else "NO ENTRY" if maasin_resident is None else "NO")
+                self.soleyte_resident_combo.setCurrentText("YES" if soleyte_resident is True else "NO ENTRY" if soleyte_resident is None else "NO")
+                self.leyte_resident_combo.setCurrentText("YES" if leyte_resident is True else "NO ENTRY" if leyte_resident is None else "NO")
 
                 # Handle dates with checkbox states
                 if date_of_birth:
@@ -832,7 +832,7 @@ class BirthTaggingWindow(QWidget):
                 #     self.marriage_place_input.setCurrentIndex(0)
                 #     self.marriage_place_input.setEditText(self.marriage_place_input.itemText(0))
 
-                self.marriage_place_input.setCurrentText(parents_marriage_place)
+                self.marriage_place_input.setCurrentText(parents_marriage_place if parents_marriage_place else "NO ENTRY")
                 if parents_marriage_date:
                     self.date_of_marriage_input.setDate(QDate.fromString(parents_marriage_date.strftime("%Y-%m-%d"), "yyyy-MM-dd"))
                     self.has_date_of_marriage_check.setChecked(True)
@@ -952,35 +952,45 @@ class BirthTaggingWindow(QWidget):
                 # Get values from input fields
                 page_no = int(self.page_no_input.text()) if self.page_no_input.text() else None
                 book_no = int(self.book_no_input.text()) if self.book_no_input.text() else None
-                reg_no = self.reg_no_input.text()
-                name = self.name_input.text()
+                reg_no = self.reg_no_input.text() 
+                name = self.name_input.text() 
                 # Handle date_of_birth based on checkbox
                 date_of_birth = self.date_of_birth_input.date().toString("yyyy-MM-dd") if self.has_date_of_birth_check.isChecked() else None
-                sex = self.sex_combo.currentText()
+                # Convert "NO ENTRY" to None for combo boxes
+                sex = None if self.sex_combo.currentText() == "NO ENTRY" else self.sex_combo.currentText()
                 # Handle date_of_reg based on checkbox
                 date_of_reg = self.date_of_reg_input.date().toString("yyyy-MM-dd") if self.has_date_of_reg_check.isChecked() else None
-                place_of_birth = self.place_of_birth_combo.currentText()
+                place_of_birth = None if self.place_of_birth_combo.currentText() == "NO ENTRY" else self.place_of_birth_combo.currentText()
                 name_of_mother = self.mother_name_input.text()
-                nationality_mother = self.mother_nationality_combo.currentText()
+                nationality_mother = None if self.mother_nationality_combo.currentText() == "NO ENTRY" else self.mother_nationality_combo.currentText()
                 name_of_father = self.father_name_input.text() if self.father_name_input.text() != "" else None
-                nationality_father = self.father_nationality_combo.currentText() if self.father_name_input.text() != "" else None
-                type_of_birth = self.type_of_birth_combo.currentText()
+                nationality_father = None if self.father_nationality_combo.currentText() == "NO ENTRY" else self.father_nationality_combo.currentText() if self.father_name_input.text() != "" else None
+                type_of_birth = None if self.type_of_birth_combo.currentText() == "NO ENTRY" else self.type_of_birth_combo.currentText()
                 
                 # Handle marriage date based on marriage place and checkbox
                 parents_marriage_place = self.marriage_place_input.currentText()
+                parents_marriage_place = None if parents_marriage_place == "NO ENTRY" else parents_marriage_place
                 if self.marriage_place_input.currentText() in ["NOT MARRIED", "FORGOTTEN", "DON'T KNOW", "NOT APPLICABLE"]:
                     parents_marriage_date = None
                 else:
                     parents_marriage_date = self.date_of_marriage_input.date().toString("yyyy-MM-dd") if self.has_date_of_marriage_check.isChecked() else None
                 
-                attendant = self.attendant_combo.currentText()
-                late_registration = self.late_reg_combo.currentText().strip().lower() == "yes"
+                attendant = None if self.attendant_combo.currentText() == "NO ENTRY" else self.attendant_combo.currentText()
+                # Handle late_registration: YES->True, NO->False, NO ENTRY->None
+                late_reg_text = self.late_reg_combo.currentText().strip()
+                if late_reg_text == "NO ENTRY":
+                    late_registration = None
+                else:
+                    late_registration = late_reg_text.lower() == "yes"
                 mother_age = int(self.mother_age_input.text()) if self.mother_age_input.text() else None
                 father_age = int(self.father_age_input.text()) if self.father_age_input.text() else None
-                # Get resident values
-                maasin_resident = self.maasin_resident_combo.currentText().strip().lower() == "yes"
-                soleyte_resident = self.soleyte_resident_combo.currentText().strip().lower() == "yes"
-                leyte_resident = self.leyte_resident_combo.currentText().strip().lower() == "yes"
+                # Get resident values: YES->True, NO->False, NO ENTRY->None
+                maasin_res_text = self.maasin_resident_combo.currentText().strip()
+                maasin_resident = None if maasin_res_text == "NO ENTRY" else maasin_res_text.lower() == "yes"
+                soleyte_res_text = self.soleyte_resident_combo.currentText().strip()
+                soleyte_resident = None if soleyte_res_text == "NO ENTRY" else soleyte_res_text.lower() == "yes"
+                leyte_res_text = self.leyte_resident_combo.currentText().strip()
+                leyte_resident = None if leyte_res_text == "NO ENTRY" else leyte_res_text.lower() == "yes"
                 
                 cursor.execute("""
                     INSERT INTO birth_index (

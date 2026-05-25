@@ -734,13 +734,13 @@ class MarriageTaggingWindow(QWidget):
                 self.wife_father_name_input.setText(wife_father if wife_father else "")
 
                 # Set QComboBox values
-                self.place_of_marriage_combo.setCurrentText(place_of_marriage if place_of_marriage else "")
-                self.husband_nationality_combo.setCurrentText(husb_nationality if husb_nationality else "")
-                self.wife_nationality_combo.setCurrentText(wife_nationality if wife_nationality else "")
-                self.husband_civil_status_combo.setCurrentText(husb_civil_status if husb_civil_status else "")
-                self.wife_civil_status_combo.setCurrentText(wife_civil_status if wife_civil_status else "")
-                self.ceremony_type_combo.setCurrentText(ceremony_type if ceremony_type else "")
-                self.late_reg_combo.setCurrentText("YES" if late_registration is True else "NO")
+                self.place_of_marriage_combo.setCurrentText(place_of_marriage if place_of_marriage else "NO ENTRY")
+                self.husband_nationality_combo.setCurrentText(husb_nationality if husb_nationality else "NO ENTRY")
+                self.wife_nationality_combo.setCurrentText(wife_nationality if wife_nationality else "NO ENTRY")
+                self.husband_civil_status_combo.setCurrentText(husb_civil_status if husb_civil_status else "NO ENTRY")
+                self.wife_civil_status_combo.setCurrentText(wife_civil_status if wife_civil_status else "NO ENTRY")
+                self.ceremony_type_combo.setCurrentText(ceremony_type if ceremony_type else "NO ENTRY")
+                self.late_reg_combo.setCurrentText("YES" if late_registration is True else "NO ENTRY" if late_registration is None else "NO")
 
                 # Handle dates with checkbox states
                 if date_of_marriage:
@@ -879,13 +879,19 @@ class MarriageTaggingWindow(QWidget):
                 date_of_marriage = self.date_of_marriage_input.date().toString("yyyy-MM-dd") if self.has_date_of_marriage_check.isChecked() else None
                 # Handle date_of_reg based on checkbox
                 date_of_reg = self.date_of_reg_input.date().toString("yyyy-MM-dd") if self.has_date_of_reg_check.isChecked() else None
-                place_of_marriage = self.place_of_marriage_combo.currentText()
-                husb_nationality = self.husband_nationality_combo.currentText()
-                wife_nationality = self.wife_nationality_combo.currentText()
-                husb_civil_status = self.husband_civil_status_combo.currentText()
-                wife_civil_status = self.wife_civil_status_combo.currentText()
-                ceremony_type = self.ceremony_type_combo.currentText()
-                late_registration = self.late_reg_combo.currentText().strip().lower() == "yes"
+                # Convert "NO ENTRY" to None for combo boxes
+                place_of_marriage = None if self.place_of_marriage_combo.currentText() == "NO ENTRY" else self.place_of_marriage_combo.currentText()
+                husb_nationality = None if self.husband_nationality_combo.currentText() == "NO ENTRY" else self.husband_nationality_combo.currentText()
+                wife_nationality = None if self.wife_nationality_combo.currentText() == "NO ENTRY" else self.wife_nationality_combo.currentText()
+                husb_civil_status = None if self.husband_civil_status_combo.currentText() == "NO ENTRY" else self.husband_civil_status_combo.currentText()
+                wife_civil_status = None if self.wife_civil_status_combo.currentText() == "NO ENTRY" else self.wife_civil_status_combo.currentText()
+                ceremony_type = None if self.ceremony_type_combo.currentText() == "NO ENTRY" else self.ceremony_type_combo.currentText()
+                # Handle late_registration: YES->True, NO->False, NO ENTRY->None
+                late_reg_text = self.late_reg_combo.currentText().strip()
+                if late_reg_text == "NO ENTRY":
+                    late_registration = None
+                else:
+                    late_registration = late_reg_text.lower() == "yes"
 
                 cursor.execute("""
                     INSERT INTO marriage_index (

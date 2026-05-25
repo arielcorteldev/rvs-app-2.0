@@ -11,3 +11,13 @@
  * Running on http://127.0.0.1:5000
  * Running on http://192.168.254.108:5000
 [2026-05-05 14:56:05,725] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2026-05-25 09:59:02,392] DEBUG in connectionpool: Starting new HTTPS connection (1): api.ipify.org:443
+[2026-05-25 09:59:03,403] DEBUG in connectionpool: https://api.ipify.org:443 "GET /?format=text HTTP/1.1" 200 14
+[2026-05-25 09:59:03,405] INFO in app: Server Public IP: 216.247.32.147
+[2026-05-25 09:59:04,083] DEBUG in __init__: CACHEDIR=C:\Users\ThisPC\.matplotlib
+[2026-05-25 09:59:04,086] DEBUG in font_manager: Using fontManager instance from C:\Users\ThisPC\.matplotlib\fontlist-v390.json
+[2026-05-25 09:59:04,813] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.254.108:5000
+[2026-05-25 09:59:04,814] INFO in _internal: [33mPress CTRL+C to quit[0m
