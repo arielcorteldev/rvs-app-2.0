@@ -556,7 +556,7 @@ class BirthTaggingWindow(QWidget):
         pdf_layout = QVBoxLayout()
         pdf_controls = QHBoxLayout()
 
-        self.pdf_viewer = PDFViewer()
+        self.pdf_viewer = PDFViewer(default_zoom=1.5)
         pdf_layout.addWidget(self.pdf_viewer)
 
         zoom_in_btn = QPushButton("+")

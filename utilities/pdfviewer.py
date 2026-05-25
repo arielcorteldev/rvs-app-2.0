@@ -12,7 +12,7 @@ from utilities.stylesheets import button_style
 
 class PDFViewer(QScrollArea):
     """PDF Viewer with zoom support optimized for landscape files."""
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, default_zoom=None):
         super().__init__(parent)      
         self.setWidgetResizable(True)
         self.pdf_widget = QWidget()
@@ -29,6 +29,7 @@ class PDFViewer(QScrollArea):
 
         self.zoom_factor = 1.0
         self.current_file = None
+        self.default_zoom = default_zoom  # Optional default zoom factor (None = auto-zoom)
         self.target_width = 1000  # Target width for landscape pages
         self.resize_timer = QTimer()
         self.resize_timer.setSingleShot(True)
@@ -115,19 +116,24 @@ class PDFViewer(QScrollArea):
             
             # Calculate optimal zoom factor for landscape pages (only if not manual zoom)
             if not self.manual_zoom and len(doc) > 0:
-                first_page = doc[0]
-                page_width = first_page.rect.width
-                page_height = first_page.rect.height
-                
-                # Calculate zoom factor to fit width
-                if page_width > page_height:  # Landscape
-                    # Scale to fit width with some padding
-                    available_width = self.target_width - 40  # 20px padding on each side
-                    self.zoom_factor = available_width / page_width
-                else:  # Portrait
-                    # Scale to fit width but maintain aspect ratio
-                    available_width = self.target_width - 40
-                    self.zoom_factor = available_width / page_width
+                if self.default_zoom is not None:
+                    # Use the provided default zoom
+                    self.zoom_factor = self.default_zoom
+                else:
+                    # Calculate automatic optimal zoom for landscape pages
+                    first_page = doc[0]
+                    page_width = first_page.rect.width
+                    page_height = first_page.rect.height
+                    
+                    # Calculate zoom factor to fit width
+                    if page_width > page_height:  # Landscape
+                        # Scale to fit width with some padding
+                        available_width = self.target_width - 40  # 20px padding on each side
+                        self.zoom_factor = available_width / page_width
+                    else:  # Portrait
+                        # Scale to fit width but maintain aspect ratio
+                        available_width = self.target_width - 40
+                        self.zoom_factor = available_width / page_width
 
             dpi = 72 * self.zoom_factor
 

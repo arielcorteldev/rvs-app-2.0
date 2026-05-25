@@ -124,7 +124,7 @@ class BookViewerWindow(QMainWindow):
         main_layout.addLayout(control_panel)
         
         # PDF Viewer (takes full width)
-        self.pdf_viewer = PDFViewer()
+        self.pdf_viewer = PDFViewer(default_zoom=1.5)
         main_layout.addWidget(self.pdf_viewer)
         
         # Status bar
