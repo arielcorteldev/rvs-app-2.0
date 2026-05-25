@@ -82,8 +82,9 @@ def render_html_form(record_dict: dict, form_type: str, templates_dir: Optional[
         context = {} if record_dict is None else record_dict
     
     # Add absolute paths for logo images so they can be found when HTML is opened as file://
-    # Resolve the project root directory (parent of this script)
-    project_root = Path(__file__).resolve().parent
+    # Resolve the project root directory (parent of utilities parent)
+    utilities_dir = Path(__file__).resolve().parent
+    project_root = utilities_dir.parent
     logos_dir = project_root / 'assets/logos'
     
     # Add image paths to context as file:// URIs so they work in the browser
@@ -91,9 +92,15 @@ def render_html_form(record_dict: dict, form_type: str, templates_dir: Optional[
         context['city_logo_path'] = (logos_dir / 'city-logo.png').as_uri()
         context['occr_logo_path'] = (logos_dir / 'occr-logo.png').as_uri()
     else:
-        # Fallback to relative paths if logos dir not found
-        context['city_logo_path'] = '../assets/logos/city-logo.png'
-        context['occr_logo_path'] = '../assets/logos/occr-logo.png'
+        # Fallback: if assets/logos not found, try to create absolute path anyway
+        alt_logos = Path('c:/ayie/PROJECTS/LGU/RVS APP/RVS dev 2.0/assets/logos')
+        if alt_logos.exists():
+            context['city_logo_path'] = (alt_logos / 'city-logo.png').as_uri()
+            context['occr_logo_path'] = (alt_logos / 'occr-logo.png').as_uri()
+        else:
+            # Last resort: use relative paths (may not work from temp directory)
+            context['city_logo_path'] = '../assets/logos/city-logo.png'
+            context['occr_logo_path'] = '../assets/logos/occr-logo.png'
 
     # If Jinja2 is available and template exists, use it
     if _HAS_JINJA and (templates_path / template_name).exists():
