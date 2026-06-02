@@ -189,10 +189,22 @@ class BirthTaggingWindow(QWidget):
         dob_label_layout.addWidget(self._create_label("Date of Birth:"))
         self.has_date_of_birth_check = QCheckBox("Has Date")
         self.has_date_of_birth_check.setChecked(True)
-        self.has_date_of_birth_check.setStyleSheet("""
+        self.has_date_of_birth_check.setStyleSheet("""                                    
+            QCheckBox::indicator:unchecked {
+                background-color: #FFFFFF;
+                border: 1px solid #D1D0D0;
+            }
+            QCheckBox::indicator:unchecked:hover {
+                background-color: #F5F5F5;
+                border: 1px solid #999999;
+            }
             QCheckBox::indicator:checked {
                 background-color: #ce305e;
                 border: 1px solid #ce305e;
+            }
+            QCheckBox::indicator:checked:hover {
+                background-color: #a8224a;
+                border: 1px solid #a8224a;
             }
         """)
         self.has_date_of_birth_check.stateChanged.connect(lambda: self.date_of_birth_input.setEnabled(self.has_date_of_birth_check.isChecked()))
@@ -408,9 +420,21 @@ class BirthTaggingWindow(QWidget):
         self.has_date_of_marriage_check = QCheckBox("Has Date")
         self.has_date_of_marriage_check.setChecked(True)
         self.has_date_of_marriage_check.setStyleSheet("""
+            QCheckBox::indicator:unchecked {
+                background-color: #FFFFFF;
+                border: 1px solid #D1D0D0;
+            }
+            QCheckBox::indicator:unchecked:hover {
+                background-color: #F5F5F5;
+                border: 1px solid #999999;
+            }
             QCheckBox::indicator:checked {
                 background-color: #ce305e;
                 border: 1px solid #ce305e;
+            }
+            QCheckBox::indicator:checked:hover {
+                background-color: #a8224a;
+                border: 1px solid #a8224a;
             }
         """)
         self.has_date_of_marriage_check.stateChanged.connect(lambda: self.date_of_marriage_input.setEnabled(self.has_date_of_marriage_check.isChecked()))
@@ -466,9 +490,21 @@ class BirthTaggingWindow(QWidget):
         self.has_date_of_reg_check = QCheckBox("Has Date")
         self.has_date_of_reg_check.setChecked(True)
         self.has_date_of_reg_check.setStyleSheet("""
+            QCheckBox::indicator:unchecked {
+                background-color: #FFFFFF;
+                border: 1px solid #D1D0D0;
+            }
+            QCheckBox::indicator:unchecked:hover {
+                background-color: #F5F5F5;
+                border: 1px solid #999999;
+            }
             QCheckBox::indicator:checked {
                 background-color: #ce305e;
                 border: 1px solid #ce305e;
+            }
+            QCheckBox::indicator:checked:hover {
+                background-color: #a8224a;
+                border: 1px solid #a8224a;
             }
         """)
         self.has_date_of_reg_check.stateChanged.connect(lambda: self.date_of_reg_input.setEnabled(self.has_date_of_reg_check.isChecked()))
