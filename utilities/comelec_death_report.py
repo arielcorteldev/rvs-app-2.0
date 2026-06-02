@@ -540,12 +540,3 @@ class ComelecDeathReportWindow(QMainWindow):
             self.closeConnection(conn)
             event.ignore()
             self.hide()
-
-if __name__ == "__main__":
-    from PySide6.QtWidgets import QApplication
-    import sys
-    
-    app = QApplication(sys.argv)
-    window = ReleasingLogViewer("test_user")  # For testing purposes
-    window.show()
-    sys.exit(app.exec()) 
