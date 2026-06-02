@@ -31,6 +31,7 @@ from utilities.audit_logger import AuditLogger
 from utilities.audit_log_viewer import AuditLogViewer
 from controllers.releasing_docs import ReleaseDocumentWindow
 from utilities.releasing_log_viewer import ReleasingLogViewer
+from utilities.comelec_death_report import ComelecDeathReportWindow
 from controllers.book_viewer import BookViewerWindow
 
 from flask_server.app import start_server
@@ -527,15 +528,17 @@ class MainWindow(QMainWindow):
         self.statistics_btn = QPushButton("Generate Statistics")
         self.tagging_btn = QPushButton("Tag Records")
         self.book_viewer_btn = QPushButton("Book Viewer")
+        self.comelec_death_report_btn = QPushButton("COMELEC Death Report")
         
         # Set object names for sub-menu styling
-        for btn in [self.statistics_btn, self.tagging_btn, self.book_viewer_btn]:
+        for btn in [self.statistics_btn, self.tagging_btn, self.book_viewer_btn, self.comelec_death_report_btn]:
             btn.setObjectName("sub_menu_btn")
         
         # Add buttons to sub-menu layout
         self.sub_menu_layout.addWidget(self.statistics_btn)
         self.sub_menu_layout.addWidget(self.tagging_btn)
         self.sub_menu_layout.addWidget(self.book_viewer_btn)
+        self.sub_menu_layout.addWidget(self.comelec_death_report_btn)
 
         # Add sub-menu to other features container
         self.other_features_layout.addWidget(self.other_features_sub_menu)
@@ -550,6 +553,8 @@ class MainWindow(QMainWindow):
         self.statistics_btn.clicked.connect(self.open_statistics_tools)
         self.tagging_btn.clicked.connect(self.open_tagging_tools)
         self.book_viewer_btn.clicked.connect(self.open_book_viewer)
+        self.comelec_death_report_btn.clicked.connect(self.open_comelec_death_report)
+
         # Create User Management Menu Container
         self.user_management_container = QFrame()
         self.user_management_layout = QVBoxLayout(self.user_management_container)
@@ -1520,6 +1525,31 @@ class MainWindow(QMainWindow):
                 self.current_user,
                 "OPEN_WINDOW",
                 {"window": "BookViewerWindow"}
+            )
+            conn.commit()
+        finally:
+            self.closeConnection()
+
+    # open COMELEC death report window
+    def open_comelec_death_report(self):
+        conn = self.create_connection()
+        try:
+            comelec_death_report = self.windows.get('comelec_death_report')
+            if comelec_death_report is None or not comelec_death_report.isVisible():
+                comelec_death_report = ComelecDeathReportWindow(self.current_user, parent=self)
+                comelec_death_report.setParent(self)
+                comelec_death_report.setWindowFlag(Qt.Window)
+                self.windows['comelec_death_report'] = comelec_death_report
+                
+            comelec_death_report.showMaximized()
+            comelec_death_report.raise_()
+            comelec_death_report.activateWindow()
+
+            AuditLogger.log_action(
+                conn,
+                self.current_user,
+                "OPEN_WINDOW",
+                {"window": "ComelecDeathReportWindow"}
             )
             conn.commit()
         finally:
