@@ -177,7 +177,7 @@ class DeathTaggingWindow(QWidget):
 
         form_layout.addLayout(name_sex_layout)
 
-        # Date of Death and Age
+        # Date of Death, Date of Birth and Age
         date_age_layout = QHBoxLayout()
         date_age_layout.setSpacing(10)
 
@@ -200,12 +200,37 @@ class DeathTaggingWindow(QWidget):
         self.date_of_death_input = QDateEdit()
         self.date_of_death_input.setCalendarPopup(True)
         self.date_of_death_input.setDate(QDate.currentDate())
-        self.date_of_death_input.setFixedWidth(220)
+        self.date_of_death_input.setFixedWidth(150)
         self.date_of_death_input.setStyleSheet(date_picker_style)
         self.date_of_death_input.setEnabled(True)
         death_date_container.addWidget(self.date_of_death_input)
         date_age_layout.addLayout(death_date_container)
-        
+
+        birth_date_container = QVBoxLayout()
+        birth_date_label_layout = QHBoxLayout()
+        birth_date_label_layout.setSpacing(5)
+        birth_date_label_layout.addWidget(self._create_label("Date of Birth:"))
+        self.has_date_of_birth_check = QCheckBox("Has Date")
+        self.has_date_of_birth_check.setChecked(True)
+        self.has_date_of_birth_check.setStyleSheet("""
+            QCheckBox::indicator:checked {
+                background-color: #ce305e;
+                border: 1px solid #ce305e;
+            }
+        """)
+        self.has_date_of_birth_check.stateChanged.connect(lambda: self.date_of_birth_input.setEnabled(self.has_date_of_birth_check.isChecked()))
+        birth_date_label_layout.addWidget(self.has_date_of_birth_check)
+        birth_date_label_layout.addStretch()
+        birth_date_container.addLayout(birth_date_label_layout)
+        self.date_of_birth_input = QDateEdit()
+        self.date_of_birth_input.setCalendarPopup(True)
+        self.date_of_birth_input.setDate(QDate.currentDate())
+        self.date_of_birth_input.setFixedWidth(150)
+        self.date_of_birth_input.setStyleSheet(date_picker_style)
+        self.date_of_birth_input.setEnabled(True)
+        birth_date_container.addWidget(self.date_of_birth_input)
+        date_age_layout.addLayout(birth_date_container)
+
         age_container = QVBoxLayout()
         self.age_input = QLineEdit()
         self.age_input.setPlaceholderText("Age (Years)")
@@ -702,7 +727,7 @@ class DeathTaggingWindow(QWidget):
                     civil_status, nationality,
                     place_of_death, cause_of_death,
                     corpse_disposal, late_registration,
-                    maasin_resident, soleyte_resident, leyte_resident, attendant, residence
+                    maasin_resident, soleyte_resident, leyte_resident, attendant, residence, date_of_birth
                 FROM death_index 
                 WHERE file_path = %s
             """, (file_path,))
@@ -715,7 +740,7 @@ class DeathTaggingWindow(QWidget):
                  civil_status, nationality,
                  place_of_death, cause_of_death,
                  corpse_disposal, late_registration,
-                 maasin_resident, soleyte_resident, leyte_resident, attendant, residence) = result
+                 maasin_resident, soleyte_resident, leyte_resident, attendant, residence, date_of_birth) = result
 
                 # Set QLineEdit values
                 self.page_no_input.setText(str(page_no) if page_no else "")
@@ -759,6 +784,14 @@ class DeathTaggingWindow(QWidget):
                     self.date_of_reg_input.setDate(QDate.currentDate())
                     self.has_date_of_reg_check.setChecked(False)
                     self.date_of_reg_input.setEnabled(False)
+                
+                if date_of_birth:
+                    self.date_of_birth_input.setDate(QDate.fromString(date_of_birth.strftime("%Y-%m-%d"), "yyyy-MM-dd"))
+                    self.has_date_of_birth_check.setChecked(True)
+                else:
+                    self.date_of_birth_input.setDate(QDate.currentDate())
+                    self.has_date_of_birth_check.setChecked(False)
+                    self.date_of_birth_input.setEnabled(False)
 
                 self.attendant_combo.setCurrentText(attendant if attendant else "NO ENTRY")
 
@@ -796,6 +829,11 @@ class DeathTaggingWindow(QWidget):
                 self.has_date_of_reg_check.setChecked(True)
                 self.date_of_reg_input.setDate(QDate.fromString(self.last_reg_date, "yyyy-MM-dd"))
                 self.date_of_reg_input.setEnabled(True)
+
+                self.has_date_of_birth_check.setChecked(True)
+                self.date_of_birth_input.setDate(QDate.currentDate())
+                self.date_of_birth_input.setEnabled(True)
+
                 self.attendant_combo.setCurrentIndex(0)
 
                 self.set_saved_cue(False)
@@ -885,14 +923,17 @@ class DeathTaggingWindow(QWidget):
                 cause_of_death = self.cause_of_death_input.text()
                 # Handle date_of_death based on checkbox
                 date_of_death = self.date_of_death_input.date().toString("yyyy-MM-dd") if self.has_date_of_death_check.isChecked() else None
+                date_of_birth = self.date_of_birth_input.date().toString("yyyy-MM-dd") if self.has_date_of_birth_check.isChecked() else None
                 # Convert "NO ENTRY" to None for combo boxes
                 sex = None if self.sex_combo.currentText() == "NO ENTRY" else self.sex_combo.currentText()
                 # Handle date_of_reg based on checkbox
                 date_of_reg = self.date_of_reg_input.date().toString("yyyy-MM-dd") if self.has_date_of_reg_check.isChecked() else None
+
                 place_of_death = None if self.death_place_input.currentText() == "NO ENTRY" else self.death_place_input.currentText()
                 civil_status = None if self.civil_status_combo.currentText() == "NO ENTRY" else self.civil_status_combo.currentText()
                 nationality = None if self.nationality_combo.currentText() == "NO ENTRY" else self.nationality_combo.currentText()
                 corpse_disposal = None if self.corpse_disposal_combo.currentText() == "NO ENTRY" else self.corpse_disposal_combo.currentText()
+
                 # Handle late_registration: YES->True, NO->False, NO ENTRY->None
                 late_reg_text = self.late_reg_combo.currentText().strip()
                 if late_reg_text == "NO ENTRY":
@@ -916,9 +957,9 @@ class DeathTaggingWindow(QWidget):
                         date_of_reg, age_years, age_months, age_days, age_hours, age_mins,
                         civil_status, nationality,
                         place_of_death, cause_of_death, corpse_disposal, late_registration,
-                        maasin_resident, soleyte_resident, leyte_resident, attendant, residence
+                        maasin_resident, soleyte_resident, leyte_resident, attendant, residence, date_of_birth
                     ) VALUES (
-                        %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+                        %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
                     )
                     ON CONFLICT(file_path) DO UPDATE SET
                         name = EXCLUDED.name,
@@ -943,13 +984,14 @@ class DeathTaggingWindow(QWidget):
                         soleyte_resident = EXCLUDED.soleyte_resident,
                         leyte_resident = EXCLUDED.leyte_resident,
                         attendant = EXCLUDED.attendant,
-                        residence = EXCLUDED.residence
+                        residence = EXCLUDED.residence,
+                        date_of_birth = EXCLUDED.date_of_birth
                 """, (
                     self.selected_pdf, name, date_of_death, sex, page_no, book_no, reg_no,
                     date_of_reg, age_years, age_months, age_days, age_hours, age_mins,
                     civil_status, nationality,
                     place_of_death, cause_of_death, corpse_disposal, late_registration,
-                    maasin_resident, soleyte_resident, leyte_resident, attendant, residence
+                    maasin_resident, soleyte_resident, leyte_resident, attendant, residence, date_of_birth
                 ))
 
                 AuditLogger.log_action(
@@ -1067,6 +1109,10 @@ class DeathTaggingWindow(QWidget):
             self.has_date_of_death_check.setChecked(True)
             self.date_of_death_input.setDate(QDate.currentDate())
             self.date_of_death_input.setEnabled(True)
+
+            self.has_date_of_birth_check.setChecked(True)
+            self.date_of_birth_input.setDate(QDate.currentDate())
+            self.date_of_birth_input.setEnabled(True)
             
             self.has_date_of_reg_check.setChecked(True)
             self.date_of_reg_input.setDate(QDate.currentDate())
@@ -1196,7 +1242,7 @@ class DeathTaggingWindow(QWidget):
             self.sex_combo, self.civil_status_combo, self.nationality_combo, self.death_place_input,
             self.corpse_disposal_combo, self.late_reg_combo,
             # Dates
-            self.date_of_death_input, self.date_of_reg_input,
+            self.date_of_death_input, self.date_of_reg_input, self.date_of_birth_input,
             # Resident combos
             self.maasin_resident_combo, self.soleyte_resident_combo, self.leyte_resident_combo,
             # Attendant combo
