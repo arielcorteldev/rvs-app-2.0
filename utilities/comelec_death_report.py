@@ -81,47 +81,27 @@ class ComelecDeathReportWindow(QMainWindow):
         filter_layout = QVBoxLayout()
         filter_layout.setSpacing(5)
         
-        # Document Owner filter
-        owner_layout = QHBoxLayout()
-        owner_layout.setContentsMargins(0, 0, 0, 0)
-        self.owner_filter = QLineEdit()
-        self.owner_filter.setPlaceholderText("Document Owner")
-        self.owner_filter.setFixedWidth(300)
-        owner_layout.addWidget(self.owner_filter)
-        owner_layout.addStretch()
-        filter_layout.addLayout(owner_layout)
+        # Name of Deceased filter
+        name_layout = QHBoxLayout()
+        name_layout.setContentsMargins(0, 0, 0, 0)
+        self.name_filter = QLineEdit()
+        self.name_filter.setPlaceholderText("Name of Deceased")
+        self.name_filter.setFixedWidth(300)
+        name_layout.addWidget(self.name_filter)
+        name_layout.addStretch()
+        filter_layout.addLayout(name_layout)
         
-        # Document Type filter
-        type_layout = QHBoxLayout()
-        type_layout.setContentsMargins(0, 0, 0, 0)
-        self.type_filter = QComboBox()
-        self.type_filter.setEditable(True)
-        self.type_filter.setPlaceholderText("Document Type")
-        self.type_filter.setFixedWidth(300)
-        self.type_filter.setStyleSheet(combo_box_style)
-        type_layout.addWidget(self.type_filter)
-        type_layout.addStretch()
-        filter_layout.addLayout(type_layout)
-        
-        # Released By filter
-        released_by_layout = QHBoxLayout()
-        released_by_layout.setContentsMargins(0, 0, 0, 0)
-        self.released_by_filter = QLineEdit()
-        self.released_by_filter.setPlaceholderText("Released By")
-        self.released_by_filter.setFixedWidth(300)
-        released_by_layout.addWidget(self.released_by_filter)
-        released_by_layout.addStretch()
-        filter_layout.addLayout(released_by_layout)
-        
-        # Received By filter
-        received_by_layout = QHBoxLayout()
-        received_by_layout.setContentsMargins(0, 0, 0, 0)
-        self.received_by_filter = QLineEdit()
-        self.received_by_filter.setPlaceholderText("Received By")
-        self.received_by_filter.setFixedWidth(300)
-        received_by_layout.addWidget(self.received_by_filter)
-        received_by_layout.addStretch()
-        filter_layout.addLayout(received_by_layout)
+        # Address filter
+        address_layout = QHBoxLayout()
+        address_layout.setContentsMargins(0, 0, 0, 0)
+        self.address_filter = QComboBox()
+        self.address_filter.setEditable(True)
+        self.address_filter.setPlaceholderText("Address")
+        self.address_filter.setFixedWidth(300)
+        self.address_filter.setStyleSheet(combo_box_style)
+        address_layout.addWidget(self.address_filter)
+        address_layout.addStretch()
+        filter_layout.addLayout(address_layout)
         
         # Date range filter
         date_range_layout = QHBoxLayout()
@@ -189,8 +169,7 @@ class ComelecDeathReportWindow(QMainWindow):
         self.table = QTableWidget()
         self.table.setColumnCount(7)
         self.table.setHorizontalHeaderLabels([
-            "ID", "Document Owner", "Document Type", "Copy No.", 
-            "Received By", "Released By", "Timestamp"
+            "Name of Deceased", "Address", "Date of Birth", "Date of Death"
         ])
         self.table.horizontalHeader().setStretchLastSection(True)
         self.table.setSelectionBehavior(QTableWidget.SelectRows)
@@ -199,7 +178,7 @@ class ComelecDeathReportWindow(QMainWindow):
         layout.addWidget(self.table)
         
         # Load initial data
-        self.load_document_types()
+        # self.load_document_types()
         self.load_data()
         
     def create_connection(self):
@@ -220,26 +199,26 @@ class ComelecDeathReportWindow(QMainWindow):
             except Exception as e:
                 print(f"Error closing connection: {str(e)}")
         
-    def load_document_types(self):
-        """Load unique document types for the type filter dropdown"""
-        conn = self.create_connection()
-        try:
-            cursor = conn.cursor()
-            cursor.execute("SELECT DISTINCT doc_type FROM releasing_log ORDER BY doc_type")
-            types = [row[0] for row in cursor.fetchall()]
-            self.type_filter.addItems(types)
+    # def load_document_types(self):
+    #     """Load unique document types for the type filter dropdown"""
+    #     conn = self.create_connection()
+    #     try:
+    #         cursor = conn.cursor()
+    #         cursor.execute("SELECT DISTINCT name FROM death_index ORDER BY name")
+    #         names = [row[0] for row in cursor.fetchall()]
+    #         self.name_filter.addItems(names)
             
-            AuditLogger.log_action(
-                conn,
-                self.current_user,
-                "DOCUMENT_TYPES_LOADED",
-                {"count": len(types)}
-            )
-            conn.commit()
-        except psycopg2.Error as e:
-            print(f"Error loading document types: {str(e)}")
-        finally:
-            self.closeConnection(conn)
+    #         AuditLogger.log_action(
+    #             conn,
+    #             self.current_user,
+    #             "NAME_OF_DECEASED_LOADED",
+    #             {"count": len(names)}
+    #         )
+    #         conn.commit()
+    #     except psycopg2.Error as e:
+    #         print(f"Error loading document types: {str(e)}")
+    #     finally:
+    #         self.closeConnection(conn)
     
     def load_data(self):
         """Load releasing log data with current filters"""
@@ -249,40 +228,27 @@ class ComelecDeathReportWindow(QMainWindow):
             
             # Build query with filters
             query = """
-                SELECT id, doc_owner, doc_type, copy_no, 
-                       received_by, released_by, timestamp 
-                FROM releasing_log 
+                SELECT name, residence, date_of_birth, date_of_death
+                FROM death_index 
                 WHERE 1=1
             """
             params = []
             filter_details = {}
             
             # Document Owner filter
-            if self.owner_filter.text():
-                query += " AND doc_owner ILIKE %s"
-                params.append(f"%{self.owner_filter.text()}%")
-                filter_details["doc_owner"] = self.owner_filter.text()
+            if self.name_filter.text():
+                query += " AND name ILIKE %s"
+                params.append(f"%{self.name_filter.text()}%")
+                filter_details["name"] = self.name_filter.text()
             
             # Document Type filter
-            if self.type_filter.currentText():
-                query += " AND doc_type = %s"
-                params.append(self.type_filter.currentText())
-                filter_details["doc_type"] = self.type_filter.currentText()
-            
-            # Released By filter
-            if self.released_by_filter.text():
-                query += " AND released_by ILIKE %s"
-                params.append(f"%{self.released_by_filter.text()}%")
-                filter_details["released_by"] = self.released_by_filter.text()
-            
-            # Received By filter
-            if self.received_by_filter.text():
-                query += " AND received_by ILIKE %s"
-                params.append(f"%{self.received_by_filter.text()}%")
-                filter_details["received_by"] = self.received_by_filter.text()
+            if self.address_filter.currentText():
+                query += " AND residence = %s"
+                params.append(self.address_filter.currentText())
+                filter_details["residence"] = self.address_filter.currentText()
             
             # Date range filter
-            query += " AND timestamp BETWEEN %s AND %s"
+            query += " AND date_of_death BETWEEN %s AND %s"
             start_date = self.start_date.dateTime().toPython()
             end_date = self.end_date.dateTime().toPython()
             params.extend([start_date, end_date])
@@ -292,7 +258,7 @@ class ComelecDeathReportWindow(QMainWindow):
             })
             
             # Order by timestamp desc
-            query += " ORDER BY timestamp DESC"
+            query += " ORDER BY date_of_death DESC"
             
             cursor.execute(query, params)
             rows = cursor.fetchall()
@@ -301,7 +267,7 @@ class ComelecDeathReportWindow(QMainWindow):
             AuditLogger.log_action(
                 conn,
                 self.current_user,
-                "RELEASE_LOGS_LOADED",
+                "COMELEC_REPORT_LOADED",
                 {
                     "filters": filter_details,
                     "rows_returned": len(rows)
@@ -328,7 +294,7 @@ class ComelecDeathReportWindow(QMainWindow):
                 AuditLogger.log_action(
                     conn,
                     self.current_user,
-                    "RELEASE_LOGS_LOAD_ERROR",
+                    "COMELEC_REPORT_LOAD_ERROR",
                     {"error": str(e)}
                 )
                 conn.commit()
@@ -342,12 +308,10 @@ class ComelecDeathReportWindow(QMainWindow):
             AuditLogger.log_action(
                 conn,
                 self.current_user,
-                "RELEASE_FILTERS_APPLIED",
+                "COMELEC_REPORT_FILTERS_APPLIED",
                 {
-                    "doc_owner": self.owner_filter.text(),
-                    "doc_type": self.type_filter.currentText(),
-                    "released_by": self.released_by_filter.text(),
-                    "received_by": self.received_by_filter.text(),
+                    "name": self.name_filter.text(),
+                    "residence": self.address_filter.currentText(),
                     "start_date": self.start_date.dateTime().toPython().isoformat(),
                     "end_date": self.end_date.dateTime().toPython().isoformat()
                 }
@@ -365,17 +329,15 @@ class ComelecDeathReportWindow(QMainWindow):
             AuditLogger.log_action(
                 conn,
                 self.current_user,
-                "RELEASE_FILTERS_RESET",
+                "COMELEC_REPORT_FILTERS_RESET",
                 {"message": "All filters reset to default values"}
             )
             conn.commit()
         finally:
             self.closeConnection(conn)
             
-        self.owner_filter.clear()
-        self.type_filter.setCurrentIndex(-1)
-        self.released_by_filter.clear()
-        self.received_by_filter.clear()
+        self.name_filter.clear()
+        self.address_filter.setCurrentIndex(-1)
         self.start_date.setDateTime(QDateTime.currentDateTime().addDays(-7))
         self.end_date.setDateTime(QDateTime.currentDateTime())
         self.load_data()
@@ -402,7 +364,7 @@ class ComelecDeathReportWindow(QMainWindow):
         return y
 
     def export_pdf(self):
-        path, _ = QFileDialog.getSaveFileName(self, "Save PDF", "ReleasingLogbook.pdf", "PDF files (*.pdf)")
+        path, _ = QFileDialog.getSaveFileName(self, "Save PDF", "ComelecDeathReport.pdf", "PDF files (*.pdf)")
         if not path:
             return
 
@@ -420,7 +382,7 @@ class ComelecDeathReportWindow(QMainWindow):
                 c.rect(margin, y - 40, 50, 50, stroke=1, fill=0)
             
             c.setFont("Helvetica-Bold", 16)
-            c.drawCentredString(width / 2, y - 10, "OFFICIAL RELEASING LOGBOOK")
+            c.drawCentredString(width / 2, y - 10, "COMELEC DEATH REPORT")
             
             c.setFont("Helvetica", 9)
             gen_date = datetime.now().strftime("%B %d, %Y %I:%M %p")
@@ -503,7 +465,7 @@ class ComelecDeathReportWindow(QMainWindow):
                 y = height - margin
             
             c.setFont("Helvetica-Bold", 10)
-            c.drawString(margin, y, f"TOTAL NUMBER OF RELEASES: {self.table.rowCount()}")
+            c.drawString(margin, y, f"TOTAL NUMBER OF DEATH REPORTS: {self.table.rowCount()}")
             c.setFont("Helvetica", 9)
             c.drawString(width - margin - 200, y, "Verified by: ________________________")
 
