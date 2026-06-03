@@ -5,11 +5,11 @@ from PySide6.QtCore import Qt, QDateTime
 from PySide6.QtGui import QFont, QColor, QIcon
 import psycopg2
 from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import landscape
+from reportlab.lib.pagesizes import landscape, portrait
 from reportlab.lib.units import inch
 from reportlab.pdfbase import pdfmetrics
 from utilities.db_config import POSTGRES_CONFIG
-from datetime import datetime, timedelta
+from datetime import datetime, date, timedelta
 from utilities.audit_logger import AuditLogger
 from utilities.stylesheets import message_box_style, table_style, date_picker_style, combo_box_style
 
@@ -111,14 +111,14 @@ class ComelecDeathReportWindow(QMainWindow):
         self.start_date = QDateTimeEdit()
         self.start_date.setDateTime(QDateTime.currentDateTime().addDays(-7))
         self.start_date.setCalendarPopup(True)
-        self.start_date.setDisplayFormat("MM/dd/yyyy hh:mm AP")
+        self.start_date.setDisplayFormat("MM/dd/yyyy")
         self.start_date.setFixedWidth(145)
         self.start_date.setStyleSheet(date_picker_style)
 
         self.end_date = QDateTimeEdit()
         self.end_date.setDateTime(QDateTime.currentDateTime())
         self.end_date.setCalendarPopup(True)
-        self.end_date.setDisplayFormat("MM/dd/yyyy hh:mm AP")
+        self.end_date.setDisplayFormat("MM/dd/yyyy")
         self.end_date.setFixedWidth(145)
         self.end_date.setStyleSheet(date_picker_style)
 
@@ -167,7 +167,7 @@ class ComelecDeathReportWindow(QMainWindow):
         
         # Create table
         self.table = QTableWidget()
-        self.table.setColumnCount(7)
+        self.table.setColumnCount(4)
         self.table.setHorizontalHeaderLabels([
             "Name of Deceased", "Address", "Date of Birth", "Date of Death"
         ])
@@ -198,31 +198,13 @@ class ComelecDeathReportWindow(QMainWindow):
                 conn.close()
             except Exception as e:
                 print(f"Error closing connection: {str(e)}")
-        
-    # def load_document_types(self):
-    #     """Load unique document types for the type filter dropdown"""
-    #     conn = self.create_connection()
-    #     try:
-    #         cursor = conn.cursor()
-    #         cursor.execute("SELECT DISTINCT name FROM death_index ORDER BY name")
-    #         names = [row[0] for row in cursor.fetchall()]
-    #         self.name_filter.addItems(names)
-            
-    #         AuditLogger.log_action(
-    #             conn,
-    #             self.current_user,
-    #             "NAME_OF_DECEASED_LOADED",
-    #             {"count": len(names)}
-    #         )
-    #         conn.commit()
-    #     except psycopg2.Error as e:
-    #         print(f"Error loading document types: {str(e)}")
-    #     finally:
-    #         self.closeConnection(conn)
-    
+
     def load_data(self):
         """Load releasing log data with current filters"""
         conn = self.create_connection()
+        if not conn:
+            print("Failed to connect to database")
+            return
         try:
             cursor = conn.cursor()
             
@@ -257,8 +239,8 @@ class ComelecDeathReportWindow(QMainWindow):
                 "end_date": end_date.isoformat()
             })
             
-            # Order by timestamp desc
-            query += " ORDER BY date_of_death DESC"
+            # Order by timestamp asc
+            query += " ORDER BY date_of_death ASC"
             
             cursor.execute(query, params)
             rows = cursor.fetchall()
@@ -279,8 +261,8 @@ class ComelecDeathReportWindow(QMainWindow):
             self.table.setRowCount(len(rows))
             for i, row in enumerate(rows):
                 for j, value in enumerate(row):
-                    if isinstance(value, datetime):
-                        value = value.strftime("%Y-%m-%d %H:%M:%S")
+                    if isinstance(value, (datetime, date)):
+                        value = value.strftime("%B %#d, %Y")
                     item = QTableWidgetItem(str(value))
                     item.setFlags(item.flags() & ~Qt.ItemIsEditable)  # Make cell read-only
                     self.table.setItem(i, j, item)
@@ -304,6 +286,9 @@ class ComelecDeathReportWindow(QMainWindow):
     def apply_filters(self):
         """Apply the current filters and reload data"""
         conn = self.create_connection()
+        if not conn:
+            print("Failed to connect to database")
+            return
         try:
             AuditLogger.log_action(
                 conn,
@@ -325,6 +310,9 @@ class ComelecDeathReportWindow(QMainWindow):
     def reset_filters(self):
         """Reset all filters to default values"""
         conn = self.create_connection()
+        if not conn:
+            print("Failed to connect to database")
+            return
         try:
             AuditLogger.log_action(
                 conn,
@@ -369,32 +357,26 @@ class ComelecDeathReportWindow(QMainWindow):
             return
 
         try:
-            c = canvas.Canvas(path, pagesize=landscape(folio))
-            width, height = landscape(folio) 
+            c = canvas.Canvas(path, pagesize=portrait(folio))
+            width, height = portrait(folio)
             margin = 40
             y = height - margin
             
             # --- 1. Header & Branding Section ---
-            try:
-                # Relative path to your logo
-                c.drawImage("assets/logos/occr-logo.png", margin, y - 40, width=50, height=50, preserveAspectRatio=True, mask='auto')
-            except:
-                c.rect(margin, y - 40, 50, 50, stroke=1, fill=0)
-            
             c.setFont("Helvetica-Bold", 16)
-            c.drawCentredString(width / 2, y - 10, "COMELEC DEATH REPORT")
+            c.drawCentredString(width / 2, y - 10, "REGISTERED DEATH")
             
-            c.setFont("Helvetica", 9)
-            gen_date = datetime.now().strftime("%B %d, %Y %I:%M %p")
-            c.drawRightString(width - margin, y - 10, f"Generated: {gen_date}")
-            c.drawRightString(width - margin, y - 22, f"Report Period: {self.start_date.dateTime().toString('MM/dd/yyyy')} to {self.end_date.dateTime().toString('MM/dd/yyyy')}")
-            c.drawRightString(width - margin, y - 34, f"Generated by: {self.current_user}")
+            # Add subtitle with month and year
+            end_date_obj = self.end_date.dateTime().toPython()
+            month_year = end_date_obj.strftime("%B %Y")
+            c.setFont("Helvetica", 11)
+            c.drawCentredString(width / 2, y - 25, f"For the month of {month_year}")
 
-            y -= 65
+            y -= 45
             
             # --- 2. Table Configuration ---
             # Order: ID, Owner, Type, Copy, Received, Released, Timestamp
-            col_widths = [40, 160, 160, 60, 160, 120, 110] 
+            col_widths = [160, 160, 100, 100] 
             total_table_width = sum(col_widths)
             
             col_offsets = []
@@ -423,7 +405,7 @@ class ComelecDeathReportWindow(QMainWindow):
             for row in range(self.table.rowCount()):
                 # Calculate height needed
                 row_max_lines = 1
-                for col in [1, 2, 4]:
+                for col in [0, 1]:
                     text = self.table.item(row, col).text() if self.table.item(row, col) else ""
                     text_width = pdfmetrics.stringWidth(text, "Helvetica", 8)
                     lines = int(text_width / (col_widths[col] - 10)) + 1
@@ -446,7 +428,7 @@ class ComelecDeathReportWindow(QMainWindow):
                 start_y = y
                 for col in range(self.table.columnCount()):
                     text = self.table.item(row, col).text() if self.table.item(row, col) else ""
-                    if col in [1, 2, 4]: 
+                    if col in [0, 1]: 
                         self.draw_wrapped_text(c, text, col_offsets[col] + 5, y - 10, col_widths[col] - 10)
                     else:
                         c.drawString(col_offsets[col] + 5, y - 12, text)
@@ -466,8 +448,19 @@ class ComelecDeathReportWindow(QMainWindow):
             
             c.setFont("Helvetica-Bold", 10)
             c.drawString(margin, y, f"TOTAL NUMBER OF DEATH REPORTS: {self.table.rowCount()}")
+            
+            # Add signature block below total count
+            y -= 40
+            c.setFont("Helvetica-Bold", 10)
+            x_pos = width - margin - 150
+            c.drawString(x_pos, y, "JENNY F. ANG")
+            
+            # Draw underline under the name
+            name_width = pdfmetrics.stringWidth("JENNY F. ANG", "Helvetica-Bold", 10)
+            c.line(x_pos, y - 2, x_pos + name_width, y - 2)
+            
             c.setFont("Helvetica", 9)
-            c.drawString(width - margin - 200, y, "Verified by: ________________________")
+            c.drawString(x_pos, y - 12, "City Civil Registrar")
 
             c.save()
             box = QMessageBox()
@@ -490,6 +483,10 @@ class ComelecDeathReportWindow(QMainWindow):
     def closeEvent(self, event):
         """Handle window close event"""
         conn = self.create_connection()
+        if not conn:
+            event.ignore()
+            self.hide()
+            return
         try:
             AuditLogger.log_action(
                 conn,
