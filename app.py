@@ -1541,7 +1541,7 @@ class MainWindow(QMainWindow):
                 comelec_death_report.setWindowFlag(Qt.Window)
                 self.windows['comelec_death_report'] = comelec_death_report
                 
-            comelec_death_report.showMaximized()
+            comelec_death_report.show()
             comelec_death_report.raise_()
             comelec_death_report.activateWindow()
 

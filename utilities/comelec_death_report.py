@@ -81,28 +81,6 @@ class ComelecDeathReportWindow(QMainWindow):
         filter_layout = QVBoxLayout()
         filter_layout.setSpacing(5)
         
-        # Name of Deceased filter
-        name_layout = QHBoxLayout()
-        name_layout.setContentsMargins(0, 0, 0, 0)
-        self.name_filter = QLineEdit()
-        self.name_filter.setPlaceholderText("Name of Deceased")
-        self.name_filter.setFixedWidth(300)
-        name_layout.addWidget(self.name_filter)
-        name_layout.addStretch()
-        filter_layout.addLayout(name_layout)
-        
-        # Address filter
-        address_layout = QHBoxLayout()
-        address_layout.setContentsMargins(0, 0, 0, 0)
-        self.address_filter = QComboBox()
-        self.address_filter.setEditable(True)
-        self.address_filter.setPlaceholderText("Address")
-        self.address_filter.setFixedWidth(300)
-        self.address_filter.setStyleSheet(combo_box_style)
-        address_layout.addWidget(self.address_filter)
-        address_layout.addStretch()
-        filter_layout.addLayout(address_layout)
-        
         # Date range filter
         date_range_layout = QHBoxLayout()
         date_range_layout.setSpacing(3)
@@ -171,7 +149,7 @@ class ComelecDeathReportWindow(QMainWindow):
         self.table.setHorizontalHeaderLabels([
             "Name of Deceased", "Address", "Date of Birth", "Date of Death"
         ])
-        self.table.horizontalHeader().setStretchLastSection(True)
+        # self.table.horizontalHeader().setStretchLastSection(True)
         self.table.setSelectionBehavior(QTableWidget.SelectRows)
         self.table.setAlternatingRowColors(True)
         self.table.setStyleSheet(table_style)
@@ -212,25 +190,13 @@ class ComelecDeathReportWindow(QMainWindow):
             query = """
                 SELECT name, residence, date_of_birth, date_of_death
                 FROM death_index 
-                WHERE 1=1
+                WHERE age_years >= 18
+                AND residence ILIKE %s
+                AND date_of_reg BETWEEN %s AND %s
             """
-            params = []
+            params = ['%maasin%']
             filter_details = {}
             
-            # Document Owner filter
-            if self.name_filter.text():
-                query += " AND name ILIKE %s"
-                params.append(f"%{self.name_filter.text()}%")
-                filter_details["name"] = self.name_filter.text()
-            
-            # Document Type filter
-            if self.address_filter.currentText():
-                query += " AND residence = %s"
-                params.append(self.address_filter.currentText())
-                filter_details["residence"] = self.address_filter.currentText()
-            
-            # Date range filter
-            query += " AND date_of_death BETWEEN %s AND %s"
             start_date = self.start_date.dateTime().toPython()
             end_date = self.end_date.dateTime().toPython()
             params.extend([start_date, end_date])
@@ -239,8 +205,10 @@ class ComelecDeathReportWindow(QMainWindow):
                 "end_date": end_date.isoformat()
             })
             
-            # Order by timestamp asc
-            query += " ORDER BY date_of_death ASC"
+
+            
+            # Order by registration date asc
+            query += " ORDER BY date_of_reg ASC"
             
             cursor.execute(query, params)
             rows = cursor.fetchall()
@@ -260,7 +228,9 @@ class ComelecDeathReportWindow(QMainWindow):
             # Update table
             self.table.setRowCount(len(rows))
             for i, row in enumerate(rows):
-                for j, value in enumerate(row):
+                # Only populate the first 4 columns (name, residence, date_of_birth, date_of_death)
+                for j in range(min(len(row), self.table.columnCount())):
+                    value = row[j]
                     if isinstance(value, (datetime, date)):
                         value = value.strftime("%B %#d, %Y")
                     item = QTableWidgetItem(str(value))
@@ -295,8 +265,6 @@ class ComelecDeathReportWindow(QMainWindow):
                 self.current_user,
                 "COMELEC_REPORT_FILTERS_APPLIED",
                 {
-                    "name": self.name_filter.text(),
-                    "residence": self.address_filter.currentText(),
                     "start_date": self.start_date.dateTime().toPython().isoformat(),
                     "end_date": self.end_date.dateTime().toPython().isoformat()
                 }
@@ -324,8 +292,6 @@ class ComelecDeathReportWindow(QMainWindow):
         finally:
             self.closeConnection(conn)
             
-        self.name_filter.clear()
-        self.address_filter.setCurrentIndex(-1)
         self.start_date.setDateTime(QDateTime.currentDateTime().addDays(-7))
         self.end_date.setDateTime(QDateTime.currentDateTime())
         self.load_data()
