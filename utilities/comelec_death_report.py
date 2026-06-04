@@ -12,6 +12,10 @@ from utilities.db_config import POSTGRES_CONFIG
 from datetime import datetime, date, timedelta
 from utilities.audit_logger import AuditLogger
 from utilities.stylesheets import message_box_style, table_style, date_picker_style, combo_box_style
+import os
+import tempfile
+import webbrowser
+from pathlib import Path
 
 folio = (8.5 * inch, 13 * inch)
 
@@ -134,6 +138,12 @@ class ComelecDeathReportWindow(QMainWindow):
         self.export_pdf_button.setObjectName("filter")  # Use same style as filter button
         self.export_pdf_button.clicked.connect(self.export_pdf)
         button_layout.addWidget(self.export_pdf_button)
+
+        # Transmittal Letter button
+        self.transmittal_button = QPushButton("Transmittal Letter")
+        self.transmittal_button.setObjectName("filter")  # Use same style as filter button
+        self.transmittal_button.clicked.connect(self.generate_transmittal_letter)
+        button_layout.addWidget(self.transmittal_button)
         
         button_layout.addStretch()
         
@@ -445,6 +455,58 @@ class ComelecDeathReportWindow(QMainWindow):
             box.setStandardButtons(QMessageBox.Ok)
             box.setStyleSheet(message_box_style)
             box.exec()
+
+    def generate_transmittal_letter(self):
+        """Generate and open the transmittal letter in browser with dynamic data"""
+        try:
+            # Get the end date for month/year
+            end_date_obj = self.end_date.dateTime().toPython()
+            report_month_year = end_date_obj.strftime("%B %Y")
+            letter_date = datetime.now().strftime("%B %d, %Y")
+            total_deaths = self.table.rowCount()
+            
+            # Get logo paths using file:// URIs
+            project_root = Path(__file__).resolve().parent.parent
+            logos_dir = project_root / 'assets/logos'
+            
+            if logos_dir.exists():
+                city_logo_path = (logos_dir / 'city-logo.png').as_uri()
+                occr_logo_path = (logos_dir / 'occr-logo.png').as_uri()
+            else:
+                city_logo_path = 'assets/logos/city-logo.png'
+                occr_logo_path = 'assets/logos/occr-logo.png'
+            
+            # Read the HTML template
+            template_path = project_root / 'templates/comelec_transmittal.html'
+            if not template_path.exists():
+                QMessageBox.warning(self, "Error", f"Template file not found: {template_path}")
+                return
+            
+            with open(template_path, 'r', encoding='utf-8') as f:
+                html_content = f.read()
+            
+            # Replace placeholders with dynamic data
+            html_content = html_content.replace("{{ letter_date or '' }}", letter_date)
+            html_content = html_content.replace("{{ report_month_year or '' }}", report_month_year)
+            html_content = html_content.replace("{{ total_deaths or '' }}", str(total_deaths))
+            html_content = html_content.replace('{{ city_logo_path }}', city_logo_path)
+            html_content = html_content.replace('{{ occr_logo_path }}', occr_logo_path)
+            
+            # Write to a temporary file
+            tmp = tempfile.NamedTemporaryFile(delete=False, suffix='.html', prefix='comelec_transmittal_')
+            try:
+                tmp.write(html_content.encode('utf-8'))
+                tmp.flush()
+                tmp_path = tmp.name
+            finally:
+                tmp.close()
+            
+            # Open in default browser
+            p = Path(tmp_path).resolve()
+            webbrowser.open(p.as_uri())
+            
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Failed to generate transmittal letter:\n{str(e)}")
 
     def closeEvent(self, event):
         """Handle window close event"""

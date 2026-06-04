@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Death Notification Letter - Office of the City Civil Registrar</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+
+      .page-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 20px;
+      }
+
+      .certificate {
+        width: 210mm;
+        height: 297mm;
+        background: white;
+        padding: 15mm;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        box-sizing: border-box;
+        overflow: hidden;
+        position: relative;
+      }
+
+      /* HEADER */
+      .header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        gap: 20px;
+        border-bottom: 2px solid #000;
+        padding-bottom: 15px;
+        margin-bottom: 30px;
+        position: relative;
+      }
+
+      .header h1 {
+        font-size: 12px;
+        margin: 5px 0;
+      }
+
+      .office-title {
+        font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+        font-size: 20px !important;
+      }
+
+      .header h2 {
+        font-size: 12px;
+        font-weight: normal;
+        margin: 3px 0;
+      }
+
+      /* BODY */
+      .date-field {
+        text-align: left;
+        margin-bottom: 30px;
+        font-size: 12px;
+      }
+
+      .date-field input {
+        border: none;
+        width: 200px;
+        text-align: left;
+        font-weight: bold;
+        height: 18px;
+        font-size: 12px;
+      }
+
+      .addressee-block {
+        margin-bottom: 25px;
+        font-size: 12px;
+        line-height: 1.8;
+      }
+
+      .addressee-block .name {
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+      .salutation {
+        margin-bottom: 20px;
+        font-size: 12px;
+      }
+
+      .body-text {
+        font-size: 12px;
+        line-height: 1.9;
+        text-align: justify;
+        text-indent: 5em;
+        margin-bottom: 15px;
+        word-spacing: 2px;
+      }
+
+      .body-text input {
+        border: none;
+        font-size: 12px;
+        font-weight: bold;
+        text-align: center;
+        height: 18px;
+        vertical-align: middle;
+      }
+
+      .body-text .input-count {
+        width: 60px;
+      }
+
+      .body-text .input-month-year {
+        width: 140px;
+      }
+
+      .closing {
+        margin-top: 25px;
+        font-size: 12px;
+      }
+
+      .signature-section {
+        margin-top: 30px;
+        font-size: 12px;
+      }
+
+      .registrar-block {
+        margin-top: 10px;
+      }
+
+      .registrar-name {
+        font-size: 14px;
+        font-weight: bold;
+        text-decoration: underline;
+        margin-bottom: 3px;
+      }
+
+      .registrar-title {
+        font-size: 12px;
+        text-transform: uppercase;
+      }
+
+      /* FOOTER */
+      .footer {
+        position: absolute;
+        bottom: 15mm;
+        left: 15mm;
+        right: 15mm;
+        border-top: 2px solid #000;
+        padding-top: 6px;
+        text-align: center;
+        font-size: 10px;
+      }
+
+
+      /* Print */
+      @page {
+        size: A4 portrait;
+        margin: 0;
+      }
+
+      @media print {
+        html, body {
+          width: 210mm;
+          height: 297mm;
+          margin: 0;
+          padding: 0;
+          background: white;
+        }
+
+        .page-wrapper {
+          padding: 0;
+          display: block;
+        }
+
+        .certificate {
+          width: 210mm;
+          height: 297mm;
+          padding: 15mm;
+          box-shadow: none;
+          margin: 0;
+          box-sizing: border-box;
+          page-break-after: always;
+          background: white;
+          overflow: visible;
+        }
+
+        input[type="text"] {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+          color: #000;
+          background: transparent !important;
+          box-shadow: none !important;
+          -webkit-appearance: none;
+        }
+
+        .toggle-docstamp {
+          display: none;
+        }
+
+        .docstamp-container {
+          position: absolute;
+          z-index: 10;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrapper">
+      <div class="certificate">
+
+        <!-- HEADER -->
+        <div class="header">
+          <div>
+            <img src="{{ city_logo_path }}" alt="City Logo" width="80" />
+          </div>
+          <div>
+            <h1>Republic of the Philippines</h1>
+            <h2>Province of Southern Leyte</h2>
+            <h2><strong>CITY OF MAASIN</strong></h2>
+            <h1 class="office-title">OFFICE OF THE CITY CIVIL REGISTRAR</h1>
+          </div>
+          <div>
+            <img src="{{ occr_logo_path }}" alt="Office Logo" width="80" />
+          </div>
+        </div>
+
+        <!-- DATE -->
+        <div class="date-field">
+          <input type="text" id="letterDate" value="{{ letter_date or '' }}" />
+        </div>
+
+        <!-- ADDRESSEE -->
+        <div class="addressee-block">
+          <div class="name">ATTY. DON JOSHUA D. MARGATE</div>
+          <div>Election Officer IV</div>
+          <div>Office of the City Election Officer</div>
+          <div>Commission on Elections</div>
+          <div>Maasin City, So. Leyte</div>
+        </div>
+
+        <!-- SALUTATION -->
+        <div class="salutation">
+          Dear Atty. Margate,
+        </div>
+
+        <!-- BODY -->
+        <div class="body-text">
+          Please be informed that for the month of
+          <input
+            type="text"
+            class="input-month-year"
+            id="reportMonthYear"
+            value="{{ report_month_year or '' }}"
+            placeholder="e.g. April 2026"
+          />,
+          this office registered
+          <input
+            type="text"
+            class="input-count"
+            id="totalDeaths"
+            value="{{ total_deaths or '' }}"
+          />
+          deaths who are Maasin City residents as reflected in their death certificate.
+          Attached herewith is the complete list of registered death for your reference.
+        </div>
+
+        <div class="body-text" style="text-indent: 0;">
+          For your information and guidance.
+        </div>
+
+        <!-- CLOSING -->
+        <div class="closing">
+          <p>Very truly yours,</p>
+        </div>
+
+        <!-- SIGNATURE -->
+        <div class="signature-section">
+          <div style="margin-top: 50px;"></div>
+          <div class="registrar-block">
+            <div class="registrar-name">JENNY F. ANG</div>
+            <div class="registrar-title">City Civil Registrar</div>
+          </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+          <strong>Maasin City Hall, Tunga-tunga, Maasin City, Southern Leyte, Philippines</strong><br />
+          &#9993; ccromaasincity@gmail.com &nbsp;|&nbsp; &#9990; 053-570-0674
+        </div>
+
+
+      </div><!-- .certificate -->
+    </div><!-- .page-wrapper -->
+
+    <script>
+      const MIN_FONT_SIZE = 8;
+      const MAX_FONT_SIZE = 12;
+
+      function adjustFontSize(element) {
+        let fontSize = MAX_FONT_SIZE;
+        element.style.fontSize = fontSize + 'px';
+        while (element.scrollWidth > element.offsetWidth && fontSize > MIN_FONT_SIZE) {
+          fontSize -= 0.5;
+          element.style.fontSize = fontSize + 'px';
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        const allInputs = document.querySelectorAll('input[type="text"]');
+        allInputs.forEach(el => {
+          el.addEventListener('input', function () { adjustFontSize(this); });
+          adjustFontSize(el);
+        });
+      });
+    </script>
+  </body>
+</html>
