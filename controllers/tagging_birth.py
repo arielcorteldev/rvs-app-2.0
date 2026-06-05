@@ -138,7 +138,7 @@ class BirthTaggingWindow(QWidget):
         self.pdf_list.setFixedWidth(750)
         self.pdf_list.setMaximumHeight(340)
         self.pdf_list.setIconSize(QSize(100, 140))
-        self.pdf_list.itemClicked.connect(self.show_preview)
+        # self.pdf_list.itemClicked.connect(self.show_preview)
         self.pdf_list.setStyleSheet("""
             QListWidget {
                 background-color: #FFFFFF;
