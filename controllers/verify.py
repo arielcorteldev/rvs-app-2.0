@@ -254,7 +254,7 @@ class VerifyWindowBase(QMainWindow):
     
     def normalize_path(self, path):
         """Normalize file path by converting all slashes to forward slashes."""
-        return path.replace('\\', '/')
+        return path.replace('\\', '/').replace('//', '/')
 
     def open_auto_form(self):
         conn = self.create_connection()
@@ -285,28 +285,62 @@ class VerifyWindowBase(QMainWindow):
                 box.exec()
                 return
 
+            # Get search term and type to pinpoint the correct row within a multi-entry file
+            search_term = self.ui.search_textEdit.text().strip()
+            search_type = self.ui.search_by_comboBox.currentText()
+
             # Get the record data from database
             cursor = conn.cursor()
             file_path = os.path.join(self.search_path, regyear, selected_file)
             normalized_path = self.normalize_path(file_path)
             
             print(f"\nSearching for record with file path: {normalized_path}")
+            print(f"Search term: {search_term}, Search type: {search_type}")
             
             record_dict = {}
             form_type = ""
 
+            # Path match condition reused across all queries
+            path_condition = """
+                (replace(replace(file_path, '\\', '/'), '//', '/') = %s
+                 OR file_path LIKE %s)
+            """
+            path_params = (normalized_path, f'%{selected_file}')
+
             # Determine which table to query based on window type and fetch data into a dictionary
             if isinstance(self, VerifyBirthWindow):
-                table = "birth_index"
                 form_type = "Birth"
-                cursor.execute("""
+
+                if search_type == "Name":
+                    filter_clause = "AND name ILIKE %s"
+                    filter_params = (f'%{search_term}%',)
+                elif search_type == "Date":
+                    try:
+                        from dateutil import parser as dateparser
+                        parsed_date = dateparser.parse(search_term).strftime('%Y-%m-%d')
+                        filter_clause = "AND date_of_birth = %s"
+                        filter_params = (parsed_date,)
+                    except Exception:
+                        filter_clause = ""
+                        filter_params = ()
+                    # filter_clause = "AND date_of_birth::text LIKE %s"
+                    # filter_params = (f'%{search_term}%',)
+                elif search_type == "Reg No.":
+                    filter_clause = "AND reg_no ILIKE %s"
+                    filter_params = (f'%{search_term}%',)
+                else:
+                    filter_clause = ""
+                    filter_params = ()
+
+                cursor.execute(f"""
                     SELECT name, date_of_birth, sex, page_no, book_no, reg_no, 
                            date_of_reg, place_of_birth, name_of_mother, nationality_mother,
                            name_of_father, nationality_father, parents_marriage_date,
                            parents_marriage_place, attendant, remarks
                     FROM birth_index 
-                    WHERE normalize_path(file_path) = %s
-                """, (normalized_path,))
+                    WHERE {path_condition} {filter_clause}
+                    LIMIT 1
+                """, path_params + filter_params)
                 record = cursor.fetchone()
                 if record:
                     (name, dob, sex, page_no, book_no, reg_no, dor, pob, mother, mother_nat, father, father_nat, parents_marriage_date, parents_marriage_place, attendant, remarks) = record
@@ -330,15 +364,37 @@ class VerifyWindowBase(QMainWindow):
                     }
 
             elif isinstance(self, VerifyDeathWindow):
-                table = "death_index"
                 form_type = "Death"
-                cursor.execute("""
+
+                if search_type == "Name":
+                    filter_clause = "AND name ILIKE %s"
+                    filter_params = (f'%{search_term}%',)
+                elif search_type == "Date":
+                    try:
+                        from dateutil import parser as dateparser
+                        parsed_date = dateparser.parse(search_term).strftime('%Y-%m-%d')
+                        filter_clause = "AND date_of_death = %s"
+                        filter_params = (parsed_date,)
+                    except Exception:
+                        filter_clause = ""
+                        filter_params = ()
+                    # filter_clause = "AND date_of_death::text LIKE %s"
+                    # filter_params = (f'%{search_term}%',)
+                elif search_type == "Reg No.":
+                    filter_clause = "AND reg_no ILIKE %s"
+                    filter_params = (f'%{search_term}%',)
+                else:
+                    filter_clause = ""
+                    filter_params = ()
+
+                cursor.execute(f"""
                     SELECT name, date_of_death, sex, page_no, book_no, reg_no,
                            date_of_reg, age_years, civil_status, nationality, place_of_death,
                            cause_of_death, remarks
                     FROM death_index 
-                    WHERE normalize_path(file_path) = %s
-                """, (normalized_path,))
+                    WHERE {path_condition} {filter_clause}
+                    LIMIT 1
+                """, path_params + filter_params)
                 record = cursor.fetchone()
                 if record:
                     (name, dod, sex, page_no, book_no, reg_no, dor, age, civil_status, nationality, pod, cod, remarks) = record
@@ -357,17 +413,40 @@ class VerifyWindowBase(QMainWindow):
                         'cause_of_death': cod,
                         'remarks': remarks
                     }
+
             elif isinstance(self, VerifyMarriageWindow):
-                table = "marriage_index"
                 form_type = "Marriage"
-                cursor.execute("""
+
+                if search_type == "Name":
+                    filter_clause = "AND (husband_name ILIKE %s OR wife_name ILIKE %s)"
+                    filter_params = (f'%{search_term}%', f'%{search_term}%')
+                elif search_type == "Date":
+                    try:
+                        from dateutil import parser as dateparser
+                        parsed_date = dateparser.parse(search_term).strftime('%Y-%m-%d')
+                        filter_clause = "AND date_of_marriage = %s"
+                        filter_params = (parsed_date,)
+                    except Exception:
+                        filter_clause = ""
+                        filter_params = ()
+                    # filter_clause = "AND date_of_marriage::text LIKE %s"
+                    # filter_params = (f'%{search_term}%',)
+                elif search_type == "Reg No.":
+                    filter_clause = "AND reg_no ILIKE %s"
+                    filter_params = (f'%{search_term}%',)
+                else:
+                    filter_clause = ""
+                    filter_params = ()
+
+                cursor.execute(f"""
                     SELECT husband_name, wife_name, date_of_marriage, page_no, book_no, reg_no,
                            husband_age, wife_age, husb_nationality, wife_nationality,
                            husb_civil_status, wife_civil_status, husb_mother, wife_mother,
                            husb_father, wife_father, date_of_reg, place_of_marriage, remarks
                     FROM marriage_index 
-                    WHERE normalize_path(file_path) = %s
-                """, (normalized_path,))
+                    WHERE {path_condition} {filter_clause}
+                    LIMIT 1
+                """, path_params + filter_params)
                 record = cursor.fetchone()
                 if record:
                     (husband, wife, dom, page_no, book_no, reg_no, husband_age, wife_age, husb_nat, wife_nat, husb_civil, wife_civil, husb_mother, wife_mother, husb_father, wife_father, dor, pom, remarks) = record
@@ -509,15 +588,24 @@ class VerifyWindowBase(QMainWindow):
             if isinstance(self, VerifyBirthWindow):
                 table_name = "birth_index"
                 form_type = "Birth"
-                cursor.execute("SELECT reg_no FROM birth_index WHERE normalize_path(file_path) = %s", (normalized_path,))
+                cursor.execute(
+                    "SELECT reg_no FROM birth_index WHERE replace(replace(file_path, '\\', '/'), '//', '/') = %s OR file_path LIKE %s LIMIT 1",
+                    (normalized_path, f'%{selected_file}')
+                )
             elif isinstance(self, VerifyDeathWindow):
                 table_name = "death_index"
                 form_type = "Death"
-                cursor.execute("SELECT reg_no FROM death_index WHERE normalize_path(file_path) = %s", (normalized_path,))
+                cursor.execute(
+                    "SELECT reg_no FROM death_index WHERE replace(replace(file_path, '\\', '/'), '//', '/') = %s OR file_path LIKE %s LIMIT 1",
+                    (normalized_path, f'%{selected_file}')
+                )
             elif isinstance(self, VerifyMarriageWindow):
                 table_name = "marriage_index"
                 form_type = "Marriage"
-                cursor.execute("SELECT reg_no FROM marriage_index WHERE normalize_path(file_path) = %s", (normalized_path,))
+                cursor.execute(
+                    "SELECT reg_no FROM marriage_index WHERE replace(replace(file_path, '\\', '/'), '//', '/') = %s OR file_path LIKE %s LIMIT 1",
+                    (normalized_path, f'%{selected_file}')
+                )
             else:
                 raise ValueError("Unknown window type")
 

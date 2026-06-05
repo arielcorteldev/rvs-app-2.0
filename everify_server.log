@@ -513,3 +513,67 @@
  * Running on http://127.0.0.1:5000
  * Running on http://192.168.254.108:5000
 [2026-06-04 15:51:21,153] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2026-06-05 13:39:47,854] DEBUG in connectionpool: Starting new HTTPS connection (1): api.ipify.org:443
+[2026-06-05 13:39:48,762] DEBUG in connectionpool: https://api.ipify.org:443 "GET /?format=text HTTP/1.1" 200 13
+[2026-06-05 13:39:48,764] INFO in app: Server Public IP: 216.247.25.46
+[2026-06-05 13:39:49,455] DEBUG in __init__: CACHEDIR=C:\Users\ThisPC\.matplotlib
+[2026-06-05 13:39:49,459] DEBUG in font_manager: Using fontManager instance from C:\Users\ThisPC\.matplotlib\fontlist-v390.json
+[2026-06-05 13:39:50,117] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.254.108:5000
+[2026-06-05 13:39:50,118] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2026-06-05 13:43:45,154] DEBUG in connectionpool: Starting new HTTPS connection (1): api.ipify.org:443
+[2026-06-05 13:43:45,976] DEBUG in connectionpool: https://api.ipify.org:443 "GET /?format=text HTTP/1.1" 200 13
+[2026-06-05 13:43:45,978] INFO in app: Server Public IP: 216.247.25.46
+[2026-06-05 13:43:46,199] DEBUG in __init__: CACHEDIR=C:\Users\ThisPC\.matplotlib
+[2026-06-05 13:43:46,202] DEBUG in font_manager: Using fontManager instance from C:\Users\ThisPC\.matplotlib\fontlist-v390.json
+[2026-06-05 13:43:46,588] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.254.108:5000
+[2026-06-05 13:43:46,588] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2026-06-05 14:06:07,204] WARNING in app: Token expiry not set — assuming token is expired.
+[2026-06-05 14:06:07,206] DEBUG in connectionpool: Starting new HTTPS connection (1): ws.everify.gov.ph:443
+[2026-06-05 14:06:08,096] DEBUG in connectionpool: https://ws.everify.gov.ph:443 "POST /api/auth HTTP/1.1" 200 None
+[2026-06-05 14:06:08,097] DEBUG in app: Token response data: {'data': {'access_token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3dzLmV2ZXJpZnkuZ292LnBoIiwic3ViIjoiMjY0IiwianRpIjoiNmEyMjY3NGZkY2U2MiIsImlhdCI6MTc4MDYzOTU2Ny45MDQ4MDcsIm5iZiI6MTc4MDYzOTU2Ny45MDQ4MDcsImV4cCI6MTc4MDY0MTM2Ny45MDQ4MDd9.35LEFr-u9LEt-O5v2SmuD1cQ2CftdPuvsRUwZIf4oXA', 'token_type': 'Bearer', 'expires_at': '1780641367'}}
+[2026-06-05 14:06:08,097] INFO in app: Access token refreshed successfully. New expiry: 1780641367
+[2026-06-05 14:24:58,070] DEBUG in connectionpool: Starting new HTTPS connection (1): api.ipify.org:443
+[2026-06-05 14:24:58,862] DEBUG in connectionpool: https://api.ipify.org:443 "GET /?format=text HTTP/1.1" 200 13
+[2026-06-05 14:24:58,864] INFO in app: Server Public IP: 216.247.25.46
+[2026-06-05 14:24:59,134] DEBUG in __init__: CACHEDIR=C:\Users\ThisPC\.matplotlib
+[2026-06-05 14:24:59,137] DEBUG in font_manager: Using fontManager instance from C:\Users\ThisPC\.matplotlib\fontlist-v390.json
+[2026-06-05 14:24:59,572] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.254.108:5000
+[2026-06-05 14:24:59,573] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2026-06-05 14:33:03,857] DEBUG in connectionpool: Starting new HTTPS connection (1): api.ipify.org:443
+[2026-06-05 14:33:05,707] DEBUG in connectionpool: https://api.ipify.org:443 "GET /?format=text HTTP/1.1" 200 13
+[2026-06-05 14:33:05,708] INFO in app: Server Public IP: 216.247.25.46
+[2026-06-05 14:33:05,964] DEBUG in __init__: CACHEDIR=C:\Users\ThisPC\.matplotlib
+[2026-06-05 14:33:05,966] DEBUG in font_manager: Using fontManager instance from C:\Users\ThisPC\.matplotlib\fontlist-v390.json
+[2026-06-05 14:33:06,375] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.254.108:5000
+[2026-06-05 14:33:06,376] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2026-06-05 14:46:53,414] DEBUG in connectionpool: Starting new HTTPS connection (1): api.ipify.org:443
+[2026-06-05 14:46:59,487] DEBUG in connectionpool: https://api.ipify.org:443 "GET /?format=text HTTP/1.1" 200 13
+[2026-06-05 14:46:59,488] INFO in app: Server Public IP: 216.247.25.46
+[2026-06-05 14:46:59,796] DEBUG in __init__: CACHEDIR=C:\Users\ThisPC\.matplotlib
+[2026-06-05 14:46:59,798] DEBUG in font_manager: Using fontManager instance from C:\Users\ThisPC\.matplotlib\fontlist-v390.json
+[2026-06-05 14:47:00,289] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.254.108:5000
+[2026-06-05 14:47:00,290] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2026-06-05 14:49:33,057] DEBUG in connectionpool: Starting new HTTPS connection (1): api.ipify.org:443
+[2026-06-05 14:49:34,714] INFO in app: Server Public IP: Error: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+[2026-06-05 14:49:34,957] DEBUG in __init__: CACHEDIR=C:\Users\ThisPC\.matplotlib
+[2026-06-05 14:49:34,960] DEBUG in font_manager: Using fontManager instance from C:\Users\ThisPC\.matplotlib\fontlist-v390.json
+[2026-06-05 14:49:35,364] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.254.108:5000
+[2026-06-05 14:49:35,364] INFO in _internal: [33mPress CTRL+C to quit[0m
