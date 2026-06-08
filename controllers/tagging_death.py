@@ -15,6 +15,7 @@ from PySide6.QtWebEngineWidgets import QWebEngineView
 from utilities.stylesheets import button_style, date_picker_style, combo_box_style, message_box_style
 from utilities.pdfviewer import PDFViewer
 from utilities.audit_logger import AuditLogger
+from utilities.death_entry_card import DeathEntryCard
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from utilities.db_config import POSTGRES_CONFIG
@@ -56,12 +57,6 @@ class DeathTaggingWindow(QWidget):
                 color: #9E9E9E;
                 border: 1px solid #CCCCCC;
             }
-            QWidget#form_area[saved="true"] {
-                background-color: #e0e7ff;
-            }
-            QWidget#form_area[saved="true"] QLabel {
-                background-color: #e0e7ff;
-            }
             QComboBox {
                 font-weight: bold;
             }
@@ -80,6 +75,7 @@ class DeathTaggingWindow(QWidget):
         self.settings = QSettings("OCCR", "RVS")
         self.pending_select_pdf = None
         self._initial_show = True
+        self._cards = []
 
         self.init_ui()
     
@@ -111,422 +107,25 @@ class DeathTaggingWindow(QWidget):
         self.folder_button.clicked.connect(self.select_folder)
         main_layout.addWidget(self.folder_button)
 
-        # Create a scroll area for the form
-        scroll_area = QScrollArea()
-        scroll_area.setWidgetResizable(True)
-        scroll_area.setFixedWidth(750)
-        
-        # Create a widget to hold the form
-        form_widget = QWidget()
-        form_widget.setObjectName("form_area")
-        self.form_area = form_widget
-        form_layout = QVBoxLayout()
-        form_layout.setAlignment(Qt.AlignTop)
-        form_widget.setLayout(form_layout)
+        # ── Card scroll area ──────────────────────────────────────────── #
+        self._cards_scroll = QScrollArea()
+        self._cards_scroll.setWidgetResizable(True)
+        self._cards_scroll.setFixedWidth(750)
+        self._cards_scroll.setMinimumHeight(300)
 
-        # Create horizontal layouts for grouped fields
-        # Page No, Book No, Registry No
-        reg_info_layout = QHBoxLayout()
-        reg_info_layout.setSpacing(10)
-        
-        page_no_container = QVBoxLayout()
-        self.page_no_input = QLineEdit()
-        self.page_no_input.setPlaceholderText("Page No.")
-        self.page_no_input.setFixedWidth(220)
-        page_no_container.addWidget(self._create_label("Page No.:"))
-        page_no_container.addWidget(self.page_no_input)
-        reg_info_layout.addLayout(page_no_container)
+        self._cards_container = QWidget()
+        self._cards_layout = QVBoxLayout(self._cards_container)
+        self._cards_layout.setAlignment(Qt.AlignTop)
+        self._cards_layout.setSpacing(10)
+        self._cards_scroll.setWidget(self._cards_container)
+        main_layout.addWidget(self._cards_scroll)
 
-        book_no_container = QVBoxLayout()
-        self.book_no_input = QLineEdit()
-        self.book_no_input.setPlaceholderText("Book No.")
-        self.book_no_input.setFixedWidth(220)
-        book_no_container.addWidget(self._create_label("Book No.:"))
-        book_no_container.addWidget(self.book_no_input)
-        reg_info_layout.addLayout(book_no_container)
-
-        reg_no_container = QVBoxLayout()
-        self.reg_no_input = QLineEdit()
-        self.reg_no_input.setPlaceholderText("Registry No.")
-        self.reg_no_input.setFixedWidth(220)
-        reg_no_container.addWidget(self._create_label("Registry No.:"))
-        reg_no_container.addWidget(self.reg_no_input)
-        reg_info_layout.addLayout(reg_no_container)
-        form_layout.addLayout(reg_info_layout)
-
-        # Name and Sex
-        name_sex_layout = QHBoxLayout()
-        name_sex_layout.setSpacing(10)
-
-        name_container = QVBoxLayout()
-        self.name_input = QLineEdit()
-        self.name_input.setPlaceholderText("Name")
-        self.name_input.setFixedWidth(400)
-        name_container.addWidget(self._create_label("Name:"))
-        name_container.addWidget(self.name_input)
-        name_sex_layout.addLayout(name_container)
-
-        sex_container = QVBoxLayout()
-        self.sex_combo = QComboBox()
-        self.sex_combo.addItems(["MALE", "FEMALE", "UNKNOWN"])
-        self.sex_combo.setFixedWidth(200)
-        self.sex_combo.setStyleSheet(combo_box_style)
-        sex_container.addWidget(self._create_label("Sex:"))
-        sex_container.addWidget(self.sex_combo)
-        name_sex_layout.addLayout(sex_container)
-
-        form_layout.addLayout(name_sex_layout)
-
-        # Date of Death, Date of Birth and Age
-        date_age_layout = QHBoxLayout()
-        date_age_layout.setSpacing(10)
-
-        death_date_container = QVBoxLayout()
-        death_date_label_layout = QHBoxLayout()
-        death_date_label_layout.setSpacing(5)
-        death_date_label_layout.addWidget(self._create_label("Date of Death:"))
-        self.has_date_of_death_check = QCheckBox("Has Date")
-        self.has_date_of_death_check.setChecked(True)
-        self.has_date_of_death_check.setStyleSheet("""
-            QCheckBox::indicator:unchecked {
-                background-color: #FFFFFF;
-                border: 1px solid #D1D0D0;
-            }
-            QCheckBox::indicator:unchecked:hover {
-                background-color: #F5F5F5;
-                border: 1px solid #999999;
-            }
-            QCheckBox::indicator:checked {
-                background-color: #ce305e;
-                border: 1px solid #ce305e;
-            }i
-            QCheckBox::indicator:checked:hover {
-                background-color: #a8224a;
-                border: 1px solid #a8224a;
-            }
-        """)
-        self.has_date_of_death_check.stateChanged.connect(lambda: self.date_of_death_input.setEnabled(self.has_date_of_death_check.isChecked()))
-        death_date_label_layout.addWidget(self.has_date_of_death_check)
-        death_date_label_layout.addStretch()
-        death_date_container.addLayout(death_date_label_layout)
-        self.date_of_death_input = QDateEdit()
-        self.date_of_death_input.setCalendarPopup(True)
-        self.date_of_death_input.setDate(QDate.currentDate())
-        self.date_of_death_input.setFixedWidth(150)
-        self.date_of_death_input.setStyleSheet(date_picker_style)
-        self.date_of_death_input.setEnabled(True)
-        death_date_container.addWidget(self.date_of_death_input)
-        date_age_layout.addLayout(death_date_container)
-
-        birth_date_container = QVBoxLayout()
-        birth_date_label_layout = QHBoxLayout()
-        birth_date_label_layout.setSpacing(5)
-        birth_date_label_layout.addWidget(self._create_label("Date of Birth:"))
-        self.has_date_of_birth_check = QCheckBox("Has Date")
-        self.has_date_of_birth_check.setChecked(True)
-        self.has_date_of_birth_check.setStyleSheet("""
-            QCheckBox::indicator:unchecked {
-                background-color: #FFFFFF;
-                border: 1px solid #D1D0D0;
-            }
-            QCheckBox::indicator:unchecked:hover {
-                background-color: #F5F5F5;
-                border: 1px solid #999999;
-            }
-            QCheckBox::indicator:checked {
-                background-color: #ce305e;
-                border: 1px solid #ce305e;
-            }
-            QCheckBox::indicator:checked:hover {
-                background-color: #a8224a;
-                border: 1px solid #a8224a;
-            }
-        """)
-        self.has_date_of_birth_check.stateChanged.connect(lambda: self.date_of_birth_input.setEnabled(self.has_date_of_birth_check.isChecked()))
-        birth_date_label_layout.addWidget(self.has_date_of_birth_check)
-        birth_date_label_layout.addStretch()
-        birth_date_container.addLayout(birth_date_label_layout)
-        self.date_of_birth_input = QDateEdit()
-        self.date_of_birth_input.setCalendarPopup(True)
-        self.date_of_birth_input.setDate(QDate.currentDate())
-        self.date_of_birth_input.setFixedWidth(150)
-        self.date_of_birth_input.setStyleSheet(date_picker_style)
-        self.date_of_birth_input.setEnabled(True)
-        birth_date_container.addWidget(self.date_of_birth_input)
-        date_age_layout.addLayout(birth_date_container)
-
-        age_container = QVBoxLayout()
-        self.age_input = QLineEdit()
-        self.age_input.setPlaceholderText("Age (Years)")
-        self.age_input.setFixedWidth(70)
-        age_container.addWidget(self._create_label("Age (Years):"))
-        age_container.addWidget(self.age_input)
-        date_age_layout.addLayout(age_container)    
-
-        age_months_container = QVBoxLayout()
-        self.age_months_input = QLineEdit()
-        self.age_months_input.setPlaceholderText("Months")
-        self.age_months_input.setFixedWidth(70)
-        age_months_container.addWidget(self._create_label("Months:"))
-        age_months_container.addWidget(self.age_months_input)
-        date_age_layout.addLayout(age_months_container)
-
-        age_days_container = QVBoxLayout()
-        self.age_days_input = QLineEdit()
-        self.age_days_input.setPlaceholderText("Days")
-        self.age_days_input.setFixedWidth(70)
-        age_days_container.addWidget(self._create_label("Days:"))
-        age_days_container.addWidget(self.age_days_input)
-        date_age_layout.addLayout(age_days_container)
-
-        age_hours_container = QVBoxLayout()
-        self.age_hours_input = QLineEdit()
-        self.age_hours_input.setPlaceholderText("Hours")
-        self.age_hours_input.setFixedWidth(70)
-        age_hours_container.addWidget(self._create_label("Hours:"))
-        age_hours_container.addWidget(self.age_hours_input)
-        date_age_layout.addLayout(age_hours_container)
-
-        age_mins_container = QVBoxLayout()
-        self.age_mins_input = QLineEdit()
-        self.age_mins_input.setPlaceholderText("Minutes")
-        self.age_mins_input.setFixedWidth(70)
-        age_mins_container.addWidget(self._create_label("Minutes:"))
-        age_mins_container.addWidget(self.age_mins_input)
-        date_age_layout.addLayout(age_mins_container)
-
-        form_layout.addLayout(date_age_layout)
-
-        # Place of Death
-        death_info_layout = QHBoxLayout()
-        death_info_layout.setSpacing(10)    
-
-        death_place_container = QVBoxLayout()
-        self.death_place_input = QComboBox()
-        self.death_place_input.setEditable(True)
-        self.death_place_input.addItems([
-            "SALVACION OPPUS YÑIGUEZ MEMORIAL PROVINCIAL HOSPITAL",
-            "MAASIN MEDCITY HOSPITAL",
-            "LIVINGHOPE HOSPITAL, INC.",
-            "CM MATERNITY CLINIC",
-            "UNKNOWN"
-        ])
-        self.death_place_input.setFixedWidth(700)
-        self.death_place_input.setStyleSheet(combo_box_style)
-        death_place_container.addWidget(self._create_label("Place of Death:"))
-        death_place_container.addWidget(self.death_place_input)
-        death_info_layout.addLayout(death_place_container)
-
-        form_layout.addLayout(death_info_layout)
-
-        # Civil Status, Nationality, Residence
-        cs_nat_layout = QHBoxLayout()
-        cs_nat_layout.setSpacing(10)
-
-        cs_container = QVBoxLayout()
-        self.civil_status_combo = QComboBox()
-        self.civil_status_combo.addItems(["SINGLE", "MARRIED", "WIDOW", "WIDOWER", "DIVORCED", "ANNULLED", "UNKNOWN"])
-        self.civil_status_combo.setFixedWidth(100)
-        self.civil_status_combo.setStyleSheet(combo_box_style)
-        cs_container.addWidget(self._create_label("Civil Status:"))
-        cs_container.addWidget(self.civil_status_combo)
-        cs_nat_layout.addLayout(cs_container)
-
-        nat_container = QVBoxLayout()
-        self.nationality_combo = QComboBox()
-        self.nationality_combo.setEditable(True)
-        self.nationality_combo.addItems([
-            "FILIPINO",
-            "CHINESE",
-            "INDIAN",
-            "AMERICAN",
-            "JAPANESE",
-            "SOUTH KOREAN",
-            "GERMAN",
-            "AUSTRALIAN",
-            "TAIWANESE",
-            "INDONESIAN",
-            "VIETNAMESE",
-            "UNKNOWN"
-        ])
-        self.nationality_combo.setFixedWidth(150)
-        self.nationality_combo.setStyleSheet(combo_box_style)
-        nat_container.addWidget(self._create_label("Nationality:"))
-        nat_container.addWidget(self.nationality_combo)
-        cs_nat_layout.addLayout(nat_container)
-
-        residence_container = QVBoxLayout()
-        self.residence_input = QLineEdit()
-        self.residence_input.setPlaceholderText("Residence")
-        self.residence_input.setFixedWidth(350)
-        residence_container.addWidget(self._create_label("Residence:"))
-        residence_container.addWidget(self.residence_input)
-        cs_nat_layout.addLayout(residence_container)
-
-        form_layout.addLayout(cs_nat_layout)
-
-        # Resident Information
-        resident_layout = QHBoxLayout()
-        resident_layout.setSpacing(10)
-
-        maasin_resident_container = QVBoxLayout()
-        self.maasin_resident_combo = QComboBox()
-        self.maasin_resident_combo.addItems(["NO", "YES", "UNKNOWN"])
-        self.maasin_resident_combo.setFixedWidth(150)
-        self.maasin_resident_combo.setStyleSheet(combo_box_style)
-        maasin_resident_container.addWidget(self._create_label("Maasin Resident:"))
-        maasin_resident_container.addWidget(self.maasin_resident_combo)
-        resident_layout.addLayout(maasin_resident_container)
-
-        soleyte_resident_container = QVBoxLayout()
-        self.soleyte_resident_combo = QComboBox()
-        self.soleyte_resident_combo.addItems(["NO", "YES", "UNKNOWN"])
-        self.soleyte_resident_combo.setFixedWidth(150)
-        self.soleyte_resident_combo.setStyleSheet(combo_box_style)
-        soleyte_resident_container.addWidget(self._create_label("Soleyte Resident:"))
-        soleyte_resident_container.addWidget(self.soleyte_resident_combo)
-        resident_layout.addLayout(soleyte_resident_container)
-
-        leyte_resident_container = QVBoxLayout()
-        self.leyte_resident_combo = QComboBox()
-        self.leyte_resident_combo.addItems(["NO", "YES", "UNKNOWN"])
-        self.leyte_resident_combo.setFixedWidth(150)
-        self.leyte_resident_combo.setStyleSheet(combo_box_style)
-        leyte_resident_container.addWidget(self._create_label("Leyte Resident:"))
-        leyte_resident_container.addWidget(self.leyte_resident_combo)
-        resident_layout.addLayout(leyte_resident_container)
-
-        form_layout.addLayout(resident_layout)
-
-        # Cause of Death
-        cod_layout = QHBoxLayout()
-        cod_layout.setSpacing(10)
-
-        cod_container = QVBoxLayout()
-        self.cause_of_death_input = QLineEdit()
-        self.cause_of_death_input.setPlaceholderText("Cause of Death")
-        self.cause_of_death_input.setFixedWidth(700)
-        cod_container.addWidget(self._create_label("Cause of Death:"))
-        cod_container.addWidget(self.cause_of_death_input)
-        cod_layout.addLayout(cod_container)
-
-        form_layout.addLayout(cod_layout)
-
-        # Attendant, Corpse Disposal, Late Registration, and Date of Registration
-        final_info_layout = QHBoxLayout()
-        final_info_layout.setSpacing(10)
-
-        attendant_container = QVBoxLayout()
-        self.attendant_combo = QComboBox()
-        self.attendant_combo.setEditable(True)
-        self.attendant_combo.addItems(["PHYSICIAN", "OTHER HEALTH PRACTITIONER", "NOT ATTENDED", "NOT STATED", "OTHERS"])
-        self.attendant_combo.setFixedWidth(250)
-        self.attendant_combo.setStyleSheet(combo_box_style)
-        attendant_container.addWidget(self._create_label("Attendant:"))
-        attendant_container.addWidget(self.attendant_combo)
-        final_info_layout.addLayout(attendant_container)
-
-        corpse_disposal_container = QVBoxLayout()
-        self.corpse_disposal_combo = QComboBox()
-        self.corpse_disposal_combo.setEditable(True)
-        self.corpse_disposal_combo.addItems(["BURIAL", "CREMATION", "UNKNOWN"])
-        self.corpse_disposal_combo.setFixedWidth(150)
-        self.corpse_disposal_combo.setStyleSheet(combo_box_style)
-        corpse_disposal_container.addWidget(self._create_label("Corpse Disposal:"))
-        corpse_disposal_container.addWidget(self.corpse_disposal_combo)
-        final_info_layout.addLayout(corpse_disposal_container)
-
-        late_reg_container = QVBoxLayout()
-        self.late_reg_combo = QComboBox()
-        self.late_reg_combo.addItems(["NO", "YES"])
-        self.late_reg_combo.setFixedWidth(100)
-        self.late_reg_combo.setStyleSheet(combo_box_style)
-        late_reg_container.addWidget(self._create_label("Late Registration:"))
-        late_reg_container.addWidget(self.late_reg_combo)
-        final_info_layout.addLayout(late_reg_container)
-
-        reg_date_container = QVBoxLayout()
-        reg_date_label_layout = QHBoxLayout()
-        reg_date_label_layout.setSpacing(5)
-        reg_date_label_layout.addWidget(self._create_label("Date of Registration:"))
-        self.has_date_of_reg_check = QCheckBox("Has Date")
-        self.has_date_of_reg_check.setChecked(True)
-        self.has_date_of_reg_check.setStyleSheet("""
-            QCheckBox::indicator:unchecked {
-                background-color: #FFFFFF;
-                border: 1px solid #D1D0D0;
-            }
-            QCheckBox::indicator:unchecked:hover {
-                background-color: #F5F5F5;
-                border: 1px solid #999999;
-            }
-            QCheckBox::indicator:checked {
-                background-color: #ce305e;
-                border: 1px solid #ce305e;
-            }
-            QCheckBox::indicator:checked:hover {
-                background-color: #a8224a;
-                border: 1px solid #a8224a;
-            }
-        """)
-        self.has_date_of_reg_check.stateChanged.connect(lambda: self.date_of_reg_input.setEnabled(self.has_date_of_reg_check.isChecked()))
-        reg_date_label_layout.addWidget(self.has_date_of_reg_check)
-        reg_date_label_layout.addStretch()
-        reg_date_container.addLayout(reg_date_label_layout)
-        self.date_of_reg_input = QDateEdit()
-        self.date_of_reg_input.setCalendarPopup(True)
-        self.date_of_reg_input.setDate(QDate.currentDate())
-        self.date_of_reg_input.setFixedWidth(150)
-        self.date_of_reg_input.setStyleSheet(date_picker_style)
-        self.date_of_reg_input.setEnabled(True)
-        reg_date_container.addWidget(self.date_of_reg_input)
-        final_info_layout.addLayout(reg_date_container)
-        form_layout.addLayout(final_info_layout)
-
-        # Add the form widget to the scroll area
-        scroll_area.setWidget(form_widget)
-        main_layout.addWidget(scroll_area)
-
-        # Action Buttons
-        button_layout = QHBoxLayout()
-
-        self.save_btn = QPushButton("Save Tags")
-        self.save_btn.clicked.connect(self.save_tags)
-        self.save_btn.setFixedWidth(130)
-        button_layout.addWidget(self.save_btn)
-
-        # Add keyboard shortcut for save button (Ctrl+S)
-        save_shortcut = QShortcut(QKeySequence.StandardKey.Save, self)
-        save_shortcut.activated.connect(self.save_tags)
-
-        self.delete_btn = QPushButton("Delete Tags")
-        self.delete_btn.clicked.connect(self.delete_tags)
-        self.delete_btn.setFixedWidth(130)
-        self.delete_btn.setEnabled(False)  # Disabled by default
-        button_layout.addWidget(self.delete_btn)
-
-        # Edit Button
-        self.edit_btn = QPushButton("Edit")
-        self.edit_btn.clicked.connect(self.on_edit_clicked)
-        self.edit_btn.setFixedWidth(130)
-        self.edit_btn.setEnabled(False)  # Disabled by default
-        button_layout.addWidget(self.edit_btn)
-
-        # clear_btn = QPushButton("Clear All Tags")
-        # clear_btn.clicked.connect(self.clear_all_tags)
-        # clear_btn.setFixedWidth(130)
-        # button_layout.addWidget(clear_btn)
-
-        self.save_btn.setStyleSheet(button_style)
-        self.delete_btn.setStyleSheet(button_style)
-        self.edit_btn.setStyleSheet(button_style)
-        # clear_btn.setStyleSheet(button_style)
-
-        button_layout.setSpacing(5)
-        button_layout.setContentsMargins(0, 0, 0, 0)
-        button_layout.setAlignment(Qt.AlignLeft)
-
-        main_layout.addLayout(button_layout)
+        # ── Add Entry button ──────────────────────────────────────────── #
+        add_entry_btn = QPushButton("+ Add Entry")
+        add_entry_btn.setFixedWidth(130)
+        add_entry_btn.setStyleSheet(button_style)
+        add_entry_btn.clicked.connect(self._add_blank_card)
+        main_layout.addWidget(add_entry_btn)
 
         # PDF List Preview
         self.pdf_list = QListWidget()
@@ -728,9 +327,6 @@ class DeathTaggingWindow(QWidget):
             if self.selected_pdf:
                 # persist last selected PDF
                 self.settings.setValue("death/last_pdf", self.selected_pdf)
-                self.last_page_no = self.page_no_input.text()
-                self.last_book_no = self.book_no_input.text()
-                self.last_reg_date = self.date_of_reg_input.date().toString("yyyy-MM-dd")
                 self.pdf_viewer.load_pdf(self.selected_pdf)
                 self.load_existing_tags(self.selected_pdf)
 
@@ -750,453 +346,70 @@ class DeathTaggingWindow(QWidget):
 
 
     def load_existing_tags(self, file_path):
-        # Avoid closing a shared connection while other code (e.g. `load_pdfs`)
-        # is still using it. Only close if *we* created it.
         created_connection = self.connection is None
         conn = self.create_connection()
         try:
             cursor = conn.cursor()
             cursor.execute("""
-                SELECT 
-                    name, date_of_death, sex, page_no, book_no, reg_no, 
+                SELECT id, name, date_of_death, date_of_birth, sex, page_no, book_no, reg_no,
                     date_of_reg, age_years, age_months, age_days, age_hours, age_mins,
-                    civil_status, nationality,
-                    place_of_death, cause_of_death,
-                    corpse_disposal, late_registration,
-                    maasin_resident, soleyte_resident, leyte_resident, attendant, residence, date_of_birth
-                FROM death_index 
+                    civil_status, nationality, place_of_death, cause_of_death,
+                    corpse_disposal, late_registration, maasin_resident, soleyte_resident,
+                    leyte_resident, attendant, residence
+                FROM death_index
                 WHERE file_path = %s
+                ORDER BY id ASC
             """, (file_path,))
-
-            result = cursor.fetchone()
-
-            if result:
-                (name, date_of_death, sex, page_no, book_no, reg_no, 
-                 date_of_reg, age_years, age_months, age_days, age_hours, age_mins,
-                 civil_status, nationality,
-                 place_of_death, cause_of_death,
-                 corpse_disposal, late_registration,
-                 maasin_resident, soleyte_resident, leyte_resident, attendant, residence, date_of_birth) = result
-
-                # Set QLineEdit values
-                self.page_no_input.setText(str(page_no) if page_no else "")
-                self.book_no_input.setText(str(book_no) if book_no else "")
-                self.reg_no_input.setText(reg_no if reg_no else "")
-                self.name_input.setText(name if name else "")
-                self.age_input.setText(str(age_years) if age_years is not None else "")
-                self.age_months_input.setText(str(age_months) if age_months is not None else "")
-                self.age_days_input.setText(str(age_days) if age_days is not None else "")
-                self.residence_input.setText(residence if residence else "")
-                self.age_hours_input.setText(str(age_hours) if age_hours is not None else "")
-                self.age_mins_input.setText(str(age_mins) if age_mins is not None else "")
-                self.cause_of_death_input.setText(cause_of_death if cause_of_death else "")
-
-                # Set QComboBox values
-                self.sex_combo.setCurrentText(sex if sex else "NO ENTRY")
-                self.civil_status_combo.setCurrentText(civil_status if civil_status else "NO ENTRY")
-                self.nationality_combo.setCurrentText(nationality if nationality else "NO ENTRY")
-                self.death_place_input.setCurrentText(place_of_death if place_of_death else "NO ENTRY")
-                self.corpse_disposal_combo.setCurrentText(corpse_disposal if corpse_disposal else "NO ENTRY")
-                self.late_reg_combo.setCurrentText("YES" if late_registration is True else "NO ENTRY" if late_registration is None else "NO")
-
-                # Set resident combo boxes
-                self.maasin_resident_combo.setCurrentText("YES" if maasin_resident is True else "NO ENTRY" if maasin_resident is None else "NO")
-                self.soleyte_resident_combo.setCurrentText("YES" if soleyte_resident is True else "NO ENTRY" if soleyte_resident is None else "NO")
-                self.leyte_resident_combo.setCurrentText("YES" if leyte_resident is True else "NO ENTRY" if leyte_resident is None else "NO")
-
-                # Handle dates with checkbox states
-                if date_of_death:
-                    self.date_of_death_input.setDate(QDate.fromString(date_of_death.strftime("%Y-%m-%d"), "yyyy-MM-dd"))
-                    self.has_date_of_death_check.setChecked(True)
-                else:
-                    self.date_of_death_input.setDate(QDate.currentDate())
-                    self.has_date_of_death_check.setChecked(False)
-                    self.date_of_death_input.setEnabled(False)
-
-                if date_of_reg:
-                    self.date_of_reg_input.setDate(QDate.fromString(date_of_reg.strftime("%Y-%m-%d"), "yyyy-MM-dd"))
-                    self.has_date_of_reg_check.setChecked(True)
-                else:
-                    self.date_of_reg_input.setDate(QDate.currentDate())
-                    self.has_date_of_reg_check.setChecked(False)
-                    self.date_of_reg_input.setEnabled(False)
-                
-                if date_of_birth:
-                    self.date_of_birth_input.setDate(QDate.fromString(date_of_birth.strftime("%Y-%m-%d"), "yyyy-MM-dd"))
-                    self.has_date_of_birth_check.setChecked(True)
-                else:
-                    self.date_of_birth_input.setDate(QDate.currentDate())
-                    self.has_date_of_birth_check.setChecked(False)
-                    self.date_of_birth_input.setEnabled(False)
-
-                self.attendant_combo.setCurrentText(attendant if attendant else "NO ENTRY")
-
-                self.set_saved_cue(True)
-
-            else:
-                # Clear all fields
-                self.page_no_input.setText(self.last_page_no)
-                self.book_no_input.setText(self.last_book_no)
-                self.reg_no_input.clear()
-                self.name_input.clear()
-                self.age_input.clear()
-                self.cause_of_death_input.clear()
-                self.age_months_input.clear()
-                self.age_days_input.clear()
-                self.age_hours_input.clear()
-                self.age_mins_input.clear()
-                self.residence_input.clear()
-
-                self.sex_combo.setCurrentIndex(0)
-                self.civil_status_combo.setCurrentIndex(0)
-                self.nationality_combo.setCurrentIndex(0)
-                self.death_place_input.setCurrentIndex(0)
-                self.corpse_disposal_combo.setCurrentIndex(0)
-                self.late_reg_combo.setCurrentIndex(0)
-                self.maasin_resident_combo.setCurrentIndex(0)
-                self.soleyte_resident_combo.setCurrentIndex(0)
-                self.leyte_resident_combo.setCurrentIndex(0)
-                
-                # Reset date checkboxes and enable date inputs
-                self.has_date_of_death_check.setChecked(True)
-                self.date_of_death_input.setDate(QDate.currentDate())
-                self.date_of_death_input.setEnabled(True)
-                
-                self.has_date_of_reg_check.setChecked(True)
-                self.date_of_reg_input.setDate(QDate.fromString(self.last_reg_date, "yyyy-MM-dd"))
-                self.date_of_reg_input.setEnabled(True)
-
-                self.has_date_of_birth_check.setChecked(True)
-                self.date_of_birth_input.setDate(QDate.currentDate())
-                self.date_of_birth_input.setEnabled(True)
-
-                self.attendant_combo.setCurrentIndex(0)
-
-                self.set_saved_cue(False)
+            rows = cursor.fetchall()
+            columns = [desc[0] for desc in cursor.description]
         finally:
             if cursor:
                 cursor.close()
             if created_connection:
                 self.closeConnection()
 
-    # def check_registry_number_exists(self, conn, reg_no, exclude_file_path=None):
-    #     """Check if registry number already exists in the database."""
-    #     if not reg_no or reg_no.strip() == "":
-    #         return False, None
-            
-    #     cursor = conn.cursor()
-    #     try:
-    #         # Check if registry number exists, optionally excluding current file
-    #         if exclude_file_path:
-    #             cursor.execute("""
-    #                 SELECT file_path, name FROM death_index 
-    #                 WHERE reg_no = %s AND file_path != %s
-    #             """, (reg_no.strip(), exclude_file_path))
-    #         else:
-    #             cursor.execute("""
-    #                 SELECT file_path, name FROM death_index 
-    #                 WHERE reg_no = %s
-    #             """, (reg_no.strip(),))
-            
-    #         result = cursor.fetchone()
-    #         return result is not None, result
-    #     finally:
-    #         if cursor:
-    #             cursor.close()
+        self._clear_cards()
+        if rows:
+            for row in rows:
+                row_dict = dict(zip(columns, row))
+                card = self._add_blank_card()
+                # card.populate(dict(zip(columns, row)))
+                card.populate(row_dict)
+        else:
+            self._add_blank_card()
 
-    def save_tags(self):
-        conn = self.create_connection()
-        cursor = None
-        try:
-            if not self.selected_pdf:
-                AuditLogger.log_action(
-                    conn,
-                    self.current_user,
-                    "TAG_SAVE_FAILED",
-                    {"reason": "no_pdf_selected"}
-                )
-                # QMessageBox.warning(self, "Error", "Please select a PDF file before saving tags!")
-                box = QMessageBox(self)
-                box.setIcon(QMessageBox.Warning)
-                box.setWindowTitle("Warning")
-                box.setText("Please select a PDF file before saving tags.")
-                box.setStandardButtons(QMessageBox.Ok)
+    # ------------------------------------------------------------------ #
+    #  Card management                                                     #
+    # ------------------------------------------------------------------ #
 
-                box.setStyleSheet(message_box_style)
+    def _add_blank_card(self):
+        card = DeathEntryCard(
+            entry_number=len(self._cards) + 1,
+            current_user=self.current_user,
+            get_selected_pdf_fn=self.get_selected_pdf,
+        )
+        card.deleted.connect(self._on_card_deleted)
+        self._cards.append(card)
+        self._cards_layout.addWidget(card)
+        from PySide6.QtWidgets import QApplication
+        QApplication.processEvents()
+        self._cards_scroll.verticalScrollBar().setValue(
+            self._cards_scroll.verticalScrollBar().maximum()
+        )
+        return card
 
-                box.exec()
-                return
+    def _clear_cards(self):
+        for card in self._cards:
+            self._cards_layout.removeWidget(card)
+            card.deleteLater()
+        self._cards.clear()
 
-            # Confirmation dialog before saving
-            confirm_box = QMessageBox(self)
-            confirm_box.setIcon(QMessageBox.Question)
-            confirm_box.setWindowTitle("Confirm Save")
-            confirm_box.setText("Are you sure you want to save these tags?")
-            confirm_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-            confirm_box.setStyleSheet(message_box_style)
-            
-            if confirm_box.exec() != QMessageBox.Yes:
-                return
-
-            cursor = conn.cursor()
-
-            try:
-                # Get values from input fields
-                page_no = int(self.page_no_input.text()) if self.page_no_input.text() else None
-                book_no = int(self.book_no_input.text()) if self.book_no_input.text() else None
-                reg_no = self.reg_no_input.text()
-                name = self.name_input.text()
-                residence = self.residence_input.text()
-                
-                def parse_int(text):
-                    return int(text) if text and text.isdigit() else None
-
-                age_years = parse_int(self.age_input.text())
-                age_months = parse_int(self.age_months_input.text())
-                age_days = parse_int(self.age_days_input.text())
-                age_hours = parse_int(self.age_hours_input.text())
-                age_mins = parse_int(self.age_mins_input.text())
-                cause_of_death = self.cause_of_death_input.text()
-                # Handle date_of_death based on checkbox
-                date_of_death = self.date_of_death_input.date().toString("yyyy-MM-dd") if self.has_date_of_death_check.isChecked() else None
-                date_of_birth = self.date_of_birth_input.date().toString("yyyy-MM-dd") if self.has_date_of_birth_check.isChecked() else None
-                # Convert "NO ENTRY" to None for combo boxes
-                sex = None if self.sex_combo.currentText() == "NO ENTRY" else self.sex_combo.currentText()
-                # Handle date_of_reg based on checkbox
-                date_of_reg = self.date_of_reg_input.date().toString("yyyy-MM-dd") if self.has_date_of_reg_check.isChecked() else None
-
-                place_of_death = None if self.death_place_input.currentText() == "NO ENTRY" else self.death_place_input.currentText()
-                civil_status = None if self.civil_status_combo.currentText() == "NO ENTRY" else self.civil_status_combo.currentText()
-                nationality = None if self.nationality_combo.currentText() == "NO ENTRY" else self.nationality_combo.currentText()
-                corpse_disposal = None if self.corpse_disposal_combo.currentText() == "NO ENTRY" else self.corpse_disposal_combo.currentText()
-
-                # Handle late_registration: YES->True, NO->False, NO ENTRY->None
-                late_reg_text = self.late_reg_combo.currentText().strip()
-                if late_reg_text == "NO ENTRY":
-                    late_registration = None
-                else:
-                    late_registration = late_reg_text.lower() == "yes"
-                
-                # Get resident values: YES->True, NO->False, NO ENTRY->None
-                maasin_res_text = self.maasin_resident_combo.currentText().strip()
-                maasin_resident = None if maasin_res_text == "NO ENTRY" else maasin_res_text.lower() == "yes"
-                soleyte_res_text = self.soleyte_resident_combo.currentText().strip()
-                soleyte_resident = None if soleyte_res_text == "NO ENTRY" else soleyte_res_text.lower() == "yes"
-                leyte_res_text = self.leyte_resident_combo.currentText().strip()
-                leyte_resident = None if leyte_res_text == "NO ENTRY" else leyte_res_text.lower() == "yes"
-                
-                attendant = None if self.attendant_combo.currentText() == "NO ENTRY" else self.attendant_combo.currentText()
-
-                cursor.execute("""
-                    INSERT INTO death_index (
-                        file_path, name, date_of_death, sex, page_no, book_no, reg_no,
-                        date_of_reg, age_years, age_months, age_days, age_hours, age_mins,
-                        civil_status, nationality,
-                        place_of_death, cause_of_death, corpse_disposal, late_registration,
-                        maasin_resident, soleyte_resident, leyte_resident, attendant, residence, date_of_birth
-                    ) VALUES (
-                        %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
-                    )
-                    ON CONFLICT(file_path) DO UPDATE SET
-                        name = EXCLUDED.name,
-                        date_of_death = EXCLUDED.date_of_death,
-                        sex = EXCLUDED.sex,
-                        page_no = EXCLUDED.page_no,
-                        book_no = EXCLUDED.book_no,
-                        reg_no = EXCLUDED.reg_no,
-                        date_of_reg = EXCLUDED.date_of_reg,
-                        age_years = EXCLUDED.age_years,
-                        age_months = EXCLUDED.age_months,
-                        age_days = EXCLUDED.age_days,
-                        age_hours = EXCLUDED.age_hours,
-                        age_mins = EXCLUDED.age_mins,
-                        civil_status = EXCLUDED.civil_status,
-                        nationality = EXCLUDED.nationality,
-                        place_of_death = EXCLUDED.place_of_death,
-                        cause_of_death = EXCLUDED.cause_of_death,
-                        corpse_disposal = EXCLUDED.corpse_disposal,
-                        late_registration = EXCLUDED.late_registration,
-                        maasin_resident = EXCLUDED.maasin_resident,
-                        soleyte_resident = EXCLUDED.soleyte_resident,
-                        leyte_resident = EXCLUDED.leyte_resident,
-                        attendant = EXCLUDED.attendant,
-                        residence = EXCLUDED.residence,
-                        date_of_birth = EXCLUDED.date_of_birth
-                """, (
-                    self.selected_pdf, name, date_of_death, sex, page_no, book_no, reg_no,
-                    date_of_reg, age_years, age_months, age_days, age_hours, age_mins,
-                    civil_status, nationality,
-                    place_of_death, cause_of_death, corpse_disposal, late_registration,
-                    maasin_resident, soleyte_resident, leyte_resident, attendant, residence, date_of_birth
-                ))
-
-                AuditLogger.log_action(
-                    conn,
-                    self.current_user,
-                    "TAGS_SAVED",
-                    {
-                        "file": self.selected_pdf,
-                        "record_type": "Death"
-                    }
-                )
-                # QMessageBox.information(self, "Success", "Tags saved successfully.")
-                box = QMessageBox(self)
-                box.setIcon(QMessageBox.Information)
-                box.setWindowTitle("Success")
-                box.setText("Tags saved successfully.")
-                box.setStandardButtons(QMessageBox.Ok)
-
-                box.setStyleSheet(message_box_style)
-                box.exec()
-
-                self.set_saved_cue(True)
-
-            except Exception as e:
-                AuditLogger.log_action(
-                    conn,
-                    self.current_user,
-                    "TAG_SAVE_ERROR",
-                    {
-                        "error": str(e),
-                        "file": self.selected_pdf,
-                        "record_type": "Death"
-                    }
-                )
-                # QMessageBox.critical(self, "Error", f"Failed to save tags: {str(e)}")
-                box = QMessageBox(self)
-                box.setIcon(QMessageBox.Critical)
-                box.setWindowTitle("Error")
-                box.setText(f"Failed to save tags: {str(e)}")
-                box.setStandardButtons(QMessageBox.Ok)
-                box.setStyleSheet(message_box_style)
-                box.exec()
-        finally:
-            if cursor:
-                cursor.close()
-            self.closeConnection()
-
-    def delete_tags(self):
-        conn = self.create_connection()
-        cursor = None
-        try:
-            if not self.selected_pdf:
-                AuditLogger.log_action(
-                    conn,
-                    self.current_user,
-                    "TAG_DELETE_FAILED",
-                    {"reason": "no_pdf_selected"}
-                )
-                conn.commit()
-                # QMessageBox.warning(self, "Error", "Please select a PDF file to delete its tags!")
-                box = QMessageBox(self)
-                box.setIcon(QMessageBox.Warning)
-                box.setWindowTitle("Error")
-                box.setText("Please select a PDF file to delete its tags.")
-                box.setStandardButtons(QMessageBox.Ok)
-                box.setStyleSheet(message_box_style)
-                box.exec()
-                return
-
-            # Confirmation dialog before deleting
-            confirm_box = QMessageBox(self)
-            confirm_box.setIcon(QMessageBox.Warning)
-            confirm_box.setWindowTitle("Confirm Delete")
-            confirm_box.setText("Are you sure you want to delete these tags? This action cannot be undone.")
-            confirm_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-            confirm_box.setStyleSheet(message_box_style)
-            
-            if confirm_box.exec() != QMessageBox.Yes:
-                return
-
-            cursor = conn.cursor()
-            cursor.execute("DELETE FROM death_index WHERE file_path = %s", (self.selected_pdf,))
-            conn.commit()
-
-            AuditLogger.log_action(
-                conn,
-                self.current_user,
-                "TAGS_DELETED",
-                {"file": self.selected_pdf, "table": "death_index"}
-            )
-            conn.commit()
-
-            # Clear all input fields after successful deletion
-            self.page_no_input.clear()
-            self.book_no_input.clear()
-            self.reg_no_input.clear()
-            self.name_input.clear()
-            self.age_input.clear()
-            self.age_months_input.clear()
-            self.age_days_input.clear()
-            self.age_hours_input.clear()
-            self.age_mins_input.clear()
-            self.cause_of_death_input.clear()
-            self.residence_input.clear()
-            
-            self.sex_combo.setCurrentIndex(0)
-            self.civil_status_combo.setCurrentIndex(0)
-            self.nationality_combo.setCurrentIndex(0)
-            self.death_place_input.setCurrentIndex(0)
-            self.corpse_disposal_combo.setCurrentIndex(0)
-            self.late_reg_combo.setCurrentIndex(0)
-            self.attendant_combo.setCurrentIndex(0)
-            
-            # Reset date checkboxes and enable date inputs
-            self.has_date_of_death_check.setChecked(True)
-            self.date_of_death_input.setDate(QDate.currentDate())
-            self.date_of_death_input.setEnabled(True)
-
-            self.has_date_of_birth_check.setChecked(True)
-            self.date_of_birth_input.setDate(QDate.currentDate())
-            self.date_of_birth_input.setEnabled(True)
-            
-            self.has_date_of_reg_check.setChecked(True)
-            self.date_of_reg_input.setDate(QDate.currentDate())
-            self.date_of_reg_input.setEnabled(True)
-
-            self.set_saved_cue(False)
-
-            # QMessageBox.information(self, "Success", "Tags deleted successfully!")
-            box = QMessageBox(self)
-            box.setIcon(QMessageBox.Information)
-            box.setWindowTitle("Success")
-            box.setText("Tags deleted successfully.")
-            box.setStandardButtons(QMessageBox.Ok)
-            box.setStyleSheet(message_box_style)
-            box.exec()
-        finally:
-            if cursor:
-                cursor.close()
-            self.closeConnection()
-
-    # def clear_all_tags(self):
-    #     conn = self.create_connection()
-    #     try:
-    #         reply = QMessageBox.question(
-    #             self, 
-    #             "Clear All Tags", 
-    #             "Are you sure you want to clear all tags from the database?",
-    #             QMessageBox.Yes | QMessageBox.No, 
-    #             QMessageBox.No
-    #         )
-            
-    #         if reply == QMessageBox.Yes:
-    #             cursor = conn.cursor()
-    #             cursor.execute("DELETE FROM death_index")
-    #             conn.commit()
-
-    #             AuditLogger.log_action(
-    #                 conn,
-    #                 self.current_user,
-    #                 "ALL_TAGS_CLEARED",
-    #                 {"tables": ["death_index"]}
-    #             )
-    #             conn.commit()
-    #             QMessageBox.information(self, "Success", "All tags have been cleared from the database.")
-    #     finally:
-    #         if cursor:
-    #             cursor.close()
-    #         self.closeConnection()
+    def _on_card_deleted(self, card):
+        self._cards_layout.removeWidget(card)
+        card.deleteLater()
+        self._cards.remove(card)
+        for i, c in enumerate(self._cards, 1):
+            c.update_entry_number(i)
 
     def get_table_name(self, file_path):
         """Determine the table name based on file path or other logic."""
@@ -1265,93 +478,3 @@ class DeathTaggingWindow(QWidget):
     #         self.date_of_marriage_input.setEnabled(True)
     #         if not self.date_of_marriage_input.date().isValid() or self.date_of_marriage_input.date() == QDate():
     #             self.date_of_marriage_input.setDate(QDate.currentDate())
-
-
-    def get_form_fields(self):
-        """Return all form field widgets for enabling/disabling."""
-        return [
-            # Line edits
-            self.page_no_input, self.book_no_input, self.reg_no_input, self.name_input,
-            self.age_input, self.age_months_input, self.age_days_input, self.age_hours_input,
-            self.age_mins_input, self.cause_of_death_input, self.residence_input,
-            # Combo boxes
-            self.sex_combo, self.civil_status_combo, self.nationality_combo, self.death_place_input,
-            self.corpse_disposal_combo, self.late_reg_combo,
-            # Dates
-            self.date_of_death_input, self.date_of_reg_input, self.date_of_birth_input,
-            # Resident combos
-            self.maasin_resident_combo, self.soleyte_resident_combo, self.leyte_resident_combo,
-            # Attendant combo
-            self.attendant_combo,
-        ]
-
-    def disable_form_fields(self):
-        """Disable all form input fields."""
-        for field in self.get_form_fields():
-            field.setEnabled(False)
-
-    def enable_form_fields(self):
-        """Enable all form input fields."""
-        for field in self.get_form_fields():
-            field.setEnabled(True)
-
-    def _update_label_colors(self, background_color=None):
-        """Update background colors of all labels in form_area."""
-        if not hasattr(self, 'form_area') or self.form_area is None:
-            return
-        
-        # Find all QLabel widgets in form_area and update their palette
-        labels = self.form_area.findChildren(QLabel)
-        for label in labels:
-            label.setAutoFillBackground(True)
-            palette = label.palette()
-            if background_color:
-                palette.setColor(QPalette.Window, background_color)
-            else:
-                palette.setColor(QPalette.Window, Qt.white)
-            label.setPalette(palette)
-
-    def set_saved_cue(self, enabled):
-        """Manage field state and button states when tags are saved or deleted."""
-        # Update label colors to white (no background color changes)
-        self._update_label_colors(Qt.white)
-        
-        # Update field and button state
-        if enabled:
-            # Disable all fields after saving
-            self.disable_form_fields()
-            # Disable Save button, enable Edit and Delete buttons
-            if hasattr(self, 'save_btn'):
-                self.save_btn.setEnabled(False)
-            if hasattr(self, 'delete_btn'):
-                self.delete_btn.setEnabled(True)
-            if hasattr(self, 'edit_btn'):
-                self.edit_btn.setEnabled(True)
-        else:
-            # Enable all fields for editing (no tags yet or after deletion)
-            self.enable_form_fields()
-            # Enable Save button, disable Edit and Delete buttons when no tags
-            if hasattr(self, 'save_btn'):
-                self.save_btn.setEnabled(True)
-            if hasattr(self, 'delete_btn'):
-                self.delete_btn.setEnabled(False)
-            if hasattr(self, 'edit_btn'):
-                self.edit_btn.setEnabled(False)
-
-    def on_edit_clicked(self):
-        """Enable form fields when Edit button is clicked."""
-        self.enable_form_fields()
-        # Enable Save button for re-saving edited tags
-        if hasattr(self, 'save_btn'):
-            self.save_btn.setEnabled(True)
-        # Keep Delete button enabled since tags still exist
-        if hasattr(self, 'delete_btn'):
-            self.delete_btn.setEnabled(True)
-        self.edit_btn.setEnabled(False)
-
-
-# if __name__ == "__main__":
-# 	app = QApplication([])
-# 	window = DeathTaggingWindow()
-# 	window.show()
-# 	app.exec()
