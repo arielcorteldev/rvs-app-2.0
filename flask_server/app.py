@@ -11,6 +11,7 @@ from utilities.db_config import POSTGRES_CONFIG
 import json
 from urllib.parse import urlparse
 import os
+import sys
 from dotenv import load_dotenv
 
 # === Setup Logging ===
@@ -27,7 +28,12 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
-load_dotenv()
+if getattr(sys, 'frozen', False):
+    _base_dir = os.path.dirname(sys.executable)
+else:
+    _base_dir = os.path.dirname(os.path.abspath(__file__))
+
+load_dotenv(os.path.join(_base_dir, '.env'))
 
 CLIENT_ID = os.getenv('CLIENT_ID')
 CLIENT_SECRET = os.getenv('CLIENT_SECRET')
