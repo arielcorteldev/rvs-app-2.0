@@ -34,7 +34,8 @@ class eVerifyForm(QWidget):
         self.connection = None
         self.qr_scanner_window = None  # Initialize as None
 
-        self.images_dir = os.path.join(os.path.dirname(__file__), "images", "faces")
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        self.images_dir = os.path.join(base_dir, "images", "faces")
         os.makedirs(self.images_dir, exist_ok=True)  
 
         self.setFixedSize(QSize(400, 250))
@@ -805,24 +806,39 @@ class eVerifyForm(QWidget):
             print("🚨 Error sending verification:", e)
 
     def download_and_save_face(self, face_url, full_name, person_data):
-        """Downloads image from URL and saves to local folder."""
+        """Show a locally cached face image or download from URL if needed."""
         try:
-            filename = os.path.basename(face_url.split('?')[0])  # Remove URL params
+            is_url = face_url.startswith(("http://", "https://"))
+            if is_url:
+                filename = os.path.basename(urlparse(face_url).path.split("?")[0])
+            else:
+                filename = face_url.split("?")[0]
+
             local_path = os.path.join(self.images_dir, filename)
-            
+
             if os.path.exists(local_path):
                 self.show_local_face(local_path, full_name, person_data)
                 return
-                
+
+            if not is_url:
+                box = QMessageBox(self)
+                box.setIcon(QMessageBox.Warning)
+                box.setWindowTitle("Face Image Not Found")
+                box.setText(f"Face image file not found: {filename}")
+                box.setStandardButtons(QMessageBox.Ok)
+                box.setStyleSheet(message_box_style)
+                box.exec()
+                return
+
             response = requests.get(face_url, stream=True)
             response.raise_for_status()
-            
-            with open(local_path, 'wb') as f:
+
+            with open(local_path, "wb") as f:
                 for chunk in response.iter_content(chunk_size=8192):
                     f.write(chunk)
-                    
+
             self.show_local_face(local_path, full_name, person_data)
-            
+
         except Exception as e:
             # QMessageBox.warning(self, "Download Failed", f"Error: {str(e)}")
             box = QMessageBox(self)
@@ -837,7 +853,6 @@ class eVerifyForm(QWidget):
         """Displays an image from the local folder."""
         pixmap = QPixmap(image_path)
         if pixmap.isNull():
-            # QMessageBox.warning(self, "Error", "Failed to load cached image.")
             box = QMessageBox(self)
             box.setIcon(QMessageBox.Warning)
             box.setWindowTitle("Error")
@@ -847,18 +862,39 @@ class eVerifyForm(QWidget):
             box.exec()
             return
 
-        msg_box = QMessageBox(self)
-        msg_box.setWindowTitle("Face Verification")
-        msg_box.setText(f"Verified: {full_name}")
-        msg_box.setIconPixmap(pixmap.scaled(300, 300, Qt.AspectRatioMode.KeepAspectRatio))
-        msg_box.setStyleSheet(message_box_style)
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Face Verification")
+        dialog.setModal(True)
+        dialog.setStyleSheet(message_box_style)
 
-        print_btn = msg_box.addButton("Print form", QMessageBox.ActionRole)
-        ok_btn = msg_box.addButton(QMessageBox.Ok)
+        image_label = QLabel()
+        image_label.setPixmap(
+            pixmap.scaled(300, 300, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+        )
+        image_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        msg_box.exec_()
+        name_label = QLabel(f"Verified: {full_name}")
+        name_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        if msg_box.clickedButton() == print_btn:
+        print_btn = QPushButton("Print form")
+        ok_btn = QPushButton("OK")
+        print_btn.setStyleSheet(button_style)
+        ok_btn.setStyleSheet(button_style)
+
+        button_layout = QHBoxLayout()
+        button_layout.addStretch()
+        button_layout.addWidget(print_btn)
+        button_layout.addWidget(ok_btn)
+
+        layout = QVBoxLayout(dialog)
+        layout.addWidget(image_label)
+        layout.addWidget(name_label)
+        layout.addLayout(button_layout)
+
+        print_btn.clicked.connect(lambda: dialog.done(1))
+        ok_btn.clicked.connect(dialog.accept)
+
+        if dialog.exec() == 1:
             self.preview_verification_form(person_data)
     
     def preview_verification_form(self, person_data):

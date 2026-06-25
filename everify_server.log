@@ -697,3 +697,485 @@
  * Running on http://127.0.0.1:5000
  * Running on http://192.168.254.119:5000
 [2026-06-25 11:22:11,501] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2026-06-25 13:01:24,616] DEBUG in connectionpool: Starting new HTTPS connection (1): api.ipify.org:443
+[2026-06-25 13:01:25,604] DEBUG in connectionpool: https://api.ipify.org:443 "GET /?format=text HTTP/1.1" 200 14
+[2026-06-25 13:01:25,606] INFO in app: Server Public IP: 216.247.31.105
+[2026-06-25 13:01:26,330] DEBUG in __init__: CACHEDIR=C:\Users\ThisPC\.matplotlib
+[2026-06-25 13:01:26,334] DEBUG in font_manager: Using fontManager instance from C:\Users\ThisPC\.matplotlib\fontlist-v390.json
+[2026-06-25 13:01:26,874] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.254.119:5000
+[2026-06-25 13:01:26,874] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2026-06-25 13:02:08,837] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:02:08,847] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:02:10,863] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:02:10,866] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:02:12,874] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:02:12,878] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:02:14,884] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:02:14,887] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:02:16,908] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:02:16,911] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:02:18,913] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:02:18,916] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:02:20,902] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:02:20,906] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:02:22,915] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:02:22,918] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:02:24,923] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:02:24,926] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:02:26,931] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:02:26,934] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:02:28,931] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:02:28,936] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:02:30,936] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:02:30,939] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:02:32,930] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:02:32,937] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:02:34,939] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:02:34,942] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:02:36,935] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:02:36,940] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:02:38,948] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:02:38,952] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:02:40,972] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:02:40,976] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:02:42,964] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:02:42,968] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:02:44,974] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:02:44,977] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:02:46,966] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:02:46,970] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:02:48,980] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:02:48,984] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:02:50,990] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:02:50,993] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:02:52,995] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:02:52,998] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:02:55,017] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:02:55,021] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:02:57,030] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:02:57,033] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:02:59,036] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:02:59,039] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:01,042] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:01,045] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:03,050] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:03,054] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:05,047] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:05,050] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:07,055] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:07,059] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:09,080] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:09,083] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:11,071] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:11,075] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:13,095] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:13,099] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:15,100] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:15,103] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:17,093] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:17,096] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:19,100] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:19,103] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:21,111] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:21,115] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:23,119] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:23,122] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:25,137] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:25,140] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:27,153] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:27,156] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:29,149] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:29,153] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:31,167] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:31,170] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:33,192] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:33,195] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:35,195] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:35,200] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:37,203] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:37,207] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:39,213] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:39,216] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:41,228] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:41,232] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:43,253] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:43,256] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:45,257] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:45,260] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:47,262] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:47,265] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:49,285] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:49,288] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:51,274] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:51,277] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:53,288] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:53,292] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:55,279] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:55,283] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:57,288] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:57,291] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:03:59,296] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:03:59,299] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:01,316] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:01,320] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:03,326] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:03,329] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:05,348] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:05,352] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:07,357] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:07,360] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:09,362] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:09,365] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:11,369] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:11,372] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:13,391] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:13,394] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:15,402] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:15,405] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:17,408] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:17,411] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:19,421] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:19,424] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:21,415] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:21,420] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:23,420] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:23,426] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:25,428] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:25,432] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:27,438] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:27,441] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:29,448] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:29,451] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:31,454] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:31,458] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:33,456] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:33,460] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:35,464] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:35,467] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:37,481] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:37,484] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:39,495] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:39,498] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:41,503] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:41,506] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:43,511] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:43,515] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:45,534] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:45,537] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:47,530] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:47,534] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:49,552] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:49,556] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:51,558] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:51,561] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:53,577] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:53,580] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:55,579] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:55,582] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:57,590] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:57,593] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:04:59,612] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:04:59,616] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:01,626] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:01,629] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:03,632] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:03,636] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:05,643] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:05,648] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:07,655] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:07,658] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:09,664] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:09,667] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:11,661] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:11,664] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:13,672] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:13,676] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:15,681] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:15,684] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:17,710] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:17,714] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:19,704] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:19,708] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:21,707] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:21,710] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:23,719] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:23,727] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:25,715] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:25,719] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:27,733] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:27,736] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:29,742] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:29,745] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:31,727] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:31,730] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:33,727] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:33,730] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:35,784] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:35,788] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:37,752] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:37,755] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:39,759] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:39,762] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:41,764] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:41,767] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:43,762] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:43,765] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:45,126] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:45,129] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:45,779] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:45,782] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:47,148] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:47,151] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:47,789] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:47,794] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:49,142] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:49,146] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:49,784] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:49,789] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:51,164] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:51,167] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:51,784] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:51,792] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:53,157] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:53,162] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:53,794] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:53,797] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:55,161] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:55,165] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:55,812] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:55,815] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:57,178] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:57,182] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:57,833] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:57,836] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:59,184] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:59,188] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:05:59,850] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:05:59,856] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:06:01,186] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:06:01,191] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:06:01,840] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:06:01,843] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:06:03,195] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:06:03,198] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:06:03,863] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:06:03,867] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:06:05,199] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:06:05,202] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:06:05,867] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:06:05,872] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:06:07,224] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:06:07,227] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:06:07,877] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:06:07,880] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:06:09,242] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:06:09,245] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:06:09,890] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:06:09,894] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:06:11,240] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:06:11,245] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:06:11,909] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:06:11,912] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 200 68
+[2026-06-25 13:06:12,078] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:06:15,434] DEBUG in connectionpool: http://127.0.0.1:5000 "POST /query HTTP/1.1" 200 77
+[2026-06-25 13:06:15,462] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:06:15,465] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 200 68
+[2026-06-25 13:06:15,650] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:06:18,280] DEBUG in connectionpool: http://127.0.0.1:5000 "POST /query HTTP/1.1" 200 1720
+[2026-06-25 13:06:22,463] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:06:23,351] DEBUG in connectionpool: http://127.0.0.1:5000 "POST /store_verification HTTP/1.1" 200 47
+[2026-06-25 13:06:23,354] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:06:23,361] DEBUG in connectionpool: http://127.0.0.1:5000 "DELETE /liveness_result HTTP/1.1" 200 42
+[2026-06-25 13:06:53,957] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:06:53,960] DEBUG in connectionpool: http://127.0.0.1:5000 "DELETE /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:08:29,287] DEBUG in connectionpool: Starting new HTTPS connection (1): api.ipify.org:443
+[2026-06-25 13:08:30,087] DEBUG in connectionpool: https://api.ipify.org:443 "GET /?format=text HTTP/1.1" 200 14
+[2026-06-25 13:08:30,088] INFO in app: Server Public IP: 216.247.31.105
+[2026-06-25 13:08:30,318] DEBUG in __init__: CACHEDIR=C:\Users\ThisPC\.matplotlib
+[2026-06-25 13:08:30,321] DEBUG in font_manager: Using fontManager instance from C:\Users\ThisPC\.matplotlib\fontlist-v390.json
+[2026-06-25 13:08:30,716] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.254.119:5000
+[2026-06-25 13:08:30,716] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2026-06-25 13:08:41,105] WARNING in app: Token expiry not set — assuming token is expired.
+[2026-06-25 13:08:41,106] DEBUG in connectionpool: Starting new HTTPS connection (1): ws.everify.gov.ph:443
+[2026-06-25 13:08:41,823] DEBUG in connectionpool: https://ws.everify.gov.ph:443 "POST /api/auth HTTP/1.1" 422 None
+[2026-06-25 13:08:41,823] ERROR in app: Exception occurred while getting access token.
+Traceback (most recent call last):
+  File "C:\ayie\PROJECTS\LGU\RVS APP\RVS dev 2.0\flask_server\app.py", line 133, in get_access_token
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\ayie\PROJECTS\LGU\RVS APP\RVS dev 2.0\.venv\Lib\site-packages\requests\models.py", line 1026, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 422 Client Error: Unprocessable Entity for url: https://ws.everify.gov.ph/api/auth
+[2026-06-25 13:09:23,944] WARNING in app: Token expiry not set — assuming token is expired.
+[2026-06-25 13:09:23,946] DEBUG in connectionpool: Starting new HTTPS connection (1): ws.everify.gov.ph:443
+[2026-06-25 13:09:24,600] DEBUG in connectionpool: https://ws.everify.gov.ph:443 "POST /api/auth HTTP/1.1" 422 None
+[2026-06-25 13:09:24,612] ERROR in app: Exception occurred while getting access token.
+Traceback (most recent call last):
+  File "C:\ayie\PROJECTS\LGU\RVS APP\RVS dev 2.0\flask_server\app.py", line 133, in get_access_token
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\ayie\PROJECTS\LGU\RVS APP\RVS dev 2.0\.venv\Lib\site-packages\requests\models.py", line 1026, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 422 Client Error: Unprocessable Entity for url: https://ws.everify.gov.ph/api/auth
+[2026-06-25 13:11:26,181] DEBUG in connectionpool: Starting new HTTPS connection (1): api.ipify.org:443
+[2026-06-25 13:11:26,963] DEBUG in connectionpool: https://api.ipify.org:443 "GET /?format=text HTTP/1.1" 200 14
+[2026-06-25 13:11:26,964] INFO in app: Server Public IP: 216.247.31.105
+[2026-06-25 13:11:27,189] DEBUG in __init__: CACHEDIR=C:\Users\ThisPC\.matplotlib
+[2026-06-25 13:11:27,191] DEBUG in font_manager: Using fontManager instance from C:\Users\ThisPC\.matplotlib\fontlist-v390.json
+[2026-06-25 13:11:27,593] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.254.119:5000
+[2026-06-25 13:11:27,594] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2026-06-25 13:11:38,626] WARNING in app: Token expiry not set — assuming token is expired.
+[2026-06-25 13:11:38,628] DEBUG in connectionpool: Starting new HTTPS connection (1): ws.everify.gov.ph:443
+[2026-06-25 13:11:39,410] DEBUG in connectionpool: https://ws.everify.gov.ph:443 "POST /api/auth HTTP/1.1" 200 None
+[2026-06-25 13:11:39,411] DEBUG in app: Token response data: {'data': {'access_token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3dzLmV2ZXJpZnkuZ292LnBoIiwic3ViIjoiMjY0IiwianRpIjoiNmEzY2I4OGMxMzIzNyIsImlhdCI6MTc4MjM2NDMwMC4wNzgzOTYsIm5iZiI6MTc4MjM2NDMwMC4wNzgzOTYsImV4cCI6MTc4MjM2NjEwMC4wNzgzOTZ9.NemuF31WAX11nj-hZ5sqpdfVZZlUUk0VrTEmN-v2feE', 'token_type': 'Bearer', 'expires_at': '1782366100'}}
+[2026-06-25 13:11:39,411] INFO in app: Access token refreshed successfully. New expiry: 1782366100
+[2026-06-25 13:11:48,710] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:11:48] "GET /liveness HTTP/1.1" 200 -
+[2026-06-25 13:11:50,280] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:11:50,285] DEBUG in app: No session ID stored yet.
+[2026-06-25 13:11:50,285] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:11:50] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-06-25 13:11:50,286] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:11:52,289] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:11:52,292] DEBUG in app: No session ID stored yet.
+[2026-06-25 13:11:52,293] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:11:52] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-06-25 13:11:52,293] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:11:54,280] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:11:54,283] DEBUG in app: No session ID stored yet.
+[2026-06-25 13:11:54,283] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:11:54] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-06-25 13:11:54,284] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:11:56,279] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:11:56,282] DEBUG in app: No session ID stored yet.
+[2026-06-25 13:11:56,282] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:11:56] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-06-25 13:11:56,283] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:11:58,286] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:11:58,289] DEBUG in app: No session ID stored yet.
+[2026-06-25 13:11:58,289] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:11:58] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-06-25 13:11:58,289] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:12:00,275] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:12:00,279] DEBUG in app: No session ID stored yet.
+[2026-06-25 13:12:00,279] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:12:00] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-06-25 13:12:00,280] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:12:02,286] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:12:02,291] DEBUG in app: No session ID stored yet.
+[2026-06-25 13:12:02,292] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:12:02] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-06-25 13:12:02,293] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:12:04,290] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:12:04,293] DEBUG in app: No session ID stored yet.
+[2026-06-25 13:12:04,293] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:12:04] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-06-25 13:12:04,294] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:12:06,302] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:12:06,306] DEBUG in app: No session ID stored yet.
+[2026-06-25 13:12:06,307] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:12:06] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-06-25 13:12:06,307] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:12:07,618] INFO in app: Liveness session ID stored: 85b7e541-8bfa-409b-9884-0ac47a0c38ab
+[2026-06-25 13:12:07,618] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:12:07] "POST /liveness_result HTTP/1.1" 200 -
+[2026-06-25 13:12:08,301] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:12:08,306] DEBUG in app: Returning liveness session ID: 85b7e541-8bfa-409b-9884-0ac47a0c38ab
+[2026-06-25 13:12:08,307] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:12:08] "GET /liveness_result HTTP/1.1" 200 -
+[2026-06-25 13:12:08,307] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 200 68
+[2026-06-25 13:12:08,471] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:12:08,474] DEBUG in app: Access token still valid. Expires at 1782366100, current time is 1782364328
+[2026-06-25 13:12:08,475] DEBUG in connectionpool: Starting new HTTPS connection (1): ws.everify.gov.ph:443
+[2026-06-25 13:12:11,054] DEBUG in connectionpool: https://ws.everify.gov.ph:443 "POST /api/query HTTP/1.1" 200 None
+[2026-06-25 13:12:11,055] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:12:11] "POST /query HTTP/1.1" 200 -
+[2026-06-25 13:12:11,056] DEBUG in connectionpool: http://127.0.0.1:5000 "POST /query HTTP/1.1" 200 1720
+[2026-06-25 13:12:14,769] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:12:14,775] INFO in app: Attempting to save face image to: C:\ayie\PROJECTS\LGU\RVS APP\RVS dev 2.0\images\faces\5825031640918536.jpg
+[2026-06-25 13:12:14,776] DEBUG in connectionpool: Starting new HTTPS connection (1): ekycbucket.s3.ap-southeast-1.amazonaws.com:443
+[2026-06-25 13:12:15,495] DEBUG in connectionpool: https://ekycbucket.s3.ap-southeast-1.amazonaws.com:443 "GET /954/faces/5825031640918536.jpg?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZWODBTF4X4XXBYWZ%2F20260625%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Date=20260625T051210Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3600&X-Amz-Signature=26c462648606c496970d2ef359b220f50e34cee4b1a765a9700f3b84aa6246da HTTP/1.1" 200 4688
+[2026-06-25 13:12:15,497] INFO in app: Successfully saved face image to: C:\ayie\PROJECTS\LGU\RVS APP\RVS dev 2.0\images\faces\5825031640918536.jpg
+[2026-06-25 13:12:15,497] INFO in app: Inserting verification record with values: ('5825031640918536', 'GBE916', 'ARIEL', 'RAMADA', 'CORTEL', '1995-03-12', '5825031640918536.jpg', 'Male', 'Single', 'City of Maasin', 'Southern Leyte')
+[2026-06-25 13:12:15,557] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:12:15] "POST /store_verification HTTP/1.1" 200 -
+[2026-06-25 13:12:15,559] DEBUG in connectionpool: http://127.0.0.1:5000 "POST /store_verification HTTP/1.1" 200 47
+[2026-06-25 13:12:15,560] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:12:15,563] INFO in app: Clearing stored liveness session ID: 85b7e541-8bfa-409b-9884-0ac47a0c38ab
+[2026-06-25 13:12:15,564] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:12:15] "DELETE /liveness_result HTTP/1.1" 200 -
+[2026-06-25 13:12:15,564] DEBUG in connectionpool: http://127.0.0.1:5000 "DELETE /liveness_result HTTP/1.1" 200 42
+[2026-06-25 13:14:54,120] DEBUG in connectionpool: Starting new HTTPS connection (1): api.ipify.org:443
+[2026-06-25 13:14:54,967] DEBUG in connectionpool: https://api.ipify.org:443 "GET /?format=text HTTP/1.1" 200 14
+[2026-06-25 13:14:54,969] INFO in app: Server Public IP: 216.247.31.105
+[2026-06-25 13:14:55,204] DEBUG in __init__: CACHEDIR=C:\Users\ThisPC\.matplotlib
+[2026-06-25 13:14:55,206] DEBUG in font_manager: Using fontManager instance from C:\Users\ThisPC\.matplotlib\fontlist-v390.json
+[2026-06-25 13:14:55,596] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.254.119:5000
+[2026-06-25 13:14:55,596] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2026-06-25 13:15:38,898] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:15:38] "GET /liveness HTTP/1.1" 200 -
+[2026-06-25 13:15:40,463] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:15:40,468] DEBUG in app: No session ID stored yet.
+[2026-06-25 13:15:40,469] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:15:40] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-06-25 13:15:40,470] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:15:42,463] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:15:42,466] DEBUG in app: No session ID stored yet.
+[2026-06-25 13:15:42,466] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:15:42] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-06-25 13:15:42,467] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:15:44,471] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:15:44,474] DEBUG in app: No session ID stored yet.
+[2026-06-25 13:15:44,474] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:15:44] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-06-25 13:15:44,475] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:15:46,480] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:15:46,483] DEBUG in app: No session ID stored yet.
+[2026-06-25 13:15:46,483] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:15:46] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-06-25 13:15:46,484] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:15:48,490] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:15:48,493] DEBUG in app: No session ID stored yet.
+[2026-06-25 13:15:48,493] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:15:48] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-06-25 13:15:48,494] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:15:49,163] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:15:49] "GET /liveness HTTP/1.1" 200 -
+[2026-06-25 13:15:51,102] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:15:51,105] DEBUG in app: No session ID stored yet.
+[2026-06-25 13:15:51,106] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:15:51] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-06-25 13:15:51,106] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:15:53,121] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:15:53,124] DEBUG in app: No session ID stored yet.
+[2026-06-25 13:15:53,124] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:15:53] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-06-25 13:15:53,125] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:15:55,138] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:15:55,141] DEBUG in app: No session ID stored yet.
+[2026-06-25 13:15:55,141] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:15:55] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-06-25 13:15:55,141] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:15:57,135] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:15:57,138] DEBUG in app: No session ID stored yet.
+[2026-06-25 13:15:57,138] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:15:57] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-06-25 13:15:57,139] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:15:59,135] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:15:59,138] DEBUG in app: No session ID stored yet.
+[2026-06-25 13:15:59,139] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:15:59] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-06-25 13:15:59,139] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:16:01,138] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:16:01,141] DEBUG in app: No session ID stored yet.
+[2026-06-25 13:16:01,141] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:16:01] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-06-25 13:16:01,141] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:16:03,135] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:16:03,140] DEBUG in app: No session ID stored yet.
+[2026-06-25 13:16:03,140] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:16:03] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-06-25 13:16:03,140] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:16:05,161] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:16:05,164] DEBUG in app: No session ID stored yet.
+[2026-06-25 13:16:05,165] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:16:05] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-06-25 13:16:05,165] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:16:07,151] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:16:07,154] DEBUG in app: No session ID stored yet.
+[2026-06-25 13:16:07,154] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:16:07] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-06-25 13:16:07,155] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:16:09,164] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:16:09,167] DEBUG in app: No session ID stored yet.
+[2026-06-25 13:16:09,167] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:16:09] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-06-25 13:16:09,167] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:16:11,168] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:16:11,171] DEBUG in app: No session ID stored yet.
+[2026-06-25 13:16:11,171] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:16:11] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-06-25 13:16:11,172] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-06-25 13:16:13,193] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-06-25 13:16:13,195] DEBUG in app: No session ID stored yet.
+[2026-06-25 13:16:13,196] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:16:13] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-06-25 13:16:13,196] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
