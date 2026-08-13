@@ -8,8 +8,9 @@ from datetime import datetime
 from controllers.everify_form import eVerifyForm
 from utilities.audit_logger import AuditLogger
 from flask_server.app import get_access_token
-
 from utilities.stylesheets import *
+from utilities.document_types import DOCUMENT_TYPES
+
 
 class ReleaseDocumentWindow(QMainWindow):
     def __init__(self, username, parent=None, main_window=None):
@@ -83,8 +84,11 @@ class ReleaseDocumentWindow(QMainWindow):
         
         # Document Type
         layout.addWidget(QLabel("Type of Document:"))
-        self.doc_type = QLineEdit()
-        self.doc_type.setPlaceholderText("Enter document type")
+        self.doc_type = QComboBox()
+        self.doc_type.addItem("Select document type")
+        self.doc_type.model().item(0).setEnabled(False)  # Disable the first item
+        self.doc_type.addItems(DOCUMENT_TYPES)
+        self.doc_type.setStyleSheet(combo_box_style)
         layout.addWidget(self.doc_type)
         
         # Number of Copies
@@ -148,7 +152,7 @@ class ReleaseDocumentWindow(QMainWindow):
     def release_document(self):
         """Handle document release"""
         # Validate inputs
-        if not all([self.doc_owner.text(), self.doc_type.text(), 
+        if not all([self.doc_owner.text(), self.doc_type.currentIndex() > 0, 
                    self.copy_no.text(), self.received_by.text()]):
             conn = self.create_connection()
             try:
@@ -181,7 +185,7 @@ class ReleaseDocumentWindow(QMainWindow):
                 "DOCUMENT_RELEASE_INITIATED",
                 {
                     "doc_owner": self.doc_owner.text().strip(),
-                    "doc_type": self.doc_type.text().strip(),
+                    "doc_type": self.doc_type.currentText(),
                     "copy_no": self.copy_no.text(),
                     "received_by": self.received_by.text().strip()
                 }
@@ -205,7 +209,7 @@ class ReleaseDocumentWindow(QMainWindow):
                 VALUES (%s, %s, %s, %s, %s)
                 """, (
                     self.doc_owner.text().strip(),
-                    self.doc_type.text().strip(),
+                    self.doc_type.currentText(),
                     int(self.copy_no.text()),
                     self.received_by.text().strip(),
                     user_name
@@ -244,7 +248,7 @@ class ReleaseDocumentWindow(QMainWindow):
     def clear_form(self):
         """Clear all form fields"""
         self.doc_owner.clear()
-        self.doc_type.clear()
+        self.doc_type.setCurrentIndex(0)
         self.copy_no.clear()
         self.received_by.clear()
 

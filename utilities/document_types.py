@@ -1,0 +1,17 @@
+DOCUMENT_TYPES =[
+    "CTC BIRTH CERTIFICATE",
+    "CTC DEATH CERTIFICATE",
+    "CTC MARRIAGE CERTIFICATE",
+    "FORM 1-A",
+    "FORM 2-A",
+    "FORM 3-A",
+    "FORM 1-B",
+    "FORM 2-B",
+    "FORM 3-B",
+    "FORM 1-C",
+    "FORM 2-C",
+    "FORM 3-C",
+    "FORM 1-A ANNOTATED",
+    "FORM 2-A ANNOTATED",
+    "FORM 3-A ANNOTATED",
+]

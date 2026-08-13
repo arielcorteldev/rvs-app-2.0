@@ -1179,3 +1179,23 @@ requests.exceptions.HTTPError: 422 Client Error: Unprocessable Entity for url: h
 [2026-06-25 13:16:13,195] DEBUG in app: No session ID stored yet.
 [2026-06-25 13:16:13,196] INFO in _internal: 127.0.0.1 - - [25/Jun/2026 13:16:13] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
 [2026-06-25 13:16:13,196] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-08-13 14:24:41,253] DEBUG in connectionpool: Starting new HTTPS connection (1): api.ipify.org:443
+[2026-08-13 14:24:42,244] DEBUG in connectionpool: https://api.ipify.org:443 "GET /?format=text HTTP/1.1" 200 14
+[2026-08-13 14:24:42,245] INFO in app: Server Public IP: 216.247.33.142
+[2026-08-13 14:24:43,377] DEBUG in __init__: CACHEDIR=C:\Users\ThisPC\.matplotlib
+[2026-08-13 14:24:43,381] DEBUG in font_manager: Using fontManager instance from C:\Users\ThisPC\.matplotlib\fontlist-v390.json
+[2026-08-13 14:24:44,072] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.254.119:5000
+[2026-08-13 14:24:44,074] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2026-08-13 15:08:42,272] DEBUG in connectionpool: Starting new HTTPS connection (1): api.ipify.org:443
+[2026-08-13 15:08:43,147] DEBUG in connectionpool: https://api.ipify.org:443 "GET /?format=text HTTP/1.1" 200 14
+[2026-08-13 15:08:43,148] INFO in app: Server Public IP: 216.247.33.142
+[2026-08-13 15:08:43,372] DEBUG in __init__: CACHEDIR=C:\Users\ThisPC\.matplotlib
+[2026-08-13 15:08:43,374] DEBUG in font_manager: Using fontManager instance from C:\Users\ThisPC\.matplotlib\fontlist-v390.json
+[2026-08-13 15:08:43,794] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.254.119:5000
+[2026-08-13 15:08:43,797] INFO in _internal: [33mPress CTRL+C to quit[0m

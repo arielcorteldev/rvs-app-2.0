@@ -12,6 +12,7 @@ from utilities.db_config import POSTGRES_CONFIG
 from datetime import datetime, timedelta
 from utilities.audit_logger import AuditLogger
 from utilities.stylesheets import message_box_style, table_style, date_picker_style, combo_box_style
+from utilities.document_types import DOCUMENT_TYPES
 
 folio = (8.5 * inch, 13 * inch)
 
@@ -95,8 +96,7 @@ class ReleasingLogViewer(QMainWindow):
         type_layout = QHBoxLayout()
         type_layout.setContentsMargins(0, 0, 0, 0)
         self.type_filter = QComboBox()
-        self.type_filter.setEditable(True)
-        self.type_filter.setPlaceholderText("Document Type")
+        self.type_filter.setEditable(False)
         self.type_filter.setFixedWidth(300)
         self.type_filter.setStyleSheet(combo_box_style)
         type_layout.addWidget(self.type_filter)
@@ -221,25 +221,9 @@ class ReleasingLogViewer(QMainWindow):
                 print(f"Error closing connection: {str(e)}")
         
     def load_document_types(self):
-        """Load unique document types for the type filter dropdown"""
-        conn = self.create_connection()
-        try:
-            cursor = conn.cursor()
-            cursor.execute("SELECT DISTINCT doc_type FROM releasing_log ORDER BY doc_type")
-            types = [row[0] for row in cursor.fetchall()]
-            self.type_filter.addItems(types)
-            
-            AuditLogger.log_action(
-                conn,
-                self.current_user,
-                "DOCUMENT_TYPES_LOADED",
-                {"count": len(types)}
-            )
-            conn.commit()
-        except psycopg2.Error as e:
-            print(f"Error loading document types: {str(e)}")
-        finally:
-            self.closeConnection(conn)
+        """Populate the type filter with the fixed document type list"""
+        self.type_filter.addItem("All Types")
+        self.type_filter.addItems(DOCUMENT_TYPES)
     
     def load_data(self):
         """Load releasing log data with current filters"""
@@ -264,7 +248,7 @@ class ReleasingLogViewer(QMainWindow):
                 filter_details["doc_owner"] = self.owner_filter.text()
             
             # Document Type filter
-            if self.type_filter.currentText():
+            if self.type_filter.currentIndex() > 0:  # Ensure a valid type is selected
                 query += " AND doc_type = %s"
                 params.append(self.type_filter.currentText())
                 filter_details["doc_type"] = self.type_filter.currentText()
@@ -373,7 +357,7 @@ class ReleasingLogViewer(QMainWindow):
             self.closeConnection(conn)
             
         self.owner_filter.clear()
-        self.type_filter.setCurrentIndex(-1)
+        self.type_filter.setCurrentIndex(0)
         self.released_by_filter.clear()
         self.received_by_filter.clear()
         self.start_date.setDateTime(QDateTime.currentDateTime().addDays(-7))
