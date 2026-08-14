@@ -33,6 +33,7 @@ from controllers.releasing_docs import ReleaseDocumentWindow
 from utilities.releasing_log_viewer import ReleasingLogViewer
 from utilities.comelec_death_report import ComelecDeathReportWindow
 from controllers.book_viewer import BookViewerWindow
+from controllers.digitization_status import DigitizationStatusWindow
 
 from flask_server.app import start_server
 import threading
@@ -529,9 +530,10 @@ class MainWindow(QMainWindow):
         self.tagging_btn = QPushButton("Tag Records")
         self.book_viewer_btn = QPushButton("Book Viewer")
         self.comelec_death_report_btn = QPushButton("COMELEC Death Report")
+        self.open_digitization_status_btn = QPushButton("Digitization Status")
         
         # Set object names for sub-menu styling
-        for btn in [self.statistics_btn, self.tagging_btn, self.book_viewer_btn, self.comelec_death_report_btn]:
+        for btn in [self.statistics_btn, self.tagging_btn, self.book_viewer_btn, self.comelec_death_report_btn, self.open_digitization_status_btn]:
             btn.setObjectName("sub_menu_btn")
         
         # Add buttons to sub-menu layout
@@ -539,6 +541,7 @@ class MainWindow(QMainWindow):
         self.sub_menu_layout.addWidget(self.tagging_btn)
         self.sub_menu_layout.addWidget(self.book_viewer_btn)
         self.sub_menu_layout.addWidget(self.comelec_death_report_btn)
+        self.sub_menu_layout.addWidget(self.open_digitization_status_btn)
 
         # Add sub-menu to other features container
         self.other_features_layout.addWidget(self.other_features_sub_menu)
@@ -554,6 +557,7 @@ class MainWindow(QMainWindow):
         self.tagging_btn.clicked.connect(self.open_tagging_tools)
         self.book_viewer_btn.clicked.connect(self.open_book_viewer)
         self.comelec_death_report_btn.clicked.connect(self.open_comelec_death_report)
+        self.open_digitization_status_btn.clicked.connect(self.open_digitization_status)
 
         # Create User Management Menu Container
         self.user_management_container = QFrame()
@@ -880,10 +884,10 @@ class MainWindow(QMainWindow):
             self.current_user = username
             self.current_user_full_name = full_name  # Store full name
             self.current_user_is_superuser = is_superuser  # Store superuser status
-            
+
             # Configure UI based on superuser status
             self.configure_ui_for_user_role(is_superuser)
-            
+
             AuditLogger.log_action(
                 conn,
                 username,
@@ -893,6 +897,10 @@ class MainWindow(QMainWindow):
             conn.commit()
         finally:
             self.closeConnection()
+
+        # Open the main dashboard window only after the session connection is fully closed.
+        # This avoids closing the same shared connection while it is still in use.
+        self.open_digitization_status()
 
     def configure_ui_for_user_role(self, is_superuser):
         """Configure UI elements based on user's superuser status"""
@@ -1442,6 +1450,34 @@ class MainWindow(QMainWindow):
                 self.current_user,
                 "OPEN_WINDOW",
                 {"window": "ReleasingLogViewer"}
+            )
+            conn.commit()
+        finally:
+            self.closeConnection()
+
+    def open_digitization_status(self):
+        # Expand sidebar first if it's contracted
+        if not self.is_sidebar_expanded:
+            self.expand_sidebar()
+
+        conn = self.create_connection()
+        try:
+            digitization_status = self.windows.get('digitization_status')
+            if digitization_status is None or not digitization_status.isVisible():
+                digitization_status = DigitizationStatusWindow(self.current_user, self.current_user_is_superuser, parent=self)
+                digitization_status.setParent(self)
+                digitization_status.setWindowFlag(Qt.Window)
+                self.windows['digitization_status'] = digitization_status
+                
+            digitization_status.show()
+            digitization_status.raise_()
+            digitization_status.activateWindow()
+            
+            AuditLogger.log_action(
+                conn,
+                self.current_user,
+                "OPEN_WINDOW",
+                {"window": "DigitizationStatusWindow"}
             )
             conn.commit()
         finally:
