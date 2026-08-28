@@ -750,6 +750,7 @@ class VerifyWindowBase(QMainWindow):
 
         conn = self.create_connection()
         try:
+            file_path = os.path.normpath(file_path)
             os.startfile(file_path)
             AuditLogger.log_action(
                 conn,
