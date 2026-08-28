@@ -261,7 +261,7 @@ class VerifyWindowBase(QMainWindow):
         cursor = None
         self.form_preview_window = None # Initialize to None
         try:
-            # Get the selected file from results list
+            # Get the selected record from results list, identified by DB row ID
             selected_items = self.ui.results_list.selectedItems()
             if not selected_items:
                 box = QMessageBox(self)
@@ -273,74 +273,37 @@ class VerifyWindowBase(QMainWindow):
                 box.exec()
                 return
 
-            selected_file = selected_items[0].text()
-            regyear = self.ui.regyear_textEdit.text().strip().capitalize()
-            if not regyear:
+            record_id = selected_items[0].data(Qt.UserRole)
+            if record_id is None:
                 box = QMessageBox(self)
                 box.setIcon(QMessageBox.Warning)
                 box.setWindowTitle("Warning")
-                box.setText("Please enter a registration year/book no.")
+                box.setText("Could not identify the selected record.")
                 box.setStandardButtons(QMessageBox.Ok)
                 box.setStyleSheet(message_box_style)
                 box.exec()
                 return
 
-            # Get search term and type to pinpoint the correct row within a multi-entry file
-            search_term = self.ui.search_textEdit.text().strip()
-            search_type = self.ui.search_by_comboBox.currentText()
-
             # Get the record data from database
             cursor = conn.cursor()
-            file_path = os.path.join(self.search_path, regyear, selected_file)
-            normalized_path = self.normalize_path(file_path)
-            
-            print(f"\nSearching for record with file path: {normalized_path}")
-            print(f"Search term: {search_term}, Search type: {search_type}")
-            
+
+            print(f"\nGenerating auto-form for record id: {record_id}")
+
             record_dict = {}
             form_type = ""
-
-            # Path match condition reused across all queries
-            path_condition = """
-                (replace(replace(file_path, '\\', '/'), '//', '/') = %s
-                 OR file_path LIKE %s)
-            """
-            path_params = (normalized_path, f'%{selected_file}')
 
             # Determine which table to query based on window type and fetch data into a dictionary
             if isinstance(self, VerifyBirthWindow):
                 form_type = "Birth"
 
-                if search_type == "Name":
-                    filter_clause = "AND name ILIKE %s"
-                    filter_params = (f'%{search_term}%',)
-                elif search_type == "Date":
-                    try:
-                        from dateutil import parser as dateparser
-                        parsed_date = dateparser.parse(search_term).strftime('%Y-%m-%d')
-                        filter_clause = "AND date_of_birth = %s"
-                        filter_params = (parsed_date,)
-                    except Exception:
-                        filter_clause = ""
-                        filter_params = ()
-                    # filter_clause = "AND date_of_birth::text LIKE %s"
-                    # filter_params = (f'%{search_term}%',)
-                elif search_type == "Reg No.":
-                    filter_clause = "AND reg_no ILIKE %s"
-                    filter_params = (f'%{search_term}%',)
-                else:
-                    filter_clause = ""
-                    filter_params = ()
-
-                cursor.execute(f"""
+                cursor.execute("""
                     SELECT name, date_of_birth, sex, page_no, book_no, reg_no, 
                            date_of_reg, place_of_birth, name_of_mother, nationality_mother,
                            name_of_father, nationality_father, parents_marriage_date,
                            parents_marriage_place, attendant, remarks
                     FROM birth_index 
-                    WHERE {path_condition} {filter_clause}
-                    LIMIT 1
-                """, path_params + filter_params)
+                    WHERE id = %s
+                """, (record_id,))
                 record = cursor.fetchone()
                 if record:
                     (name, dob, sex, page_no, book_no, reg_no, dor, pob, mother, mother_nat, father, father_nat, parents_marriage_date, parents_marriage_place, attendant, remarks) = record
@@ -366,35 +329,13 @@ class VerifyWindowBase(QMainWindow):
             elif isinstance(self, VerifyDeathWindow):
                 form_type = "Death"
 
-                if search_type == "Name":
-                    filter_clause = "AND name ILIKE %s"
-                    filter_params = (f'%{search_term}%',)
-                elif search_type == "Date":
-                    try:
-                        from dateutil import parser as dateparser
-                        parsed_date = dateparser.parse(search_term).strftime('%Y-%m-%d')
-                        filter_clause = "AND date_of_death = %s"
-                        filter_params = (parsed_date,)
-                    except Exception:
-                        filter_clause = ""
-                        filter_params = ()
-                    # filter_clause = "AND date_of_death::text LIKE %s"
-                    # filter_params = (f'%{search_term}%',)
-                elif search_type == "Reg No.":
-                    filter_clause = "AND reg_no ILIKE %s"
-                    filter_params = (f'%{search_term}%',)
-                else:
-                    filter_clause = ""
-                    filter_params = ()
-
-                cursor.execute(f"""
+                cursor.execute("""
                     SELECT name, date_of_death, sex, page_no, book_no, reg_no,
                            date_of_reg, age_years, civil_status, nationality, place_of_death,
                            cause_of_death, remarks
                     FROM death_index 
-                    WHERE {path_condition} {filter_clause}
-                    LIMIT 1
-                """, path_params + filter_params)
+                    WHERE id = %s
+                """, (record_id,))
                 record = cursor.fetchone()
                 if record:
                     (name, dod, sex, page_no, book_no, reg_no, dor, age, civil_status, nationality, pod, cod, remarks) = record
@@ -417,36 +358,14 @@ class VerifyWindowBase(QMainWindow):
             elif isinstance(self, VerifyMarriageWindow):
                 form_type = "Marriage"
 
-                if search_type == "Name":
-                    filter_clause = "AND (husband_name ILIKE %s OR wife_name ILIKE %s)"
-                    filter_params = (f'%{search_term}%', f'%{search_term}%')
-                elif search_type == "Date":
-                    try:
-                        from dateutil import parser as dateparser
-                        parsed_date = dateparser.parse(search_term).strftime('%Y-%m-%d')
-                        filter_clause = "AND date_of_marriage = %s"
-                        filter_params = (parsed_date,)
-                    except Exception:
-                        filter_clause = ""
-                        filter_params = ()
-                    # filter_clause = "AND date_of_marriage::text LIKE %s"
-                    # filter_params = (f'%{search_term}%',)
-                elif search_type == "Reg No.":
-                    filter_clause = "AND reg_no ILIKE %s"
-                    filter_params = (f'%{search_term}%',)
-                else:
-                    filter_clause = ""
-                    filter_params = ()
-
-                cursor.execute(f"""
+                cursor.execute("""
                     SELECT husband_name, wife_name, date_of_marriage, page_no, book_no, reg_no,
                            husband_age, wife_age, husb_nationality, wife_nationality,
                            husb_civil_status, wife_civil_status, husb_mother, wife_mother,
                            husb_father, wife_father, date_of_reg, place_of_marriage, remarks
                     FROM marriage_index 
-                    WHERE {path_condition} {filter_clause}
-                    LIMIT 1
-                """, path_params + filter_params)
+                    WHERE id = %s
+                """, (record_id,))
                 record = cursor.fetchone()
                 if record:
                     (husband, wife, dom, page_no, book_no, reg_no, husband_age, wife_age, husb_nat, wife_nat, husb_civil, wife_civil, husb_mother, wife_mother, husb_father, wife_father, dor, pom, remarks) = record
@@ -475,11 +394,11 @@ class VerifyWindowBase(QMainWindow):
                 raise ValueError("Unknown window type for form preview")
 
             if not record_dict:
-                print(f"No record data found for file path: {normalized_path}")
+                print(f"No record data found for record id: {record_id}")
                 box = QMessageBox(self)
                 box.setIcon(QMessageBox.Warning)
                 box.setWindowTitle("Warning")
-                box.setText("No record data found for the selected file.")
+                box.setText("No record data found for the selected record.")
                 box.setStandardButtons(QMessageBox.Ok)
                 box.setStyleSheet(message_box_style)
                 box.exec()
@@ -561,13 +480,12 @@ class VerifyWindowBase(QMainWindow):
                 box.exec()
                 return
 
-            selected_file = selected_items[0].text()
-            regyear = self.ui.regyear_textEdit.text().strip().capitalize()
-            if not regyear:
+            record_id = selected_items[0].data(Qt.UserRole)
+            if record_id is None:
                 box = QMessageBox(self)
                 box.setIcon(QMessageBox.Warning)
                 box.setWindowTitle("Warning")
-                box.setText("Please enter a registration year/book no.")
+                box.setText("Could not identify the selected record.")
                 box.setStandardButtons(QMessageBox.Ok)
                 box.setStyleSheet(message_box_style)
                 box.exec()
@@ -575,11 +493,9 @@ class VerifyWindowBase(QMainWindow):
 
             # Get the record data from database to identify the record
             cursor = conn.cursor()
-            file_path = os.path.join(self.search_path, regyear, selected_file)
-            normalized_path = self.normalize_path(file_path)
-            
-            print(f"\nFetching reg_no for file path: {normalized_path}")
-            
+
+            print(f"\nFetching reg_no for record id: {record_id}")
+
             reg_no = None
             table_name = None
             form_type = ""
@@ -588,24 +504,15 @@ class VerifyWindowBase(QMainWindow):
             if isinstance(self, VerifyBirthWindow):
                 table_name = "birth_index"
                 form_type = "Birth"
-                cursor.execute(
-                    "SELECT reg_no FROM birth_index WHERE replace(replace(file_path, '\\', '/'), '//', '/') = %s OR file_path LIKE %s LIMIT 1",
-                    (normalized_path, f'%{selected_file}')
-                )
+                cursor.execute("SELECT reg_no FROM birth_index WHERE id = %s", (record_id,))
             elif isinstance(self, VerifyDeathWindow):
                 table_name = "death_index"
                 form_type = "Death"
-                cursor.execute(
-                    "SELECT reg_no FROM death_index WHERE replace(replace(file_path, '\\', '/'), '//', '/') = %s OR file_path LIKE %s LIMIT 1",
-                    (normalized_path, f'%{selected_file}')
-                )
+                cursor.execute("SELECT reg_no FROM death_index WHERE id = %s", (record_id,))
             elif isinstance(self, VerifyMarriageWindow):
                 table_name = "marriage_index"
                 form_type = "Marriage"
-                cursor.execute(
-                    "SELECT reg_no FROM marriage_index WHERE replace(replace(file_path, '\\', '/'), '//', '/') = %s OR file_path LIKE %s LIMIT 1",
-                    (normalized_path, f'%{selected_file}')
-                )
+                cursor.execute("SELECT reg_no FROM marriage_index WHERE id = %s", (record_id,))
             else:
                 raise ValueError("Unknown window type")
 
@@ -613,7 +520,7 @@ class VerifyWindowBase(QMainWindow):
             if record:
                 reg_no = record[0]
             else:
-                print(f"No record found for file path: {normalized_path}")
+                print(f"No record found for record id: {record_id}")
                 box = QMessageBox(self)
                 box.setIcon(QMessageBox.Warning)
                 box.setWindowTitle("Warning")
@@ -701,8 +608,8 @@ class VerifyWindowBase(QMainWindow):
                 
                 # Update database
                 cursor.execute(
-                    f"UPDATE {table_name} SET remarks = %s WHERE reg_no = %s",
-                    (remarks, reg_no)
+                    f"UPDATE {table_name} SET remarks = %s WHERE id = %s",
+                    (remarks, record_id)
                 )
                 conn.commit()
                 
@@ -828,18 +735,19 @@ class VerifyWindowBase(QMainWindow):
             self.closeConnection()
     
     def open_selected_file(self, item):
-        regyear = self.ui.regyear_textEdit.text().strip()
-        if not regyear:
-            # QMessageBox.warning(self, "Error", "Please enter a registration year before opening a file.")
+        scanned = item.data(Qt.UserRole + 1)
+        file_path = item.data(Qt.UserRole + 2)
+
+        if not scanned or not file_path:
             box = QMessageBox(self)
-            box.setIcon(QMessageBox.Warning)
-            box.setWindowTitle("Error")
-            box.setText("Please enter a registration year/book no. before opening a file.")
+            box.setIcon(QMessageBox.Information)
+            box.setWindowTitle("Record Not Yet Scanned")
+            box.setText("This record has not been scanned yet, so there is no file to open.")
             box.setStandardButtons(QMessageBox.Ok)
             box.setStyleSheet(message_box_style)
             box.exec()
             return
-        file_path = os.path.join(self.search_path, regyear, item.text())
+
         conn = self.create_connection()
         try:
             os.startfile(file_path)
@@ -847,11 +755,10 @@ class VerifyWindowBase(QMainWindow):
                 conn,
                 self.current_user,
                 "FILE_OPENED",
-                {"file": item.text(), "path": file_path}
+                {"file": os.path.basename(file_path), "path": file_path}
             )
             conn.commit()
         except FileNotFoundError:
-            # QMessageBox.critical(self, "Error", f"File not found:\n{file_path}")
             box = QMessageBox(self)
             box.setIcon(QMessageBox.Critical)
             box.setWindowTitle("Error")
@@ -860,7 +767,6 @@ class VerifyWindowBase(QMainWindow):
             box.setStyleSheet(message_box_style)
             box.exec()
         except Exception as e:
-            # QMessageBox.critical(self, "Error", f"An error occurred:\n{str(e)}")
             box = QMessageBox(self)
             box.setIcon(QMessageBox.Critical)
             box.setWindowTitle("Error")
@@ -872,7 +778,7 @@ class VerifyWindowBase(QMainWindow):
                 conn,
                 self.current_user,
                 "FILE_OPEN_ERROR",
-                {"error": str(e), "file": item.text()}
+                {"error": str(e), "path": file_path}
             )
             conn.commit()
         finally:
@@ -952,14 +858,17 @@ class VerifyWindowBase(QMainWindow):
                 index_table = "birth_index"
                 name_column = "name"
                 date_column = "date_of_birth"
+                form_type_label = "Certificate of Live Birth"
             elif isinstance(self, VerifyDeathWindow):
                 index_table = "death_index"
                 name_column = "name"
                 date_column = "date_of_death"
+                form_type_label = "Certificate of Death"
             elif isinstance(self, VerifyMarriageWindow):
                 index_table = "marriage_index"
                 name_column = "husband_name"  # We'll search both husband and wife names
                 date_column = "date_of_marriage"
+                form_type_label = "Certificate of Marriage"
             else:
                 raise ValueError("Unknown window type")
 
@@ -988,7 +897,7 @@ class VerifyWindowBase(QMainWindow):
                     if isinstance(self, VerifyMarriageWindow):
                         # For marriage records, search both husband and wife names
                         search_query = f"""
-                            SELECT file_path FROM {index_table}
+                            SELECT id, file_path, scanned, reg_no, date_of_reg FROM {index_table}
                             WHERE (
                                 LOWER({name_column}) LIKE LOWER(%s) 
                                 OR LOWER(wife_name) LIKE LOWER(%s)
@@ -1007,7 +916,7 @@ class VerifyWindowBase(QMainWindow):
                         search_params = name_variations
                     else:
                         search_query = f"""
-                            SELECT file_path FROM {index_table}
+                            SELECT id, file_path, scanned, reg_no, date_of_reg FROM {index_table}
                             WHERE (
                                 LOWER({name_column}) LIKE LOWER(%s)
                                 OR LOWER({name_column}) LIKE LOWER(%s)
@@ -1054,7 +963,7 @@ class VerifyWindowBase(QMainWindow):
                                 if year:
                                     formatted_date = f"{year}-{month_map[month]}-{day.zfill(2)}"
                                     search_query = f"""
-                                        SELECT file_path FROM {index_table}
+                                        SELECT id, file_path, scanned, reg_no, date_of_reg FROM {index_table}
                                         WHERE {date_column}::text LIKE %s
                                         OR {date_column}::text LIKE %s
                                         OR {date_column}::text LIKE %s
@@ -1068,7 +977,7 @@ class VerifyWindowBase(QMainWindow):
                                 else:
                                     # Search for month and day in any year
                                     search_query = f"""
-                                        SELECT file_path FROM {index_table}
+                                        SELECT id, file_path, scanned, reg_no, date_of_reg FROM {index_table}
                                         WHERE {date_column}::text LIKE %s
                                         OR {date_column}::text LIKE %s
                                         OR {date_column}::text LIKE %s
@@ -1081,7 +990,7 @@ class VerifyWindowBase(QMainWindow):
                                     )
                             else:
                                 search_query = f"""
-                                    SELECT file_path FROM {index_table}
+                                    SELECT id, file_path, scanned, reg_no, date_of_reg FROM {index_table}
                                     WHERE {date_column}::text LIKE %s
                                     ORDER BY {date_column} DESC
                                 """
@@ -1104,7 +1013,7 @@ class VerifyWindowBase(QMainWindow):
                                     # Build a query that matches any of the formatted dates
                                     placeholders = ', '.join(['%s'] * len(formatted_dates))
                                     search_query = f"""
-                                        SELECT file_path FROM {index_table}
+                                        SELECT id, file_path, scanned, reg_no, date_of_reg FROM {index_table}
                                         WHERE {date_column}::text LIKE ANY(ARRAY[{placeholders}])
                                         OR {date_column}::text LIKE %s
                                         ORDER BY {date_column} DESC
@@ -1113,7 +1022,7 @@ class VerifyWindowBase(QMainWindow):
                                 else:
                                     # If all parsing fails, do a simple text search
                                     search_query = f"""
-                                        SELECT file_path FROM {index_table}
+                                        SELECT id, file_path, scanned, reg_no, date_of_reg FROM {index_table}
                                         WHERE {date_column}::text LIKE %s
                                         ORDER BY {date_column} DESC
                                     """
@@ -1122,7 +1031,7 @@ class VerifyWindowBase(QMainWindow):
                                 print(f"DEBUG - Date parsing error: {str(e)}")
                                 # Fallback to simple text search
                                 search_query = f"""
-                                    SELECT file_path FROM {index_table}
+                                    SELECT id, file_path, scanned, reg_no, date_of_reg FROM {index_table}
                                     WHERE {date_column}::text LIKE %s
                                     ORDER BY {date_column} DESC
                                 """
@@ -1131,14 +1040,14 @@ class VerifyWindowBase(QMainWindow):
                         print(f"DEBUG - Date parsing error: {str(e)}")
                         # Fallback to simple text search if date parsing fails
                         search_query = f"""
-                            SELECT file_path FROM {index_table}
+                            SELECT id, file_path, scanned, reg_no, date_of_reg FROM {index_table}
                             WHERE {date_column}::text LIKE %s
                             ORDER BY {date_column} DESC
                         """
                         search_params = (f'%{query}%',)
                 elif search_type == "Reg No.":
                     search_query = f"""
-                        SELECT file_path FROM {index_table}
+                        SELECT id, file_path, scanned, reg_no, date_of_reg FROM {index_table}
                         WHERE reg_no LIKE %s
                         ORDER BY {date_column} DESC
                     """
@@ -1153,16 +1062,30 @@ class VerifyWindowBase(QMainWindow):
                 print(f"DEBUG - Query returned {len(results)} results")
 
                 if results:
-                    pdf_files = [os.path.basename(result[0]) for result in results]
-                    self.ui.results_list.addItems(pdf_files)
-                    self.found_pdfs.extend(pdf_files)
+                    display_texts = []
+                    for row in results:
+                        row_id, row_file_path, row_scanned, row_reg_no, row_date_of_reg = row
+                        if row_scanned and row_file_path:
+                            text = os.path.basename(row_file_path)
+                        else:
+                            year = str(row_date_of_reg.year) if row_date_of_reg else ""
+                            text = f"{form_type_label} {year} (Reg. No. {row_reg_no}) - Record not yet scanned".replace("  ", " ")
+
+                        item = QListWidgetItem(text)
+                        item.setData(Qt.UserRole, row_id)
+                        item.setData(Qt.UserRole + 1, bool(row_scanned))
+                        item.setData(Qt.UserRole + 2, row_file_path)
+                        self.ui.results_list.addItem(item)
+                        display_texts.append(text)
+
+                    self.found_pdfs.extend(display_texts)
                     self.ui.status_label.setText(f"Found {len(self.found_pdfs)} files.")
                     AuditLogger.log_action(
                         conn,
                         self.current_user,
                         "SEARCH_COMPLETED",
                         {
-                            "result_count": len(pdf_files),
+                            "result_count": len(display_texts),
                             "type": search_type
                         }
                     )
