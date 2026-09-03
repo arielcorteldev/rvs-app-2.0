@@ -15,9 +15,9 @@ from PySide6.QtCore import *
 from PySide6.QtPrintSupport import QPrinter, QPrintDialog, QPrintPreviewDialog
 
 # IMPORT UI 
-from ui.Search_Birth_Window import Ui_SearchBirthWindow
-from ui.Search_Death_Window import Ui_SearchDeathWindow
-from ui.Search_Marriage_Window import Ui_SearchMarriageWindow
+from ui.Verify_Birth_Window import Ui_VerifyBirthWindow
+from ui.Verify_Death_Window import Ui_VerifyDeathWindow
+from ui.Verify_Marriage_Window import Ui_VerifyMarriageWindow
 
 from utilities.audit_logger import AuditLogger
 from utilities.html_renderer import render_html_form
@@ -1227,12 +1227,12 @@ class VerifyWindowBase(QMainWindow):
 # Subclasses for each document type
 class VerifyBirthWindow(VerifyWindowBase):
     def __init__(self, username, parent=None, main_window=None):
-        super().__init__(Ui_SearchBirthWindow, r"\\server\MCR\LIVE BIRTH", r'forms\FORM 1-A.pdf', r'forms\FORM 1-B.pdf', r'forms\FORM 1-C.pdf', username, parent, main_window)
+        super().__init__(Ui_VerifyBirthWindow, r"\\server\MCR\LIVE BIRTH", r'forms\FORM 1-A.pdf', r'forms\FORM 1-B.pdf', r'forms\FORM 1-C.pdf', username, parent, main_window)
 
 class VerifyDeathWindow(VerifyWindowBase):
     def __init__(self, username, parent=None, main_window=None):
-        super().__init__(Ui_SearchDeathWindow, r"\\server\MCR\DEATH", r'forms\FORM 2-A.pdf', r'forms\FORM 2-B.pdf', r'forms\FORM 2-C.pdf', username, parent, main_window)
+        super().__init__(Ui_VerifyDeathWindow, r"\\server\MCR\DEATH", r'forms\FORM 2-A.pdf', r'forms\FORM 2-B.pdf', r'forms\FORM 2-C.pdf', username, parent, main_window)
 
 class VerifyMarriageWindow(VerifyWindowBase):
     def __init__(self, username, parent=None, main_window=None):
-        super().__init__(Ui_SearchMarriageWindow, r"\\server\MCR\MARRIAGE", r'forms\FORM 3-A.pdf', r'forms\FORM 3-B.pdf', r'forms\FORM 3-C.pdf', username, parent, main_window)
+        super().__init__(Ui_VerifyMarriageWindow, r"\\server\MCR\MARRIAGE", r'forms\FORM 3-A.pdf', r'forms\FORM 3-B.pdf', r'forms\FORM 3-C.pdf', username, parent, main_window)

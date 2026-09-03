@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'searchbirthwindow.ui'
+## Form generated from reading UI file 'searchmarriagewindow.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.9.0
 ##
@@ -20,15 +20,15 @@ from PySide6.QtWidgets import (QApplication, QComboBox, QGridLayout, QHBoxLayout
     QListWidgetItem, QMainWindow, QPushButton, QSizePolicy,
     QSpacerItem, QVBoxLayout, QWidget)
 
-class Ui_SearchBirthWindow(object):
-    def setupUi(self, SearchBirthWindow):
-        if not SearchBirthWindow.objectName():
-            SearchBirthWindow.setObjectName(u"SearchBirthWindow")
-        SearchBirthWindow.resize(800, 600)
+class Ui_VerifyMarriageWindow(object):
+    def setupUi(self, VerifyMarriageWindow):
+        if not VerifyMarriageWindow.objectName():
+            VerifyMarriageWindow.setObjectName(u"VerifyMarriageWindow")
+        VerifyMarriageWindow.resize(800, 600)
         icon = QIcon()
         icon.addFile(u"assets/icons/magnifier.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        SearchBirthWindow.setWindowIcon(icon)
-        self.centralwidget = QWidget(SearchBirthWindow)
+        VerifyMarriageWindow.setWindowIcon(icon)
+        self.centralwidget = QWidget(VerifyMarriageWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName(u"gridLayout")
@@ -64,6 +64,7 @@ class Ui_SearchBirthWindow(object):
 
         self.horizontalLayout.addWidget(self.search_button)
 
+
         self.gridLayout.addLayout(self.horizontalLayout, 0, 0, 1, 4)
 
         self.horizontalLayout.addItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
@@ -82,9 +83,9 @@ class Ui_SearchBirthWindow(object):
         icon7 = QIcon()
         icon7.addFile(u"assets/icons/auto.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.auto_form.setIcon(icon7)
-    
-        self.verticalLayout.addWidget(self.auto_form)
 
+        self.verticalLayout.addWidget(self.auto_form)
+        
         self.create_form = QPushButton(self.centralwidget)
         self.create_form.setObjectName(u"create_form")
         icon2 = QIcon()
@@ -113,12 +114,14 @@ class Ui_SearchBirthWindow(object):
 
         self.verticalLayout.addItem(self.verticalSpacer)
 
+
         self.horizontalLayout_2.addLayout(self.verticalLayout)
 
         self.results_list = QListWidget(self.centralwidget)
         self.results_list.setObjectName(u"results_list")
 
         self.horizontalLayout_2.addWidget(self.results_list)
+
 
         self.gridLayout.addLayout(self.horizontalLayout_2, 1, 0, 1, 4)
 
@@ -135,21 +138,21 @@ class Ui_SearchBirthWindow(object):
 
         self.gridLayout.addWidget(self.status_label, 2, 3, 1, 1)
 
-        SearchBirthWindow.setCentralWidget(self.centralwidget)
+        VerifyMarriageWindow.setCentralWidget(self.centralwidget)
 
-        self.retranslateUi(SearchBirthWindow)
+        self.retranslateUi(VerifyMarriageWindow)
 
-        QMetaObject.connectSlotsByName(SearchBirthWindow)
+        QMetaObject.connectSlotsByName(VerifyMarriageWindow)
     # setupUi
 
-    def retranslateUi(self, SearchBirthWindow):
-        SearchBirthWindow.setWindowTitle(QCoreApplication.translate("SearchBirthWindow", u"MainWindow", None))
+    def retranslateUi(self, VerifyMarriageWindow):
+        VerifyMarriageWindow.setWindowTitle(QCoreApplication.translate("VerifyMarriageWindow", u"MainWindow", None))
         self.search_textEdit.setPlaceholderText("")
         self.search_button.setText("")
         self.create_form.setText("")
         self.no_record.setText("")
         self.destroyed.setText("")
         self.status_label.setText("")
-        self.everify_button.setText(QCoreApplication.translate("SearchBirthWindow", u"PushButton", None))
+        self.everify_button.setText(QCoreApplication.translate("VerifyMarriageWindow", u"Verify", None))
     # retranslateUi
 

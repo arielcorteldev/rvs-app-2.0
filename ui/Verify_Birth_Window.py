@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'searchdeathwindow.ui'
+## Form generated from reading UI file 'searchbirthwindow.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.9.0
 ##
@@ -20,15 +20,15 @@ from PySide6.QtWidgets import (QApplication, QComboBox, QGridLayout, QHBoxLayout
     QListWidgetItem, QMainWindow, QPushButton, QSizePolicy,
     QSpacerItem, QVBoxLayout, QWidget)
 
-class Ui_SearchDeathWindow(object):
-    def setupUi(self, SearchDeathWindow):
-        if not SearchDeathWindow.objectName():
-            SearchDeathWindow.setObjectName(u"SearchDeathWindow")
-        SearchDeathWindow.resize(800, 600)
+class Ui_VerifyBirthWindow(object):
+    def setupUi(self, VerifyBirthWindow):
+        if not VerifyBirthWindow.objectName():
+            VerifyBirthWindow.setObjectName(u"VerifyBirthWindow")
+        VerifyBirthWindow.resize(800, 600)
         icon = QIcon()
         icon.addFile(u"assets/icons/magnifier.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        SearchDeathWindow.setWindowIcon(icon)
-        self.centralwidget = QWidget(SearchDeathWindow)
+        VerifyBirthWindow.setWindowIcon(icon)
+        self.centralwidget = QWidget(VerifyBirthWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName(u"gridLayout")
@@ -82,9 +82,9 @@ class Ui_SearchDeathWindow(object):
         icon7 = QIcon()
         icon7.addFile(u"assets/icons/auto.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.auto_form.setIcon(icon7)
-
+    
         self.verticalLayout.addWidget(self.auto_form)
-        
+
         self.create_form = QPushButton(self.centralwidget)
         self.create_form.setObjectName(u"create_form")
         icon2 = QIcon()
@@ -135,21 +135,21 @@ class Ui_SearchDeathWindow(object):
 
         self.gridLayout.addWidget(self.status_label, 2, 3, 1, 1)
 
-        SearchDeathWindow.setCentralWidget(self.centralwidget)
+        VerifyBirthWindow.setCentralWidget(self.centralwidget)
 
-        self.retranslateUi(SearchDeathWindow)
+        self.retranslateUi(VerifyBirthWindow)
 
-        QMetaObject.connectSlotsByName(SearchDeathWindow)
+        QMetaObject.connectSlotsByName(VerifyBirthWindow)
     # setupUi
 
-    def retranslateUi(self, SearchDeathWindow):
-        SearchDeathWindow.setWindowTitle(QCoreApplication.translate("SearchDeathWindow", u"MainWindow", None))
+    def retranslateUi(self, VerifyBirthWindow):
+        VerifyBirthWindow.setWindowTitle(QCoreApplication.translate("VerifyBirthWindow", u"MainWindow", None))
         self.search_textEdit.setPlaceholderText("")
         self.search_button.setText("")
         self.create_form.setText("")
         self.no_record.setText("")
         self.destroyed.setText("")
         self.status_label.setText("")
-        self.everify_button.setText(QCoreApplication.translate("SearchDeathWindow", u"PushButton", None))
+        self.everify_button.setText(QCoreApplication.translate("VerifyBirthWindow", u"PushButton", None))
     # retranslateUi
 
