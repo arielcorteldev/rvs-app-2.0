@@ -15,8 +15,8 @@ from PySide6.QtCore import *
 
 # IMPORT UI 
 from ui.LCR_Search_Birth_Window import Ui_LCRSearchBirthWindow
-from ui.Verify_Death_Window import Ui_VerifyDeathWindow
-from ui.Verify_Marriage_Window import Ui_VerifyMarriageWindow
+from ui.LCR_Search_Death_Window import Ui_LCRSearchDeathWindow
+from ui.LCR_Search_Marriage_Window import Ui_LCRSearchMarriageWindow
 from utilities.audit_logger import AuditLogger
 from utilities.db_config import POSTGRES_CONFIG
 
@@ -657,8 +657,8 @@ class SearchBirthWindow(SearchWindowBase):
 
 class SearchDeathWindow(SearchWindowBase):
     def __init__(self, username, parent=None, main_window=None):
-        super().__init__(Ui_VerifyDeathWindow, r"\\server\MCR\DEATH", r'forms\FORM 2-A.pdf', r'forms\FORM 2-B.pdf', r'forms\FORM 2-C.pdf', username, parent, main_window)
+        super().__init__(Ui_LCRSearchDeathWindow, r"\\server\MCR\DEATH", r'forms\FORM 2-A.pdf', r'forms\FORM 2-B.pdf', r'forms\FORM 2-C.pdf', username, parent, main_window)
 
 class SearchMarriageWindow(SearchWindowBase):
     def __init__(self, username, parent=None, main_window=None):
-        super().__init__(Ui_VerifyMarriageWindow, r"\\server\MCR\MARRIAGE", r'forms\FORM 3-A.pdf', r'forms\FORM 3-B.pdf', r'forms\FORM 3-C.pdf', username, parent, main_window)
+        super().__init__(Ui_LCRSearchMarriageWindow, r"\\server\MCR\MARRIAGE", r'forms\FORM 3-A.pdf', r'forms\FORM 3-B.pdf', r'forms\FORM 3-C.pdf', username, parent, main_window)
