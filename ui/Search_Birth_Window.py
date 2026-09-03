@@ -113,14 +113,12 @@ class Ui_SearchBirthWindow(object):
 
         self.verticalLayout.addItem(self.verticalSpacer)
 
-
         self.horizontalLayout_2.addLayout(self.verticalLayout)
 
         self.results_list = QListWidget(self.centralwidget)
         self.results_list.setObjectName(u"results_list")
 
         self.horizontalLayout_2.addWidget(self.results_list)
-
 
         self.gridLayout.addLayout(self.horizontalLayout_2, 1, 0, 1, 4)
 
