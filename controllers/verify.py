@@ -95,19 +95,19 @@ class VerifyWindowBase(QMainWindow):
                 background-color: #fef2f4;
             }
         """)
-        self.ui.regyear_textEdit.setStyleSheet("""
-            QLineEdit {
-                background-color: #FFFFFF;
-                color: #212121;
-                border: 1px solid #D1D0D0;
-                border-radius: 5px;
-                padding: 5px;
-            }
-            QLineEdit:focus {
-                border: 1px solid #ce305e;
-                background-color: #fef2f4;
-            }
-        """)
+        # self.ui.regyear_textEdit.setStyleSheet("""
+        #     QLineEdit {
+        #         background-color: #FFFFFF;
+        #         color: #212121;
+        #         border: 1px solid #D1D0D0;
+        #         border-radius: 5px;
+        #         padding: 5px;
+        #     }
+        #     QLineEdit:focus {
+        #         border: 1px solid #ce305e;
+        #         background-color: #fef2f4;
+        #     }
+        # """)
         self.ui.search_by_comboBox.setFixedWidth(100)
         self.ui.search_by_comboBox.setStyleSheet("""
             QComboBox {
@@ -228,7 +228,7 @@ class VerifyWindowBase(QMainWindow):
                     item.layout().setParent(None)
 
         # Add the new search layout to the grid layout
-        self.ui.gridLayout.addLayout(search_layout, 0, 1, 1, 2)
+        self.ui.gridLayout.addLayout(search_layout, 0, 0, 1, 4)
 
         # Update the layout
         self.ui.gridLayout.update()
@@ -1213,7 +1213,7 @@ class VerifyWindowBase(QMainWindow):
             conn.commit()
 
             # Clear all inputs
-            self.ui.regyear_textEdit.clear()
+            # self.ui.regyear_textEdit.clear()
             self.ui.search_textEdit.clear()
             self.ui.search_by_comboBox.setCurrentText("Name")
             self.ui.results_list.clear()
