@@ -86,11 +86,11 @@ class ManualBirthEntryWindow(QWidget):
 
         clicked = box.clickedButton()
         if clicked == verify_btn:
-            self.close()
+            QTimer.singleShot(0, self.close)
             if self.main_window:
                 QTimer.singleShot(0, self.main_window.open_search_birth_dialog)
         elif clicked == tracker_btn:
-            self.close()
+            QTimer.singleShot(0, self.close)
             if self.main_window:
                 QTimer.singleShot(0, self.main_window.open_digitization_status)
         # continue_btn (or dialog dismissed another way): just proceed —

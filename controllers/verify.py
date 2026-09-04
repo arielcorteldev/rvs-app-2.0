@@ -650,7 +650,7 @@ class VerifyWindowBase(QMainWindow):
         manual_window = windows.get('manual_birth_entry')
         if manual_window is None or not manual_window.isVisible():
             manual_window = ManualBirthEntryWindow(
-                self.current_user_full_name, parent=self.main_window, main_window=self.main_window
+                self.current_user, parent=self.main_window, main_window=self.main_window
             )
             windows['manual_birth_entry'] = manual_window
 
