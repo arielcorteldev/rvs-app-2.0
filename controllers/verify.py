@@ -7,6 +7,7 @@ import webbrowser
 import subprocess
 from flask_server.app import get_access_token
 from controllers.everify_form import eVerifyForm
+from controllers.manual_birth_entry import ManualBirthEntryWindow
 
 # IMPORT PYSIDE6 MODULES
 from PySide6.QtWidgets import *
@@ -151,7 +152,7 @@ class VerifyWindowBase(QMainWindow):
         # Connect buttons
         self.ui.auto_form.clicked.connect(self.open_auto_form)
         self.ui.search_button.clicked.connect(self.search_pdfs)
-        self.ui.create_form.clicked.connect(self.open_form_file)
+        self.ui.create_form.clicked.connect(self.open_manual_entry_form)
         self.ui.no_record.clicked.connect(self.open_no_record)
         self.ui.destroyed.clicked.connect(self.open_destroyed_record)
         self.add_remarks_button.clicked.connect(self.add_remarks_to_record)
@@ -643,6 +644,19 @@ class VerifyWindowBase(QMainWindow):
             if cursor:
                 cursor.close()
             self.closeConnection()
+
+    def open_manual_entry_form(self):
+        windows = self.main_window.windows
+        manual_window = windows.get('manual_birth_entry')
+        if manual_window is None or not manual_window.isVisible():
+            manual_window = ManualBirthEntryWindow(
+                self.current_user_full_name, parent=self.main_window, main_window=self.main_window
+            )
+            windows['manual_birth_entry'] = manual_window
+
+        manual_window.show()
+        manual_window.raise_()
+        manual_window.activateWindow()
 
     def open_form_file(self):
         conn = self.create_connection()
