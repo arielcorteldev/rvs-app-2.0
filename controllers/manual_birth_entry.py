@@ -9,7 +9,7 @@ just hosts it in a window and owns the reminder pop-up / close behavior.
 """
 
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QMessageBox, QScrollArea
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QIcon
 
 from utilities.stylesheets import message_box_style
@@ -86,11 +86,13 @@ class ManualBirthEntryWindow(QWidget):
 
         clicked = box.clickedButton()
         if clicked == verify_btn:
+            self.close()
             if self.main_window:
-                self.main_window.open_search_birth_dialog()
+                QTimer.singleShot(0, self.main_window.open_search_birth_dialog)
         elif clicked == tracker_btn:
+            self.close()
             if self.main_window:
-                self.main_window.open_digitization_status()
+                QTimer.singleShot(0, self.main_window.open_digitization_status)
         # continue_btn (or dialog dismissed another way): just proceed —
         # this window is already visible underneath.
 
