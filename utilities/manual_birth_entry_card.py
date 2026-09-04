@@ -90,6 +90,7 @@ class ManualBirthEntryCard(QFrame):
         """)
 
         self._build_ui()
+        self._apply_default_values()
 
     # ------------------------------------------------------------------ #
     #  DB helpers                                                          #
@@ -508,7 +509,19 @@ class ManualBirthEntryCard(QFrame):
     def reset(self):
         """Clear the card back to a blank, editable state. Does not touch the DB."""
         self.record_id = None
+        self._apply_default_values()
+        self._set_saved_state(False)
 
+    def _apply_default_values(self):
+        """Set every field to the same state a freshly built card starts in.
+
+        Combos default to whatever addItems() put first (index 0) — that's
+        not "NO ENTRY" for most fields, it's the first real option (e.g.
+        sex_combo -> MALE, attendant_combo -> PHYSICIAN). Mirrored here
+        explicitly so this is the one place that defines "blank card," used
+        by both __init__ and reset() — no separate hardcoded defaults to
+        drift out of sync with each other.
+        """
         self.page_no_input.clear()
         self.book_no_input.clear()
         self.reg_no_input.clear()
@@ -518,26 +531,24 @@ class ManualBirthEntryCard(QFrame):
         self.mother_age_input.clear()
         self.father_age_input.clear()
 
-        self.sex_combo.setCurrentText("NO ENTRY")
-        self.place_of_birth_combo.setCurrentText("NO ENTRY")
-        self.mother_nationality_combo.setCurrentText("NO ENTRY")
-        self.father_nationality_combo.setCurrentText("NO ENTRY")
-        self.attendant_combo.setCurrentText("NO ENTRY")
-        self.type_of_birth_combo.setCurrentText("NO ENTRY")
-        self.marriage_place_input.setCurrentText("NO ENTRY")
-        self.late_reg_combo.setCurrentText("NO ENTRY")
-        self.maasin_resident_combo.setCurrentText("NO ENTRY")
-        self.soleyte_resident_combo.setCurrentText("NO ENTRY")
-        self.leyte_resident_combo.setCurrentText("NO ENTRY")
+        self.sex_combo.setCurrentIndex(0)
+        self.place_of_birth_combo.setCurrentIndex(0)
+        self.mother_nationality_combo.setCurrentIndex(0)
+        self.father_nationality_combo.setCurrentIndex(0)
+        self.attendant_combo.setCurrentIndex(0)
+        self.type_of_birth_combo.setCurrentIndex(0)
+        self.marriage_place_input.setCurrentIndex(0)
+        self.late_reg_combo.setCurrentIndex(0)
+        self.maasin_resident_combo.setCurrentIndex(0)
+        self.soleyte_resident_combo.setCurrentIndex(0)
+        self.leyte_resident_combo.setCurrentIndex(0)
 
         self.date_of_birth_input.setDate(QDate.currentDate())
         self.has_dob_check.setChecked(True)
         self.date_of_reg_input.setDate(QDate.currentDate())
         self.has_dor_check.setChecked(True)
-        self.date_of_marriage_input.setDate(QDate.currentDate())
         self.has_dom_check.setChecked(True)
-
-        self._set_saved_state(False)
+        self.date_of_marriage_input.setDate(QDate.currentDate())
 
     # ------------------------------------------------------------------ #
     #  Collect values                                                      #
@@ -749,4 +760,3 @@ class ManualBirthEntryCard(QFrame):
             if cursor:
                 cursor.close()
             self._close_connection()
-
