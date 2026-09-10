@@ -8,6 +8,7 @@ import subprocess
 from flask_server.app import get_access_token
 from controllers.everify_form import eVerifyForm
 from controllers.manual_birth_entry import ManualBirthEntryWindow
+from controllers.manual_death_entry import ManualDeathEntryWindow
 
 # IMPORT PYSIDE6 MODULES
 from PySide6.QtWidgets import *
@@ -645,34 +646,44 @@ class VerifyWindowBase(QMainWindow):
                 cursor.close()
             self.closeConnection()
 
+    def _manual_entry_target(self):
+        """Return (cache_key, window_class) for this window's manual entry
+        window, or (None, None) if that record type isn't built yet."""
+        if isinstance(self, VerifyBirthWindow):
+            return 'manual_birth_entry', ManualBirthEntryWindow
+        if isinstance(self, VerifyDeathWindow):
+            return 'manual_death_entry', ManualDeathEntryWindow
+        return None, None
+
     def open_manual_entry_form(self):
         """Handle the create_form button.
 
-        For Birth, opens the new ManualBirthEntryWindow (structured manual
-        tagging) instead of the old blank PDF template. Death and Marriage
-        fall back to the old open_form_file behavior until their manual
-        entry windows are built.
+        For Birth and Death, opens the corresponding structured manual
+        entry window instead of the old blank PDF template. Marriage falls
+        back to the old open_form_file behavior until its manual entry
+        window is built.
         """
-        if not isinstance(self, VerifyBirthWindow):
+        cache_key, window_class = self._manual_entry_target()
+        if window_class is None:
             self.open_form_file()
             return
 
         windows = self.main_window.windows
-        manual_window = windows.get('manual_birth_entry')
+        manual_window = windows.get(cache_key)
         if manual_window is None or not manual_window.isVisible():
-            manual_window = ManualBirthEntryWindow(
+            manual_window = window_class(
                 self.current_user, parent=self.main_window, main_window=self.main_window
             )
-            windows['manual_birth_entry'] = manual_window
+            windows[cache_key] = manual_window
 
         manual_window.show()
         manual_window.raise_()
         manual_window.activateWindow()
 
     def _open_manual_entry_for_editing(self, record_id):
-        """Reopen an existing manual (unscanned) Birth record for editing.
+        """Reopen an existing manual (unscanned) record for editing.
 
-        Routes to the same cached ManualBirthEntryWindow instance as
+        Routes to the same cached manual entry window instance as
         create_form — never a second window — and skips the standing
         reminder pop-up for this specific path, since staff is deliberately
         reopening a record they already know exists.
@@ -680,8 +691,12 @@ class VerifyWindowBase(QMainWindow):
         if record_id is None:
             return
 
+        cache_key, window_class = self._manual_entry_target()
+        if window_class is None:
+            return
+
         windows = self.main_window.windows
-        manual_window = windows.get('manual_birth_entry')
+        manual_window = windows.get(cache_key)
 
         if manual_window is not None and manual_window.isVisible() and manual_window.card.record_id is None:
             # An unsaved, in-progress manual entry is currently open —
@@ -698,10 +713,10 @@ class VerifyWindowBase(QMainWindow):
                 return
 
         if manual_window is None or not manual_window.isVisible():
-            manual_window = ManualBirthEntryWindow(
+            manual_window = window_class(
                 self.current_user, parent=self.main_window, main_window=self.main_window
             )
-            windows['manual_birth_entry'] = manual_window
+            windows[cache_key] = manual_window
 
         manual_window.skip_next_reminder = True
         loaded = manual_window.card.load_from_record(record_id)
@@ -816,7 +831,8 @@ class VerifyWindowBase(QMainWindow):
         record_id = item.data(Qt.UserRole)
 
         if not scanned or not file_path:
-            if isinstance(self, VerifyBirthWindow):
+            _, window_class = self._manual_entry_target()
+            if window_class is not None:
                 box = QMessageBox(self)
                 box.setIcon(QMessageBox.Question)
                 box.setWindowTitle("Record Not Yet Scanned")
@@ -827,7 +843,7 @@ class VerifyWindowBase(QMainWindow):
                     self._open_manual_entry_for_editing(record_id)
                 return
             else:
-                # Death / Marriage: manual entry windows not built yet
+                # Marriage: manual entry window not built yet
                 box = QMessageBox(self)
                 box.setIcon(QMessageBox.Information)
                 box.setWindowTitle("Record Not Yet Scanned")
