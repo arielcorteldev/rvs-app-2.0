@@ -28,6 +28,7 @@ class ManualBirthEntryWindow(QWidget):
         super().__init__(parent)
         self.current_user = username
         self.main_window = main_window
+        self.skip_next_reminder = False  # set True by callers reopening an existing record for editing
 
         self.setWindowTitle("Manual Entry — Live Birth")
         self.setWindowIcon(QIcon("assets/icons/application.png"))
@@ -67,6 +68,9 @@ class ManualBirthEntryWindow(QWidget):
 
     def showEvent(self, event):
         super().showEvent(event)
+        if self.skip_next_reminder:
+            self.skip_next_reminder = False
+            return
         self._show_reminder()
 
     def _show_reminder(self):
@@ -74,8 +78,8 @@ class ManualBirthEntryWindow(QWidget):
         box.setIcon(QMessageBox.Information)
         box.setWindowTitle("Before You Continue")
         box.setText(
-            "Make sure you've searched Verify and checked the Digitization Status "
-            "Tracker — this record may already exist."
+            "Make sure you've searched the record through Verify and checked the Digitization Status  "
+            "Tracker —  this record may already exist. If you continue to manual entry, you may create a duplicate record."
         )
         verify_btn = box.addButton("Open Verify", QMessageBox.ActionRole)
         tracker_btn = box.addButton("Open Digitization Status Tracker", QMessageBox.ActionRole)

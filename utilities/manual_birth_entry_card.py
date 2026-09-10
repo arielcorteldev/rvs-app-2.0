@@ -551,6 +551,91 @@ class ManualBirthEntryCard(QFrame):
         self.date_of_marriage_input.setDate(QDate.currentDate())
 
     # ------------------------------------------------------------------ #
+    #  Load an existing record — used when reopening a saved manual entry  #
+    #  for editing (e.g. via Verify's "not yet scanned" prompt), rather    #
+    #  than starting a fresh blank entry.                                  #
+    # ------------------------------------------------------------------ #
+
+    def load_from_record(self, record_id):
+        """Populate the card from an existing birth_index row and put it
+        into the saved/editable state (Edit + Delete available, fields
+        disabled until Edit is clicked). Returns True on success."""
+        conn = self._create_connection()
+        cursor = None
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT page_no, book_no, reg_no, name, date_of_birth, sex,
+                       date_of_reg, place_of_birth, name_of_mother, nationality_mother,
+                       name_of_father, nationality_father, parents_marriage_date,
+                       parents_marriage_place, attendant, type_of_birth, late_registration,
+                       maasin_resident, soleyte_resident, leyte_resident, mother_age, father_age
+                FROM birth_index WHERE id = %s
+            """, (record_id,))
+            row = cursor.fetchone()
+            if not row:
+                return False
+
+            (page_no, book_no, reg_no, name, date_of_birth, sex, date_of_reg,
+             place_of_birth, name_of_mother, nationality_mother, name_of_father,
+             nationality_father, parents_marriage_date, parents_marriage_place,
+             attendant, type_of_birth, late_registration, maasin_resident,
+             soleyte_resident, leyte_resident, mother_age, father_age) = row
+
+            self.record_id = record_id
+
+            self.page_no_input.setText(str(page_no) if page_no is not None else "")
+            self.book_no_input.setText(str(book_no) if book_no is not None else "")
+            self.reg_no_input.setText(reg_no or "")
+            self.name_input.setText(name or "")
+            self.mother_name_input.setText(name_of_mother or "")
+            self.father_name_input.setText(name_of_father or "")
+            self.mother_age_input.setText(str(mother_age) if mother_age is not None else "")
+            self.father_age_input.setText(str(father_age) if father_age is not None else "")
+
+            self.sex_combo.setCurrentText(sex or "NO ENTRY")
+            self.place_of_birth_combo.setCurrentText(place_of_birth or "NO ENTRY")
+            self.mother_nationality_combo.setCurrentText(nationality_mother or "NO ENTRY")
+            self.father_nationality_combo.setCurrentText(nationality_father or "NO ENTRY")
+            self.attendant_combo.setCurrentText(attendant or "NO ENTRY")
+            self.type_of_birth_combo.setCurrentText(type_of_birth or "NO ENTRY")
+
+            # Set marriage place first — its change handler may disable/null
+            # the marriage date, which the block below then correctly
+            # overrides with the record's actual saved date state.
+            self.marriage_place_input.setCurrentText(parents_marriage_place or "NO ENTRY")
+
+            def bool_to_combo_text(v):
+                if v is None:
+                    return "NO ENTRY"
+                return "YES" if v else "NO"
+
+            self.late_reg_combo.setCurrentText(bool_to_combo_text(late_registration))
+            self.maasin_resident_combo.setCurrentText(bool_to_combo_text(maasin_resident))
+            self.soleyte_resident_combo.setCurrentText(bool_to_combo_text(soleyte_resident))
+            self.leyte_resident_combo.setCurrentText(bool_to_combo_text(leyte_resident))
+
+            def apply_date(value, date_edit, has_check):
+                if value:
+                    has_check.setChecked(True)
+                    date_edit.setDate(QDate(value.year, value.month, value.day))
+                else:
+                    has_check.setChecked(False)
+                    date_edit.setDate(QDate.currentDate())
+
+            apply_date(date_of_birth, self.date_of_birth_input, self.has_dob_check)
+            apply_date(date_of_reg, self.date_of_reg_input, self.has_dor_check)
+            apply_date(parents_marriage_date, self.date_of_marriage_input, self.has_dom_check)
+
+            self._set_saved_state(True)
+            return True
+
+        finally:
+            if cursor:
+                cursor.close()
+            self._close_connection()
+
+    # ------------------------------------------------------------------ #
     #  Collect values                                                      #
     # ------------------------------------------------------------------ #
 

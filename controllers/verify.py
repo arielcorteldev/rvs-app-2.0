@@ -646,6 +646,17 @@ class VerifyWindowBase(QMainWindow):
             self.closeConnection()
 
     def open_manual_entry_form(self):
+        """Handle the create_form button.
+
+        For Birth, opens the new ManualBirthEntryWindow (structured manual
+        tagging) instead of the old blank PDF template. Death and Marriage
+        fall back to the old open_form_file behavior until their manual
+        entry windows are built.
+        """
+        if not isinstance(self, VerifyBirthWindow):
+            self.open_form_file()
+            return
+
         windows = self.main_window.windows
         manual_window = windows.get('manual_birth_entry')
         if manual_window is None or not manual_window.isVisible():
@@ -653,6 +664,57 @@ class VerifyWindowBase(QMainWindow):
                 self.current_user, parent=self.main_window, main_window=self.main_window
             )
             windows['manual_birth_entry'] = manual_window
+
+        manual_window.show()
+        manual_window.raise_()
+        manual_window.activateWindow()
+
+    def _open_manual_entry_for_editing(self, record_id):
+        """Reopen an existing manual (unscanned) Birth record for editing.
+
+        Routes to the same cached ManualBirthEntryWindow instance as
+        create_form — never a second window — and skips the standing
+        reminder pop-up for this specific path, since staff is deliberately
+        reopening a record they already know exists.
+        """
+        if record_id is None:
+            return
+
+        windows = self.main_window.windows
+        manual_window = windows.get('manual_birth_entry')
+
+        if manual_window is not None and manual_window.isVisible() and manual_window.card.record_id is None:
+            # An unsaved, in-progress manual entry is currently open —
+            # confirm before discarding it to load a different record.
+            warn = QMessageBox(self)
+            warn.setIcon(QMessageBox.Warning)
+            warn.setWindowTitle("Unsaved Manual Entry")
+            warn.setText(
+                "You have an unsaved manual entry open. Discard it and load this record instead?"
+            )
+            warn.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            warn.setStyleSheet(message_box_style)
+            if warn.exec() != QMessageBox.Yes:
+                return
+
+        if manual_window is None or not manual_window.isVisible():
+            manual_window = ManualBirthEntryWindow(
+                self.current_user, parent=self.main_window, main_window=self.main_window
+            )
+            windows['manual_birth_entry'] = manual_window
+
+        manual_window.skip_next_reminder = True
+        loaded = manual_window.card.load_from_record(record_id)
+
+        if not loaded:
+            box = QMessageBox(self)
+            box.setIcon(QMessageBox.Warning)
+            box.setWindowTitle("Warning")
+            box.setText("Could not find that record — it may have been deleted.")
+            box.setStandardButtons(QMessageBox.Ok)
+            box.setStyleSheet(message_box_style)
+            box.exec()
+            return
 
         manual_window.show()
         manual_window.raise_()
@@ -751,16 +813,29 @@ class VerifyWindowBase(QMainWindow):
     def open_selected_file(self, item):
         scanned = item.data(Qt.UserRole + 1)
         file_path = item.data(Qt.UserRole + 2)
+        record_id = item.data(Qt.UserRole)
 
         if not scanned or not file_path:
-            box = QMessageBox(self)
-            box.setIcon(QMessageBox.Information)
-            box.setWindowTitle("Record Not Yet Scanned")
-            box.setText("This record has not been scanned yet, so there is no file to open.")
-            box.setStandardButtons(QMessageBox.Ok)
-            box.setStyleSheet(message_box_style)
-            box.exec()
-            return
+            if isinstance(self, VerifyBirthWindow):
+                box = QMessageBox(self)
+                box.setIcon(QMessageBox.Question)
+                box.setWindowTitle("Record Not Yet Scanned")
+                box.setText("This record has not been scanned yet. Do you want to open it for editing?")
+                box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+                box.setStyleSheet(message_box_style)
+                if box.exec() == QMessageBox.Yes:
+                    self._open_manual_entry_for_editing(record_id)
+                return
+            else:
+                # Death / Marriage: manual entry windows not built yet
+                box = QMessageBox(self)
+                box.setIcon(QMessageBox.Information)
+                box.setWindowTitle("Record Not Yet Scanned")
+                box.setText("This record has not been scanned yet, so there is no file to open.")
+                box.setStandardButtons(QMessageBox.Ok)
+                box.setStyleSheet(message_box_style)
+                box.exec()
+                return
 
         conn = self.create_connection()
         try:
