@@ -47,8 +47,8 @@ class ManualBirthEntryWindow(QWidget):
         outer = QVBoxLayout(self)
 
         info_label = QLabel(
-            "Use this form to tag a Live Birth record that has not been scanned yet. "
-            "The saved data can still be used to generate an auto-populated LCR certificate."
+            "Use this form to encode/tag the details of a Live Birth record that has not been scanned yet. "
+            "Onced saved, this record will be searchable through the Verify menu and an auto-populated LCR certificate can be generated for this record."
         )
         info_label.setWordWrap(True)
         info_label.setStyleSheet("color: #5F5E5A; font-size: 12px; padding: 4px 2px;")
@@ -78,8 +78,8 @@ class ManualBirthEntryWindow(QWidget):
         box.setIcon(QMessageBox.Information)
         box.setWindowTitle("Before You Continue")
         box.setText(
-            "Make sure you've searched the record through Verify and checked the Digitization Status  "
-            "Tracker —  this record may already exist. If you continue to manual entry, you may create a duplicate record."
+            "Make sure you've already searched this record in the Verify menu and checked the Digitization Status "
+            "Tracker — this record may already exist."
         )
         verify_btn = box.addButton("Open Verify", QMessageBox.ActionRole)
         tracker_btn = box.addButton("Open Digitization Status Tracker", QMessageBox.ActionRole)
@@ -90,9 +90,9 @@ class ManualBirthEntryWindow(QWidget):
 
         clicked = box.clickedButton()
         if clicked == verify_btn:
+            # Verify is already open — this window was launched from it —
+            # so closing this one is enough to reveal it again.
             QTimer.singleShot(0, self.close)
-            if self.main_window:
-                QTimer.singleShot(0, self.main_window.open_search_birth_dialog)
         elif clicked == tracker_btn:
             QTimer.singleShot(0, self.close)
             if self.main_window:

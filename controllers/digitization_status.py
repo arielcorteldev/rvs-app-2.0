@@ -142,9 +142,16 @@ class DigitizationStatusWindow(QMainWindow):
 
         subtitle = QLabel(
             "Shows which Registry Books and Certificate years are Scanned "
-            "and/or Tagged, so staff know what's searchable in RVS."
+            "and/or Tagged, so staff know what's searchable in RVS.\n"
+            "\n"
+            "If marked as Tagged, you can already search these records in the "
+            "Verify menu and generate auto-populated LCR forms.\n"
+            "\n"
+            "If a Registry Book is marked as Scanned but not Tagged, "
+            "You can view the Scanned copy of this book in the Book Viewer (Other Features > Book Viewer)"
         )
         subtitle.setStyleSheet("font-weight: normal; color: #6B6B6B; margin-bottom: 10px;")
+        subtitle.setWordWrap(True)
         layout.addWidget(subtitle)
 
         # --- Filter row ---
