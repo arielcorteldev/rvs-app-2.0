@@ -9,6 +9,7 @@ from flask_server.app import get_access_token
 from controllers.everify_form import eVerifyForm
 from controllers.manual_birth_entry import ManualBirthEntryWindow
 from controllers.manual_death_entry import ManualDeathEntryWindow
+from controllers.manual_marriage_entry import ManualMarriageEntryWindow
 
 # IMPORT PYSIDE6 MODULES
 from PySide6.QtWidgets import *
@@ -648,11 +649,13 @@ class VerifyWindowBase(QMainWindow):
 
     def _manual_entry_target(self):
         """Return (cache_key, window_class) for this window's manual entry
-        window, or (None, None) if that record type isn't built yet."""
+        window."""
         if isinstance(self, VerifyBirthWindow):
             return 'manual_birth_entry', ManualBirthEntryWindow
         if isinstance(self, VerifyDeathWindow):
             return 'manual_death_entry', ManualDeathEntryWindow
+        if isinstance(self, VerifyMarriageWindow):
+            return 'manual_marriage_entry', ManualMarriageEntryWindow
         return None, None
 
     def open_manual_entry_form(self):
@@ -843,7 +846,9 @@ class VerifyWindowBase(QMainWindow):
                     self._open_manual_entry_for_editing(record_id)
                 return
             else:
-                # Marriage: manual entry window not built yet
+                # No manual entry window for this record type (shouldn't
+                # happen now that Birth/Death/Marriage are all wired up,
+                # but kept as a safe fallback).
                 box = QMessageBox(self)
                 box.setIcon(QMessageBox.Information)
                 box.setWindowTitle("Record Not Yet Scanned")
