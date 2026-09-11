@@ -50,8 +50,8 @@ class ManualMarriageEntryWindow(QWidget):
         outer = QVBoxLayout(self)
 
         info_label = QLabel(
-            "Use this form to tag a Marriage record that has not been scanned yet. "
-            "The saved data can still be used to generate an auto-populated LCR certificate."
+            "Use this form to encode/tag the details of a Marriage record that has not been scanned yet. "
+            "Onced saved, this record will be searchable through the Verify menu and an auto-populated LCR certificate can be generated for this record."
         )
         info_label.setWordWrap(True)
         info_label.setStyleSheet("color: #5F5E5A; font-size: 12px; padding: 4px 2px;")
@@ -81,7 +81,7 @@ class ManualMarriageEntryWindow(QWidget):
         box.setIcon(QMessageBox.Information)
         box.setWindowTitle("Before You Continue")
         box.setText(
-            "Make sure you've searched Verify and checked the Digitization Status "
+            "Make sure you've already searched this record in the Verify menu and checked the Digitization Status "
             "Tracker — this record may already exist."
         )
         verify_btn = box.addButton("Open Verify", QMessageBox.ActionRole)

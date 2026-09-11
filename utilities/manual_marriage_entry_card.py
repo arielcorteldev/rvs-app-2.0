@@ -8,10 +8,9 @@ ManualMarriageEntryWindow. MarriageEntryCard itself is unchanged.
 
 Mirrors utilities/manual_death_entry_card.py's structure and conventions
 (_apply_default_values / reset / load_from_record), adapted to Marriage's
-field set. Note: unlike Birth/Death, most combos here use "UNKNOWN" as the
-null-sentinel value (not "NO ENTRY") — preserved exactly as in
-MarriageEntryCard, since _collect_values()'s null-checks depend on it.
-Only late_reg_combo uses "NO ENTRY".
+field set. Uses "NO ENTRY" as the null-sentinel throughout, consistent
+with Birth and Death (the original MarriageEntryCard's mixed sentinel
+convention has been standardized to "NO ENTRY" everywhere).
 """
 
 from PySide6.QtWidgets import (
@@ -49,7 +48,7 @@ CHECKBOX_STYLE = """
 
 NATIONALITY_ITEMS = [
     "FILIPINO", "CHINESE", "INDIAN", "AMERICAN", "JAPANESE", "SOUTH KOREAN",
-    "GERMAN", "AUSTRALIAN", "TAIWANESE", "INDONESIAN", "VIETNAMESE", "UNKNOWN"
+    "GERMAN", "AUSTRALIAN", "TAIWANESE", "INDONESIAN", "VIETNAMESE", "NO ENTRY"
 ]
 
 
@@ -180,7 +179,7 @@ class ManualMarriageEntryCard(QFrame):
         c = QVBoxLayout(); c.addWidget(self._label("Nationality:")); c.addWidget(self.husband_nationality_combo)
         row_h2.addLayout(c)
         self.husband_civil_status_combo = QComboBox()
-        self.husband_civil_status_combo.addItems(["SINGLE", "WIDOWER", "DIVORCED", "ANNULLED", "UNKNOWN"])
+        self.husband_civil_status_combo.addItems(["SINGLE", "WIDOWER", "DIVORCED", "ANNULLED", "NO ENTRY"])
         self.husband_civil_status_combo.setFixedWidth(300); self.husband_civil_status_combo.setStyleSheet(combo_box_style)
         c = QVBoxLayout(); c.addWidget(self._label("Civil Status:")); c.addWidget(self.husband_civil_status_combo)
         row_h2.addLayout(c)
@@ -219,7 +218,7 @@ class ManualMarriageEntryCard(QFrame):
         c = QVBoxLayout(); c.addWidget(self._label("Nationality:")); c.addWidget(self.wife_nationality_combo)
         row_w2.addLayout(c)
         self.wife_civil_status_combo = QComboBox()
-        self.wife_civil_status_combo.addItems(["SINGLE", "WIDOW", "DIVORCED", "ANNULLED", "UNKNOWN"])
+        self.wife_civil_status_combo.addItems(["SINGLE", "WIDOW", "DIVORCED", "ANNULLED", "NO ENTRY"])
         self.wife_civil_status_combo.setFixedWidth(300); self.wife_civil_status_combo.setStyleSheet(combo_box_style)
         c = QVBoxLayout(); c.addWidget(self._label("Civil Status:")); c.addWidget(self.wife_civil_status_combo)
         row_w2.addLayout(c)
@@ -247,7 +246,7 @@ class ManualMarriageEntryCard(QFrame):
             "STO. NIÑO DE IBARRA PARISH, IBARRA, ASUNCION, MAASIN CITY, SO. LEYTE",
             "MUNICIPAL TRIAL COURT IN CITIES, MAASIN CITY, SO. LEYTE",
             "OFFICE OF THE CITY MAYOR, MAASIN CITY, SO. LEYTE",
-            "UNKNOWN"
+            "NO ENTRY"
         ])
         self.place_of_marriage_combo.setFixedWidth(450); self.place_of_marriage_combo.setStyleSheet(combo_box_style)
         c = QVBoxLayout(); c.addWidget(self._label("Place of Marriage:")); c.addWidget(self.place_of_marriage_combo)
@@ -258,7 +257,7 @@ class ManualMarriageEntryCard(QFrame):
         row_m2 = QHBoxLayout(); row_m2.setSpacing(10)
         self.ceremony_type_combo = QComboBox(); self.ceremony_type_combo.setEditable(True)
         self.ceremony_type_combo.addItems([
-            "ROMAN CATHOLIC WEDDING", "CIVIL WEDDING", "OTHER RELIGIOUS WEDDING", "UNKNOWN"
+            "ROMAN CATHOLIC WEDDING", "CIVIL WEDDING", "OTHER RELIGIOUS WEDDING", "NO ENTRY"
         ])
         self.ceremony_type_combo.setFixedWidth(270); self.ceremony_type_combo.setStyleSheet(combo_box_style)
         c = QVBoxLayout(); c.addWidget(self._label("Ceremony Type:")); c.addWidget(self.ceremony_type_combo)
@@ -425,12 +424,12 @@ class ManualMarriageEntryCard(QFrame):
             self.wife_father_name_input.setText(wife_father or "")
             self.wife_mother_name_input.setText(wife_mother or "")
 
-            self.husband_nationality_combo.setCurrentText(husb_nationality or "UNKNOWN")
-            self.husband_civil_status_combo.setCurrentText(husb_civil_status or "UNKNOWN")
-            self.wife_nationality_combo.setCurrentText(wife_nationality or "UNKNOWN")
-            self.wife_civil_status_combo.setCurrentText(wife_civil_status or "UNKNOWN")
-            self.place_of_marriage_combo.setCurrentText(place_of_marriage or "UNKNOWN")
-            self.ceremony_type_combo.setCurrentText(ceremony_type or "UNKNOWN")
+            self.husband_nationality_combo.setCurrentText(husb_nationality or "NO ENTRY")
+            self.husband_civil_status_combo.setCurrentText(husb_civil_status or "NO ENTRY")
+            self.wife_nationality_combo.setCurrentText(wife_nationality or "NO ENTRY")
+            self.wife_civil_status_combo.setCurrentText(wife_civil_status or "NO ENTRY")
+            self.place_of_marriage_combo.setCurrentText(place_of_marriage or "NO ENTRY")
+            self.ceremony_type_combo.setCurrentText(ceremony_type or "NO ENTRY")
 
             if late_registration is True:
                 self.late_reg_combo.setCurrentText("YES")
@@ -477,19 +476,19 @@ class ManualMarriageEntryCard(QFrame):
             "reg_no": self.reg_no_input.text() or None,
             "husband_name": self.husband_name_input.text() or None,
             "husband_age": parse_int(self.husband_age_input.text()),
-            "husb_nationality": None if self.husband_nationality_combo.currentText() == "UNKNOWN" else self.husband_nationality_combo.currentText(),
-            "husb_civil_status": None if self.husband_civil_status_combo.currentText() == "UNKNOWN" else self.husband_civil_status_combo.currentText(),
+            "husb_nationality": None if self.husband_nationality_combo.currentText() == "NO ENTRY" else self.husband_nationality_combo.currentText(),
+            "husb_civil_status": None if self.husband_civil_status_combo.currentText() == "NO ENTRY" else self.husband_civil_status_combo.currentText(),
             "husb_father": self.husband_father_name_input.text() or None,
             "husb_mother": self.husband_mother_name_input.text() or None,
             "wife_name": self.wife_name_input.text() or None,
             "wife_age": parse_int(self.wife_age_input.text()),
-            "wife_nationality": None if self.wife_nationality_combo.currentText() == "UNKNOWN" else self.wife_nationality_combo.currentText(),
-            "wife_civil_status": None if self.wife_civil_status_combo.currentText() == "UNKNOWN" else self.wife_civil_status_combo.currentText(),
+            "wife_nationality": None if self.wife_nationality_combo.currentText() == "NO ENTRY" else self.wife_nationality_combo.currentText(),
+            "wife_civil_status": None if self.wife_civil_status_combo.currentText() == "NO ENTRY" else self.wife_civil_status_combo.currentText(),
             "wife_father": self.wife_father_name_input.text() or None,
             "wife_mother": self.wife_mother_name_input.text() or None,
             "date_of_marriage": self.date_of_marriage_input.date().toString("yyyy-MM-dd") if self.has_dom_check.isChecked() else None,
-            "place_of_marriage": None if self.place_of_marriage_combo.currentText() == "UNKNOWN" else self.place_of_marriage_combo.currentText(),
-            "ceremony_type": None if self.ceremony_type_combo.currentText() == "UNKNOWN" else self.ceremony_type_combo.currentText(),
+            "place_of_marriage": None if self.place_of_marriage_combo.currentText() == "NO ENTRY" else self.place_of_marriage_combo.currentText(),
+            "ceremony_type": None if self.ceremony_type_combo.currentText() == "NO ENTRY" else self.ceremony_type_combo.currentText(),
             "late_registration": late_registration,
             "date_of_reg": self.date_of_reg_input.date().toString("yyyy-MM-dd") if self.has_dor_check.isChecked() else None,
         }
