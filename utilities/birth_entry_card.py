@@ -87,6 +87,12 @@ class BirthEntryCard(QFrame):
 
         self._build_ui()
 
+        # Reconciliation state — see _check_for_manual_match()
+        self._last_reconciliation_check = None
+        self._reconciled_from_manual = False
+        self.reg_no_input.editingFinished.connect(self._check_for_manual_match)
+        self.name_input.editingFinished.connect(self._check_for_manual_match)
+
     # ------------------------------------------------------------------ #
     #  DB helpers                                                          #
     # ------------------------------------------------------------------ #
@@ -498,11 +504,79 @@ class BirthEntryCard(QFrame):
         self.delete_btn.setEnabled(True)
 
     # ------------------------------------------------------------------ #
+    #  Reconciliation — detect an existing manual (unscanned) entry        #
+    # ------------------------------------------------------------------ #
+
+    def _check_for_manual_match(self):
+        """If this is still a blank/new card and both Reg. No. and Name are
+        filled in, check for an existing manual (unscanned) entry with the
+        same Reg. No. + Name and offer to load it — this is how a manual
+        entry gets reconciled with its scan once the page is finally tagged.
+        """
+        if self.record_id is not None:
+            return
+
+        reg_no = self.reg_no_input.text().strip()
+        name = self.name_input.text().strip()
+        if not reg_no or not name:
+            return
+
+        check_key = (reg_no, name)
+        if check_key == self._last_reconciliation_check:
+            return
+        self._last_reconciliation_check = check_key
+
+        conn = self._create_connection()
+        cursor = None
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT id, name, date_of_birth, sex, page_no, book_no, reg_no,
+                    date_of_reg, place_of_birth, name_of_mother, nationality_mother,
+                    name_of_father, nationality_father, parents_marriage_date,
+                    parents_marriage_place, attendant, type_of_birth, late_registration,
+                    maasin_resident, soleyte_resident, leyte_resident, mother_age, father_age
+                FROM birth_index
+                WHERE reg_no = %s AND name ILIKE %s AND scanned = false
+                LIMIT 1
+            """, (reg_no, name))
+            row = cursor.fetchone()
+            if not row:
+                return
+            columns = [desc[0] for desc in cursor.description]
+            row_dict = dict(zip(columns, row))
+        finally:
+            if cursor:
+                cursor.close()
+            self._close_connection()
+
+        box = QMessageBox(self)
+        box.setIcon(QMessageBox.Question)
+        box.setWindowTitle("Existing Manual Entry Found")
+        box.setText(
+            f"A manual entry already exists for Reg. No. {reg_no} — {row_dict.get('name')}.\n\n"
+            "Load this record? Any other details already entered in this card will be replaced."
+        )
+        box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        box.setStyleSheet(message_box_style)
+        if box.exec() != QMessageBox.Yes:
+            return
+
+        self._reconciled_from_manual = True
+        self.populate(row_dict, mark_saved=False)
+
+    # ------------------------------------------------------------------ #
     #  Public: populate from DB row                                        #
     # ------------------------------------------------------------------ #
 
-    def populate(self, row: dict):
-        """Fill card fields from a DB result dict. Sets record_id."""
+    def populate(self, row: dict, mark_saved: bool = True):
+        """Fill card fields from a DB result dict. Sets record_id.
+
+        mark_saved=False leaves fields editable and Save active instead of
+        marking the card as already-saved — used when reconciling a manual
+        entry match, since the row hasn't actually been attached to a scan
+        yet at this point; staff still needs to review and click Save.
+        """
         self.record_id = row.get("id")
 
         self.page_no_input.setText(str(row["page_no"]) if row.get("page_no") is not None else "")
@@ -558,7 +632,7 @@ class BirthEntryCard(QFrame):
             self.has_dom_check.setChecked(False)
             self.date_of_marriage_input.setEnabled(False)
 
-        self._set_saved_state(True)
+        self._set_saved_state(mark_saved)
 
     def update_entry_number(self, n: int):
         self.entry_number = n
@@ -669,6 +743,7 @@ class BirthEntryCard(QFrame):
                 # UPDATE by id
                 cursor.execute("""
                     UPDATE birth_index SET
+                        file_path = %(file_path)s, scanned = TRUE,
                         name = %(name)s, date_of_birth = %(date_of_birth)s, sex = %(sex)s,
                         page_no = %(page_no)s, book_no = %(book_no)s, reg_no = %(reg_no)s,
                         date_of_reg = %(date_of_reg)s, place_of_birth = %(place_of_birth)s,
@@ -685,7 +760,8 @@ class BirthEntryCard(QFrame):
                 """, {**v, "id": self.record_id})
 
             AuditLogger.log_action(conn, self.current_user, "TAGS_SAVED", {
-                "file": file_path, "record_type": "Birth", "entry": self.entry_number
+                "file": file_path, "record_type": "Birth", "entry": self.entry_number,
+                "reconciled_from_manual": self._reconciled_from_manual
             })
 
             box = QMessageBox(self)
