@@ -92,6 +92,11 @@ class ManualBirthEntryCard(QFrame):
         self._build_ui()
         self._apply_default_values()
 
+        # Duplicate-check state — see _check_for_existing_record()
+        self._last_duplicate_check = None
+        self.reg_no_input.editingFinished.connect(self._check_for_existing_record)
+        self.name_input.editingFinished.connect(self._check_for_existing_record)
+
     # ------------------------------------------------------------------ #
     #  DB helpers                                                          #
     # ------------------------------------------------------------------ #
@@ -555,6 +560,84 @@ class ManualBirthEntryCard(QFrame):
     #  for editing (e.g. via Verify's "not yet scanned" prompt), rather    #
     #  than starting a fresh blank entry.                                  #
     # ------------------------------------------------------------------ #
+
+    # ------------------------------------------------------------------ #
+    #  Duplicate check — before a NEW manual entry is created, see if a    #
+    #  matching record (scanned or another manual entry) already exists.  #
+    # ------------------------------------------------------------------ #
+
+    def _check_for_existing_record(self):
+        """If this is still a blank/new card and both Reg. No. and Name are
+        filled in, check whether a matching birth_index row already exists.
+
+        - If it's already scanned/tagged: block — that record is already
+          searchable and auto-populatable via Verify, no reason to create
+          a duplicate manual entry for it.
+        - If it's another manual (unscanned) entry: offer to open that one
+          instead of creating a second one for the same person.
+        """
+        if self.record_id is not None:
+            return
+
+        reg_no = self.reg_no_input.text().strip()
+        name = self.name_input.text().strip()
+        if not reg_no or not name:
+            return
+
+        check_key = (reg_no, name)
+        if check_key == self._last_duplicate_check:
+            return
+        self._last_duplicate_check = check_key
+
+        conn = self._create_connection()
+        cursor = None
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT id, scanned
+                FROM birth_index
+                WHERE reg_no = %s AND name ILIKE %s
+                LIMIT 1
+            """, (reg_no, name))
+            row = cursor.fetchone()
+        finally:
+            if cursor:
+                cursor.close()
+            self._close_connection()
+
+        if not row:
+            return
+
+        existing_id, existing_scanned = row
+
+        if existing_scanned:
+            box = QMessageBox(self)
+            box.setIcon(QMessageBox.Warning)
+            box.setWindowTitle("Record Already Exists")
+            box.setText(
+                f"A record for Reg. No. {reg_no} — {name} has already been scanned and "
+                "tagged. It's already searchable and can generate an LCR certificate "
+                "through Verify — there's no need to create a manual entry for it. "
+                "This window will now close."
+            )
+            box.setStandardButtons(QMessageBox.Ok)
+            box.setStyleSheet(message_box_style)
+            box.exec()
+            self.window().close()
+            return
+
+        box = QMessageBox(self)
+        box.setIcon(QMessageBox.Information)
+        box.setWindowTitle("Manual Entry Already Exists")
+        box.setText(
+            f"A manual entry already exists for Reg. No. {reg_no} — {name}. "
+            "Opening that record for editing."
+        )
+        box.setStandardButtons(QMessageBox.Ok)
+        box.setStyleSheet(message_box_style)
+        box.exec()
+
+        self.load_from_record(existing_id)
 
     def load_from_record(self, record_id):
         """Populate the card from an existing birth_index row and put it
