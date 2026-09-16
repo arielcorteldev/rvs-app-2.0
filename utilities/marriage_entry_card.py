@@ -84,6 +84,13 @@ class MarriageEntryCard(QFrame):
 
         self._build_ui()
 
+        # Reconciliation state — see _check_for_manual_match()
+        self._last_reconciliation_check = None
+        self._reconciled_from_manual = False
+        self.reg_no_input.editingFinished.connect(self._check_for_manual_match)
+        self.husband_name_input.editingFinished.connect(self._check_for_manual_match)
+        self.wife_name_input.editingFinished.connect(self._check_for_manual_match)
+
     # ------------------------------------------------------------------ #
     #  DB helpers                                                          #
     # ------------------------------------------------------------------ #
@@ -331,7 +338,79 @@ class MarriageEntryCard(QFrame):
     #  Public: populate from DB row                                        #
     # ------------------------------------------------------------------ #
 
-    def populate(self, row: dict):
+    # ------------------------------------------------------------------ #
+    #  Reconciliation — detect an existing manual (unscanned) entry        #
+    # ------------------------------------------------------------------ #
+
+    def _check_for_manual_match(self):
+        """If this is still a blank/new card and Reg. No., Husband Name, and
+        Wife Name are all filled in, check for an existing manual (unscanned)
+        entry matching all three and offer to load it — this is how a manual
+        entry gets reconciled with its scan once the page is finally tagged.
+        Marriage requires both names (not just one) to reduce the odds of a
+        false match, since Reg. No. alone can repeat across older books.
+        """
+        if self.record_id is not None:
+            return
+
+        reg_no = self.reg_no_input.text().strip()
+        husband_name = self.husband_name_input.text().strip()
+        wife_name = self.wife_name_input.text().strip()
+        if not reg_no or not husband_name or not wife_name:
+            return
+
+        check_key = (reg_no, husband_name, wife_name)
+        if check_key == self._last_reconciliation_check:
+            return
+        self._last_reconciliation_check = check_key
+
+        conn = self._create_connection()
+        cursor = None
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT id, page_no, book_no, reg_no,
+                    husband_name, husband_age, husb_nationality, husb_civil_status, husb_father, husb_mother,
+                    wife_name, wife_age, wife_nationality, wife_civil_status, wife_father, wife_mother,
+                    date_of_marriage, place_of_marriage, ceremony_type, late_registration, date_of_reg
+                FROM marriage_index
+                WHERE reg_no = %s AND husband_name ILIKE %s AND wife_name ILIKE %s AND scanned = false
+                LIMIT 1
+            """, (reg_no, husband_name, wife_name))
+            row = cursor.fetchone()
+            if not row:
+                return
+            columns = [desc[0] for desc in cursor.description]
+            row_dict = dict(zip(columns, row))
+        finally:
+            if cursor:
+                cursor.close()
+            self._close_connection()
+
+        box = QMessageBox(self)
+        box.setIcon(QMessageBox.Question)
+        box.setWindowTitle("Existing Manual Entry Found")
+        box.setText(
+            f"A manual entry already exists for Reg. No. {reg_no} — "
+            f"{row_dict.get('husband_name')} & {row_dict.get('wife_name')}.\n\n"
+            "Load this record? Any other details already entered in this card will be replaced."
+        )
+        box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        box.setStyleSheet(message_box_style)
+        if box.exec() != QMessageBox.Yes:
+            return
+
+        self._reconciled_from_manual = True
+        self.populate(row_dict, mark_saved=False)
+
+    def populate(self, row: dict, mark_saved: bool = True):
+        """Fill card fields from a DB result dict. Sets record_id.
+
+        mark_saved=False leaves fields editable and Save active instead of
+        marking the card as already-saved — used when reconciling a manual
+        entry match, since the row hasn't actually been attached to a scan
+        yet at this point; staff still needs to review and click Save.
+        """
         self.record_id = row.get("id")
 
         self.page_no_input.setText(str(row["page_no"]) if row.get("page_no") is not None else "")
@@ -368,7 +447,7 @@ class MarriageEntryCard(QFrame):
             else:
                 inp.setDate(QDate.currentDate()); chk.setChecked(False); inp.setEnabled(False)
 
-        self._set_saved_state(True)
+        self._set_saved_state(mark_saved)
 
     def update_entry_number(self, n: int):
         self.entry_number = n
@@ -451,6 +530,7 @@ class MarriageEntryCard(QFrame):
             else:
                 cursor.execute("""
                     UPDATE marriage_index SET
+                        file_path=%(file_path)s, scanned=TRUE,
                         page_no=%(page_no)s, book_no=%(book_no)s, reg_no=%(reg_no)s,
                         husband_name=%(husband_name)s, husband_age=%(husband_age)s,
                         husb_nationality=%(husb_nationality)s, husb_civil_status=%(husb_civil_status)s,
@@ -465,7 +545,8 @@ class MarriageEntryCard(QFrame):
                 """, {**v, "id": self.record_id})
 
             AuditLogger.log_action(conn, self.current_user, "TAGS_SAVED", {
-                "file": file_path, "record_type": "Marriage", "entry": self.entry_number
+                "file": file_path, "record_type": "Marriage", "entry": self.entry_number,
+                "reconciled_from_manual": self._reconciled_from_manual
             })
 
             box = QMessageBox(self); box.setIcon(QMessageBox.Information)
