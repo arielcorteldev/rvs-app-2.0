@@ -345,6 +345,7 @@ class ManualMarriageEntryCard(QFrame):
     def reset(self):
         """Clear the card back to a blank, editable state. Does not touch the DB."""
         self.record_id = None
+        self._last_duplicate_check = None
         self._apply_default_values()
         self._set_saved_state(False)
 
