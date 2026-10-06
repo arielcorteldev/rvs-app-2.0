@@ -2063,3 +2063,84 @@ requests.exceptions.HTTPError: 422 Client Error: Unprocessable Entity for url: h
 [2026-10-06 10:44:16,920] DEBUG in connectionpool: http://127.0.0.1:5000 "POST /query HTTP/1.1" 401 35
 [2026-10-06 10:44:25,860] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
 [2026-10-06 10:44:25,864] DEBUG in connectionpool: http://127.0.0.1:5000 "DELETE /liveness_result HTTP/1.1" 200 42
+[2026-10-06 10:48:30,729] DEBUG in connectionpool: Starting new HTTPS connection (1): api.ipify.org:443
+[2026-10-06 10:48:31,505] DEBUG in connectionpool: https://api.ipify.org:443 "GET /?format=text HTTP/1.1" 200 13
+[2026-10-06 10:48:31,506] INFO in app: Server Public IP: 216.247.29.78
+[2026-10-06 10:48:31,734] DEBUG in __init__: CACHEDIR=C:\Users\ThisPC\.matplotlib
+[2026-10-06 10:48:31,736] DEBUG in font_manager: Using fontManager instance from C:\Users\ThisPC\.matplotlib\fontlist-v390.json
+[2026-10-06 10:48:32,119] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.254.119:5000
+[2026-10-06 10:48:32,119] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2026-10-06 10:48:40,294] WARNING in app: Token expiry not set — assuming token is expired.
+[2026-10-06 10:48:40,296] DEBUG in connectionpool: Starting new HTTPS connection (1): ws.everify.gov.ph:443
+[2026-10-06 10:48:40,960] DEBUG in connectionpool: https://ws.everify.gov.ph:443 "POST /api/auth HTTP/1.1" 200 None
+[2026-10-06 10:48:40,960] DEBUG in app: Token response data: {'data': {'access_token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3dzLmV2ZXJpZnkuZ292LnBoIiwic3ViIjoiMjY0IiwianRpIjoiNmFjNDYxODg1YmQ2YyIsImlhdCI6MTc5MTI1NDkyMC4zNzYxNzksIm5iZiI6MTc5MTI1NDkyMC4zNzYxNzksImV4cCI6MTc5MTI1NjcyMC4zNzYxNzl9.Zkyfwn8Ig6pyRdlbHt9OtOq0A-tw9PS98QrRXkSz9zQ', 'token_type': 'Bearer', 'expires_at': '1791256720'}}
+[2026-10-06 10:48:40,961] INFO in app: Access token refreshed successfully. New expiry: 1791256720
+[2026-10-06 10:48:56,581] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:48:56,586] DEBUG in app: Access token still valid. Expires at 1791256720, current time is 1791254936
+[2026-10-06 10:48:56,589] DEBUG in connectionpool: Starting new HTTPS connection (1): ws.everify.gov.ph:443
+[2026-10-06 10:48:57,727] DEBUG in connectionpool: https://ws.everify.gov.ph:443 "POST /api/query/qr/check HTTP/1.1" 200 None
+[2026-10-06 10:48:57,729] DEBUG in connectionpool: Starting new HTTPS connection (1): api.ipify.org:443
+[2026-10-06 10:48:58,517] DEBUG in connectionpool: https://api.ipify.org:443 "GET /?format=text HTTP/1.1" 200 13
+[2026-10-06 10:48:58,518] DEBUG in app: QR check response: {'data': {'pcn': '5825031640918536', 'first_name': 'ARIEL', 'middle_name': 'RAMADA', 'last_name': 'CORTEL', 'suffix': None, 'birth_date': '1995-03-12', 'sex': 'Male', 'place_of_birth': 'City of Cebu, Cebu', 'best_finger_captured': ['RIGHT THUMB', 'LEFT INDEX FINGER'], 'date_issued': '2022-10-24'}, 'meta': {'qr_type': 'Philsys Card'}}, requests: <PreparedRequest [POST]>, Public_IP: 216.247.29.78
+[2026-10-06 10:48:58,519] INFO in _internal: 127.0.0.1 - - [06/Oct/2026 10:48:58] "POST /query/qr/check HTTP/1.1" 200 -
+[2026-10-06 10:48:58,520] DEBUG in connectionpool: http://127.0.0.1:5000 "POST /query/qr/check HTTP/1.1" 200 312
+[2026-10-06 10:49:00,698] INFO in _internal: 127.0.0.1 - - [06/Oct/2026 10:49:00] "GET /liveness HTTP/1.1" 200 -
+[2026-10-06 10:49:02,578] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:49:02,584] DEBUG in app: No session ID stored yet.
+[2026-10-06 10:49:02,584] INFO in _internal: 127.0.0.1 - - [06/Oct/2026 10:49:02] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-10-06 10:49:02,584] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-10-06 10:49:04,571] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:49:04,574] DEBUG in app: No session ID stored yet.
+[2026-10-06 10:49:04,574] INFO in _internal: 127.0.0.1 - - [06/Oct/2026 10:49:04] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-10-06 10:49:04,574] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-10-06 10:49:06,575] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:49:06,579] DEBUG in app: No session ID stored yet.
+[2026-10-06 10:49:06,580] INFO in _internal: 127.0.0.1 - - [06/Oct/2026 10:49:06] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-10-06 10:49:06,581] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-10-06 10:49:08,575] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:49:08,578] DEBUG in app: No session ID stored yet.
+[2026-10-06 10:49:08,578] INFO in _internal: 127.0.0.1 - - [06/Oct/2026 10:49:08] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-10-06 10:49:08,578] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-10-06 10:49:10,577] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:49:10,581] DEBUG in app: No session ID stored yet.
+[2026-10-06 10:49:10,582] INFO in _internal: 127.0.0.1 - - [06/Oct/2026 10:49:10] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-10-06 10:49:10,582] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-10-06 10:49:12,575] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:49:12,578] DEBUG in app: No session ID stored yet.
+[2026-10-06 10:49:12,579] INFO in _internal: 127.0.0.1 - - [06/Oct/2026 10:49:12] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-10-06 10:49:12,579] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-10-06 10:49:14,574] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:49:14,577] DEBUG in app: No session ID stored yet.
+[2026-10-06 10:49:14,577] INFO in _internal: 127.0.0.1 - - [06/Oct/2026 10:49:14] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-10-06 10:49:14,578] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-10-06 10:49:16,576] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:49:16,579] DEBUG in app: No session ID stored yet.
+[2026-10-06 10:49:16,580] INFO in _internal: 127.0.0.1 - - [06/Oct/2026 10:49:16] "[35m[1mGET /liveness_result HTTP/1.1[0m" 204 -
+[2026-10-06 10:49:16,580] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-10-06 10:49:17,704] INFO in app: Liveness session ID stored: b38e150e-ee91-40bd-9582-6387e9b5a78a
+[2026-10-06 10:49:17,704] INFO in _internal: 127.0.0.1 - - [06/Oct/2026 10:49:17] "POST /liveness_result HTTP/1.1" 200 -
+[2026-10-06 10:49:18,576] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:49:18,579] DEBUG in app: Returning liveness session ID: b38e150e-ee91-40bd-9582-6387e9b5a78a
+[2026-10-06 10:49:18,580] INFO in _internal: 127.0.0.1 - - [06/Oct/2026 10:49:18] "GET /liveness_result HTTP/1.1" 200 -
+[2026-10-06 10:49:18,580] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 200 68
+[2026-10-06 10:49:18,757] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:49:18,760] DEBUG in app: Access token still valid. Expires at 1791256720, current time is 1791254958
+[2026-10-06 10:49:18,761] DEBUG in connectionpool: Starting new HTTPS connection (1): ws.everify.gov.ph:443
+[2026-10-06 10:49:21,653] DEBUG in connectionpool: https://ws.everify.gov.ph:443 "POST /api/query/qr HTTP/1.1" 200 None
+[2026-10-06 10:49:21,654] INFO in _internal: 127.0.0.1 - - [06/Oct/2026 10:49:21] "POST /query/qr HTTP/1.1" 200 -
+[2026-10-06 10:49:21,654] DEBUG in connectionpool: http://127.0.0.1:5000 "POST /query/qr HTTP/1.1" 200 1720
+[2026-10-06 10:49:24,901] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:49:24,920] INFO in app: Attempting to save face image to: C:\ayie\PROJECTS\LGU\RVS APP\RVS dev 2.0\images\faces\5825031640918536.jpg
+[2026-10-06 10:49:24,922] DEBUG in connectionpool: Starting new HTTPS connection (1): ekycbucket.s3.ap-southeast-1.amazonaws.com:443
+[2026-10-06 10:49:25,742] DEBUG in connectionpool: https://ekycbucket.s3.ap-southeast-1.amazonaws.com:443 "GET /954/faces/5825031640918536.jpg?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZWODBTF4X4XXBYWZ%2F20261006%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Date=20261006T024919Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3600&X-Amz-Signature=739efd9a3ee99dbb9f62a4a703a9afc24e369198144963945bad8da7f36e9a10 HTTP/1.1" 200 4688
+[2026-10-06 10:49:25,743] INFO in app: Successfully saved face image to: C:\ayie\PROJECTS\LGU\RVS APP\RVS dev 2.0\images\faces\5825031640918536.jpg
+[2026-10-06 10:49:25,744] INFO in app: Inserting verification record with values: ('5825031640918536', 'GBE916', 'ARIEL', 'RAMADA', 'CORTEL', '1995-03-12', '5825031640918536.jpg', 'Male', 'Single', 'City of Maasin', 'Southern Leyte')
+[2026-10-06 10:49:25,807] INFO in _internal: 127.0.0.1 - - [06/Oct/2026 10:49:25] "POST /store_verification HTTP/1.1" 200 -
+[2026-10-06 10:49:25,807] DEBUG in connectionpool: http://127.0.0.1:5000 "POST /store_verification HTTP/1.1" 200 47
+[2026-10-06 10:49:25,810] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:49:25,813] INFO in app: Clearing stored liveness session ID: b38e150e-ee91-40bd-9582-6387e9b5a78a
+[2026-10-06 10:49:25,814] INFO in _internal: 127.0.0.1 - - [06/Oct/2026 10:49:25] "DELETE /liveness_result HTTP/1.1" 200 -
+[2026-10-06 10:49:25,814] DEBUG in connectionpool: http://127.0.0.1:5000 "DELETE /liveness_result HTTP/1.1" 200 42
