@@ -1923,3 +1923,143 @@ requests.exceptions.HTTPError: 422 Client Error: Unprocessable Entity for url: h
  * Running on http://127.0.0.1:5000
  * Running on http://192.168.254.119:5000
 [2026-09-17 10:32:26,622] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2026-09-17 10:45:58,049] DEBUG in connectionpool: Starting new HTTPS connection (1): api.ipify.org:443
+[2026-09-17 10:45:58,845] DEBUG in connectionpool: https://api.ipify.org:443 "GET /?format=text HTTP/1.1" 200 14
+[2026-09-17 10:45:58,846] INFO in app: Server Public IP: 216.247.31.112
+[2026-09-17 10:45:59,055] DEBUG in __init__: CACHEDIR=C:\Users\ThisPC\.matplotlib
+[2026-09-17 10:45:59,057] DEBUG in font_manager: Using fontManager instance from C:\Users\ThisPC\.matplotlib\fontlist-v390.json
+[2026-09-17 10:45:59,452] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.254.119:5000
+[2026-09-17 10:45:59,455] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2026-09-17 10:47:26,705] DEBUG in connectionpool: Starting new HTTPS connection (1): api.ipify.org:443
+[2026-09-17 10:47:27,474] DEBUG in connectionpool: https://api.ipify.org:443 "GET /?format=text HTTP/1.1" 200 14
+[2026-09-17 10:47:27,475] INFO in app: Server Public IP: 216.247.31.112
+[2026-09-17 10:47:27,674] DEBUG in __init__: CACHEDIR=C:\Users\ThisPC\.matplotlib
+[2026-09-17 10:47:27,676] DEBUG in font_manager: Using fontManager instance from C:\Users\ThisPC\.matplotlib\fontlist-v390.json
+[2026-09-17 10:47:28,050] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.254.119:5000
+[2026-09-17 10:47:28,052] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2026-10-06 10:28:26,709] DEBUG in connectionpool: Starting new HTTPS connection (1): api.ipify.org:443
+[2026-10-06 10:28:28,054] DEBUG in connectionpool: https://api.ipify.org:443 "GET /?format=text HTTP/1.1" 200 13
+[2026-10-06 10:28:28,056] INFO in app: Server Public IP: 216.247.29.78
+[2026-10-06 10:28:28,923] DEBUG in __init__: CACHEDIR=C:\Users\ThisPC\.matplotlib
+[2026-10-06 10:28:28,926] DEBUG in font_manager: Using fontManager instance from C:\Users\ThisPC\.matplotlib\fontlist-v390.json
+[2026-10-06 10:28:29,989] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.254.119:5000
+[2026-10-06 10:28:29,990] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2026-10-06 10:28:43,761] WARNING in app: Token expiry not set — assuming token is expired.
+[2026-10-06 10:28:43,763] DEBUG in connectionpool: Starting new HTTPS connection (1): ws.everify.gov.ph:443
+[2026-10-06 10:28:44,413] DEBUG in connectionpool: https://ws.everify.gov.ph:443 "POST /api/auth HTTP/1.1" 422 None
+[2026-10-06 10:28:44,414] ERROR in app: Exception occurred while getting access token.
+Traceback (most recent call last):
+  File "C:\ayie\PROJECTS\LGU\RVS APP\RVS dev 2.0\flask_server\app.py", line 133, in get_access_token
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\ayie\PROJECTS\LGU\RVS APP\RVS dev 2.0\.venv\Lib\site-packages\requests\models.py", line 1026, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 422 Client Error: Unprocessable Entity for url: https://ws.everify.gov.ph/api/auth
+[2026-10-06 10:33:36,525] DEBUG in connectionpool: Starting new HTTPS connection (1): api.ipify.org:443
+[2026-10-06 10:33:37,289] DEBUG in connectionpool: https://api.ipify.org:443 "GET /?format=text HTTP/1.1" 200 13
+[2026-10-06 10:33:37,290] INFO in app: Server Public IP: 216.247.29.78
+[2026-10-06 10:33:37,538] DEBUG in __init__: CACHEDIR=C:\Users\ThisPC\.matplotlib
+[2026-10-06 10:33:37,540] DEBUG in font_manager: Using fontManager instance from C:\Users\ThisPC\.matplotlib\fontlist-v390.json
+[2026-10-06 10:33:37,958] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.254.119:5000
+[2026-10-06 10:33:37,958] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2026-10-06 10:33:48,780] WARNING in app: Token expiry not set — assuming token is expired.
+[2026-10-06 10:33:48,781] DEBUG in connectionpool: Starting new HTTPS connection (1): ws.everify.gov.ph:443
+[2026-10-06 10:33:49,488] DEBUG in connectionpool: https://ws.everify.gov.ph:443 "POST /api/auth HTTP/1.1" 200 None
+[2026-10-06 10:33:49,488] DEBUG in app: Token response data: {'data': {'access_token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3dzLmV2ZXJpZnkuZ292LnBoIiwic3ViIjoiMjY0IiwianRpIjoiNmFjNDVlMGNkODJmYSIsImlhdCI6MTc5MTI1NDAyOC44ODU1MDUsIm5iZiI6MTc5MTI1NDAyOC44ODU1MDUsImV4cCI6MTc5MTI1NTgyOC44ODU1MDV9.pbhXlRYOq24d6d54f3preT21_A4Ot6X_1XS6fpYjMeM', 'token_type': 'Bearer', 'expires_at': '1791255828'}}
+[2026-10-06 10:33:49,489] INFO in app: Access token refreshed successfully. New expiry: 1791255828
+[2026-10-06 10:37:48,405] DEBUG in connectionpool: Starting new HTTPS connection (1): api.ipify.org:443
+[2026-10-06 10:37:49,228] DEBUG in connectionpool: https://api.ipify.org:443 "GET /?format=text HTTP/1.1" 200 13
+[2026-10-06 10:37:49,229] INFO in app: Server Public IP: 216.247.29.78
+[2026-10-06 10:37:49,451] DEBUG in __init__: CACHEDIR=C:\Users\ThisPC\.matplotlib
+[2026-10-06 10:37:49,454] DEBUG in font_manager: Using fontManager instance from C:\Users\ThisPC\.matplotlib\fontlist-v390.json
+[2026-10-06 10:37:49,872] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.254.119:5000
+[2026-10-06 10:37:49,872] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2026-10-06 10:38:01,082] WARNING in app: Token expiry not set — assuming token is expired.
+[2026-10-06 10:38:01,084] DEBUG in connectionpool: Starting new HTTPS connection (1): ws.everify.gov.ph:443
+[2026-10-06 10:38:01,774] DEBUG in connectionpool: https://ws.everify.gov.ph:443 "POST /api/auth HTTP/1.1" 200 None
+[2026-10-06 10:38:01,776] DEBUG in app: Token response data: {'data': {'access_token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3dzLmV2ZXJpZnkuZ292LnBoIiwic3ViIjoiMjY0IiwianRpIjoiNmFjNDVmMDkyZGIxMCIsImlhdCI6MTc5MTI1NDI4MS4xODcxNiwibmJmIjoxNzkxMjU0MjgxLjE4NzE2LCJleHAiOjE3OTEyNTYwODEuMTg3MTZ9.uGcPaJ0vxQcE5QO2WdtQdduK1Y3PftU1nmMRiWWJiZQ', 'token_type': 'Bearer', 'expires_at': '1791256081'}}
+[2026-10-06 10:38:01,776] INFO in app: Access token refreshed successfully. New expiry: 1791256081
+[2026-10-06 10:38:08,559] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:38:09,154] DEBUG in connectionpool: http://127.0.0.1:5000 "POST /query/qr/check HTTP/1.1" 401 35
+[2026-10-06 10:39:27,431] DEBUG in app: Access token still valid. Expires at 1791256081, current time is 1791254367
+[2026-10-06 10:39:39,699] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:39:39,707] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-10-06 10:39:41,694] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:39:41,699] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-10-06 10:39:43,696] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:39:43,703] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-10-06 10:39:45,702] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:39:45,709] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-10-06 10:39:47,702] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:39:47,709] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-10-06 10:39:49,703] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:39:49,708] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-10-06 10:39:51,690] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:39:51,695] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-10-06 10:39:53,702] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:39:53,706] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-10-06 10:39:55,705] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:39:55,709] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-10-06 10:39:57,698] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:39:57,709] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-10-06 10:39:59,691] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:39:59,695] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-10-06 10:40:01,702] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:40:01,707] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-10-06 10:40:03,703] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:40:03,710] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-10-06 10:40:05,697] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:40:05,703] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 200 68
+[2026-10-06 10:40:05,891] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:40:06,507] DEBUG in connectionpool: http://127.0.0.1:5000 "POST /query HTTP/1.1" 401 35
+[2026-10-06 10:40:14,889] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:40:14,893] DEBUG in connectionpool: http://127.0.0.1:5000 "DELETE /liveness_result HTTP/1.1" 200 42
+[2026-10-06 10:42:37,510] DEBUG in connectionpool: Starting new HTTPS connection (1): api.ipify.org:443
+[2026-10-06 10:42:38,313] DEBUG in connectionpool: https://api.ipify.org:443 "GET /?format=text HTTP/1.1" 200 13
+[2026-10-06 10:42:38,315] INFO in app: Server Public IP: 216.247.29.78
+[2026-10-06 10:42:38,528] DEBUG in __init__: CACHEDIR=C:\Users\ThisPC\.matplotlib
+[2026-10-06 10:42:38,530] DEBUG in font_manager: Using fontManager instance from C:\Users\ThisPC\.matplotlib\fontlist-v390.json
+[2026-10-06 10:42:38,919] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.254.119:5000
+[2026-10-06 10:42:38,919] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2026-10-06 10:43:18,394] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:43:19,035] DEBUG in connectionpool: http://127.0.0.1:5000 "POST /query/qr/check HTTP/1.1" 401 35
+[2026-10-06 10:44:00,143] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:44:00,151] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-10-06 10:44:02,156] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:44:02,160] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-10-06 10:44:04,156] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:44:04,160] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-10-06 10:44:06,145] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:44:06,150] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-10-06 10:44:08,152] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:44:08,156] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-10-06 10:44:10,157] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:44:10,163] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-10-06 10:44:12,143] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:44:12,146] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-10-06 10:44:14,146] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:44:14,152] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 204 0
+[2026-10-06 10:44:16,152] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:44:16,156] DEBUG in connectionpool: http://127.0.0.1:5000 "GET /liveness_result HTTP/1.1" 200 68
+[2026-10-06 10:44:16,344] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:44:16,920] DEBUG in connectionpool: http://127.0.0.1:5000 "POST /query HTTP/1.1" 401 35
+[2026-10-06 10:44:25,860] DEBUG in connectionpool: Starting new HTTP connection (1): 127.0.0.1:5000
+[2026-10-06 10:44:25,864] DEBUG in connectionpool: http://127.0.0.1:5000 "DELETE /liveness_result HTTP/1.1" 200 42

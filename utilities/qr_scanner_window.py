@@ -27,12 +27,19 @@ class QRScannerWindow(QMainWindow):
         self.widget.setLayout(self.layout)
         self.setCentralWidget(self.widget)
 
-        self.cap = cv2.VideoCapture(0)
-        self.cap.set(cv2.CAP_PROP_BRIGHTNESS, 0.6)  # ✅ Slight brightness boost
+        camera_backend = cv2.CAP_DSHOW if platform.system() == "Windows" else cv2.CAP_ANY
+        self.cap = cv2.VideoCapture(0, camera_backend)
+        self.failed_reads = 0
+        if self.cap.isOpened():
+            self.cap.set(cv2.CAP_PROP_BRIGHTNESS, 0.6)  # ✅ Slight brightness boost
+        else:
+            self.cap.release()
+            self.video_label.setText("Camera 0 could not be opened. Check its connection and permissions.")
 
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_video)
-        self.timer.start(30)
+        if self.cap.isOpened():
+            self.timer.start(30)
 
         self.setStyleSheet("""
             QMainWindow {
@@ -58,7 +65,14 @@ class QRScannerWindow(QMainWindow):
     def update_video(self):
         ret, frame = self.cap.read()
         if not ret:
+            self.failed_reads += 1
+            if self.failed_reads >= 10:
+                self.timer.stop()
+                self.cap.release()
+                self.video_label.setText("Camera stopped returning frames. Check that it is available and not in use.")
             return
+
+        self.failed_reads = 0
         
         frame = self.preprocess_image(frame)
         decoded_objects = decode(frame)
