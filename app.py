@@ -1,5 +1,6 @@
 import sys
 import os
+import bcrypt  # password hashing (verify hashed passwords at login)
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 import subprocess
@@ -43,6 +44,12 @@ flask_thread = threading.Thread(target=start_server, daemon=True)
 flask_thread.start()
 
 basedir = os.path.dirname(__file__)
+
+
+# A valid bcrypt hash of a throwaway string. When the username doesn't exist we still
+# run checkpw against this, so "unknown user" and "wrong password" take the same time
+# and an attacker can't discover valid usernames by measuring response speed.
+_DUMMY_HASH = b"$2b$12$zBLm4jn.GAx/aT0tYfylheFd67soDFLN8vDLhPT6nMqvn8s5q4TWa"
 
 
 # Login Dialog
@@ -110,6 +117,8 @@ class Login(QDialog, Ui_Login_Dialog):
                 pass  # Ignore close errors
 
     def login(self):
+        conn = None
+        cursor = None
         try:
             username = self.username_input.text().strip()
             password = self.password_input.text().strip()
@@ -141,13 +150,29 @@ class Login(QDialog, Ui_Login_Dialog):
                 
             cursor = conn.cursor()
             
-            # Check credentials and fetch user info including superuser status
+            # Fetch the row by username ONLY. The password is never put in the SQL;
+            # bcrypt compares it in Python against the stored hash.
             cursor.execute(
-                "SELECT username, firstname, lastname, is_superuser FROM users_list WHERE username = %s AND password = %s",
-                (username, password)
+                "SELECT username, firstname, lastname, is_superuser, password FROM users_list WHERE username = %s",
+                (username,)
             )
             
-            user = cursor.fetchone()
+            row = cursor.fetchone()
+
+            # Use the real hash if the user exists, otherwise the dummy (see _DUMMY_HASH)
+            stored_hash = row[4] if row else None
+            hash_to_check = stored_hash.encode("utf-8") if stored_hash else _DUMMY_HASH
+
+            try:
+                matches = bcrypt.checkpw(password.encode("utf-8"), hash_to_check)
+            except ValueError:
+                # Malformed stored hash, or password longer than bcrypt's 72-byte limit
+                matches = False
+
+            # Pass only if the user exists, has a stored hash, AND the password matches.
+            # (The stored_hash check stops the dummy hash from ever granting access.)
+            password_ok = bool(stored_hash) and matches
+            user = row[:4] if password_ok else None
             
             if user:
                 username, firstname, lastname, is_superuser = user
@@ -1680,4 +1705,4 @@ if __name__ == "__main__":
     loginwindow.login_success.connect(mainwindow.set_current_user)
     loginwindow.show()
     # mainwindow.show()
-    sys.exit(app.exec()) 
+    sys.exit(app.exec())
