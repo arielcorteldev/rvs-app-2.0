@@ -2253,3 +2253,13 @@ requests.exceptions.HTTPError: 422 Client Error: Unprocessable Entity for url: h
 [2026-10-12 13:04:11,242] DEBUG in connectionpool: https://ws.everify.gov.ph:443 "POST /api/auth HTTP/1.1" 200 None
 [2026-10-12 13:04:11,242] DEBUG in app: Token response data: {'data': {'access_token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3dzLmV2ZXJpZnkuZ292LnBoIiwic3ViIjoiMjY0IiwianRpIjoiNmFjYzZhNDEwMzI4ZCIsImlhdCI6MTc5MTc4MTQ0MS4wMTI5NDksIm5iZiI6MTc5MTc4MTQ0MS4wMTI5NDksImV4cCI6MTc5MTc4MzI0MS4wMTI5NDl9.r7l3i40XXY1lL-hxBBbl7D8t1XD-kBLmwpffyrgsZGA', 'token_type': 'Bearer', 'expires_at': '1791783241'}}
 [2026-10-12 13:04:11,242] INFO in app: Access token refreshed successfully. New expiry: 1791783241
+[2026-10-27 13:32:57,218] DEBUG in connectionpool: Starting new HTTPS connection (1): api.ipify.org:443
+[2026-10-27 13:32:58,280] DEBUG in connectionpool: https://api.ipify.org:443 "GET /?format=text HTTP/1.1" 200 14
+[2026-10-27 13:32:58,281] INFO in app: Server Public IP: 216.247.31.118
+[2026-10-27 13:32:58,928] DEBUG in __init__: CACHEDIR=C:\Users\ThisPC\.matplotlib
+[2026-10-27 13:32:58,932] DEBUG in font_manager: Using fontManager instance from C:\Users\ThisPC\.matplotlib\fontlist-v390.json
+[2026-10-27 13:32:59,619] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.254.119:5000
+[2026-10-27 13:32:59,619] INFO in _internal: [33mPress CTRL+C to quit[0m

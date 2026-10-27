@@ -1,5 +1,6 @@
 import sys
 import os
+import bcrypt  # password hashing
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
@@ -16,6 +17,21 @@ from utilities.db_config import POSTGRES_CONFIG
 from utilities.stylesheets import button_style, message_box_style, table_style
 
 # Manage Users Window
+# Password rules, enforced whenever a password is created or changed
+MIN_PASSWORD_LENGTH = 8
+MAX_PASSWORD_BYTES = 72  # bcrypt only uses the first 72 bytes, so longer passwords are rejected
+
+
+def hash_password(plain_password):
+    """Return a salted bcrypt hash (60-char string) that is safe to store in users_list.password.
+
+    gensalt() creates a fresh random salt on every call, so two users with the same
+    password still get different hashes. The salt and cost factor are embedded in the
+    result, which is why login only needs bcrypt.checkpw() and no separate salt column.
+    """
+    return bcrypt.hashpw(plain_password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+
+
 class ManageUserForm(QWidget, Ui_Manage_User_Form):
     def __init__(self, username, is_superuser=False, parent=None):
         super().__init__(parent)
@@ -94,6 +110,8 @@ class ManageUserForm(QWidget, Ui_Manage_User_Form):
 
         # hide password input
         self.password_input.setEchoMode(QLineEdit.Password)
+        # remember the original placeholder so edit mode can temporarily change it
+        self._default_pw_placeholder = self.password_input.placeholderText()
 
         # Create superuser checkbox (will be shown/enabled only for superusers)
         self.superuser_checkbox = QCheckBox("Superuser")
@@ -114,6 +132,14 @@ class ManageUserForm(QWidget, Ui_Manage_User_Form):
         
         # Configure checkbox visibility based on user role
         self.configure_ui_for_user_role()
+
+    # Returns an error message if the password breaks the rules, otherwise None
+    def password_problem(self, password):
+        if len(password) < MIN_PASSWORD_LENGTH:
+            return f"Password must be at least {MIN_PASSWORD_LENGTH} characters."
+        if len(password.encode("utf-8")) > MAX_PASSWORD_BYTES:
+            return f"Password is too long (maximum {MAX_PASSWORD_BYTES} bytes)."
+        return None
 
     # Configure UI based on user's superuser status
     def configure_ui_for_user_role(self):
@@ -194,12 +220,12 @@ class ManageUserForm(QWidget, Ui_Manage_User_Form):
             if self.is_superuser:
                 cursor.execute("SELECT COUNT(*) FROM users_list")
                 count = cursor.fetchone()[0]
-                cursor.execute("SELECT firstname, lastname, username, password, is_superuser FROM users_list ORDER BY firstname, lastname")
+                cursor.execute("SELECT firstname, lastname, username, '' AS password, is_superuser FROM users_list ORDER BY firstname, lastname")
             else:
                 # Non-superuser can only see their own account
                 cursor.execute("SELECT COUNT(*) FROM users_list WHERE username = %s", (self.current_user,))
                 count = cursor.fetchone()[0]
-                cursor.execute("SELECT firstname, lastname, username, password, is_superuser FROM users_list WHERE username = %s", (self.current_user,))
+                cursor.execute("SELECT firstname, lastname, username, '' AS password, is_superuser FROM users_list WHERE username = %s", (self.current_user,))
             
             users = cursor.fetchall()
 
@@ -275,6 +301,24 @@ class ManageUserForm(QWidget, Ui_Manage_User_Form):
                 box.exec()
                 return
 
+            # Enforce password rules before anything touches the database
+            problem = self.password_problem(password)
+            if problem:
+                AuditLogger.log_action(
+                    conn,
+                    self.current_user,
+                    "USER_CREATE_FAILED",
+                    {"reason": "invalid_password"}
+                )
+                box = QMessageBox()
+                box.setIcon(QMessageBox.Warning)
+                box.setText("Invalid Password")
+                box.setWindowTitle("Invalid Password")
+                box.setDetailedText(problem)
+                box.setStyleSheet(message_box_style)
+                box.exec()
+                return
+
             # Check if user exists
             cursor.execute(
                 "SELECT username FROM users_list WHERE firstname = %s AND lastname = %s",
@@ -301,7 +345,7 @@ class ManageUserForm(QWidget, Ui_Manage_User_Form):
             cursor.execute('''
                 INSERT INTO users_list (firstname, lastname, username, password, is_superuser)
                 VALUES (%s, %s, %s, %s, %s)
-            ''', (fname, lname, username, password, is_superuser))
+            ''', (fname, lname, username, hash_password(password), is_superuser))
 
             AuditLogger.log_action(
                 conn,
@@ -328,6 +372,7 @@ class ManageUserForm(QWidget, Ui_Manage_User_Form):
             self.lname_input.clear()
             self.username_input.clear()
             self.password_input.clear()
+            self.password_input.setPlaceholderText(self._default_pw_placeholder)
             self.superuser_checkbox.setChecked(False)
 
             # Refresh table
@@ -380,7 +425,9 @@ class ManageUserForm(QWidget, Ui_Manage_User_Form):
             self.fname_input.setText(self.tableWidget.item(current_row, 0).text())
             self.lname_input.setText(self.tableWidget.item(current_row, 1).text())
             self.username_input.setText(self.tableWidget.item(current_row, 2).text())
-            self.password_input.setText(self.tableWidget.item(current_row, 3).text())
+            # Never show the stored password/hash. Blank = keep current, typed = set new one.
+            self.password_input.clear()
+            self.password_input.setPlaceholderText("Leave blank to keep current password")
             
             # Get superuser status from database
             conn = self.create_connection()
@@ -459,7 +506,8 @@ class ManageUserForm(QWidget, Ui_Manage_User_Form):
             password = self.password_input.text().strip()
             is_superuser = self.superuser_checkbox.isChecked()
 
-            if not all([fname, lname, username, password]):
+            # Password is optional when editing: blank means "keep the current one"
+            if not all([fname, lname, username]):
                 AuditLogger.log_action(
                     conn,
                     self.current_user,
@@ -474,6 +522,25 @@ class ManageUserForm(QWidget, Ui_Manage_User_Form):
                 box.setStyleSheet(message_box_style)
                 box.exec()
                 return
+
+            # Only validate the password if a new one was typed
+            if password:
+                problem = self.password_problem(password)
+                if problem:
+                    AuditLogger.log_action(
+                        conn,
+                        self.current_user,
+                        "USER_UPDATE_FAILED",
+                        {"reason": "invalid_password", "username": old_username}
+                    )
+                    box = QMessageBox()
+                    box.setIcon(QMessageBox.Warning)
+                    box.setText("Invalid Password")
+                    box.setWindowTitle("Invalid Password")
+                    box.setDetailedText(problem)
+                    box.setStyleSheet(message_box_style)
+                    box.exec()
+                    return
 
             # Check if new username already exists (if username was changed)
             if username != old_username:
@@ -494,12 +561,20 @@ class ManageUserForm(QWidget, Ui_Manage_User_Form):
                     box.exec()
                     return
 
-            # Update user
-            cursor.execute('''
-                UPDATE users_list 
-                SET firstname = %s, lastname = %s, username = %s, password = %s, is_superuser = %s
-                WHERE username = %s
-            ''', (fname, lname, username, password, is_superuser, old_username))
+            # Update user. The password column is only touched if a new password was typed;
+            # otherwise the existing hash is left exactly as it is.
+            if password:
+                cursor.execute('''
+                    UPDATE users_list 
+                    SET firstname = %s, lastname = %s, username = %s, password = %s, is_superuser = %s
+                    WHERE username = %s
+                ''', (fname, lname, username, hash_password(password), is_superuser, old_username))
+            else:
+                cursor.execute('''
+                    UPDATE users_list 
+                    SET firstname = %s, lastname = %s, username = %s, is_superuser = %s
+                    WHERE username = %s
+                ''', (fname, lname, username, is_superuser, old_username))
 
             AuditLogger.log_action(
                 conn,
@@ -508,6 +583,7 @@ class ManageUserForm(QWidget, Ui_Manage_User_Form):
                 {
                     "old_username": old_username,
                     "new_username": username,
+                    "password_changed": bool(password),
                     "first_name": fname,
                     "last_name": lname,
                     "is_superuser": is_superuser
@@ -527,6 +603,7 @@ class ManageUserForm(QWidget, Ui_Manage_User_Form):
             self.lname_input.clear()
             self.username_input.clear()
             self.password_input.clear()
+            self.password_input.setPlaceholderText(self._default_pw_placeholder)
             self.superuser_checkbox.setChecked(False)
 
             # Refresh table
@@ -622,6 +699,7 @@ class ManageUserForm(QWidget, Ui_Manage_User_Form):
                 self.lname_input.clear()
                 self.username_input.clear()
                 self.password_input.clear()
+                self.password_input.setPlaceholderText(self._default_pw_placeholder)
                 self.superuser_checkbox.setChecked(False)
                 
                 # Refresh table
