@@ -74,46 +74,6 @@ class Ui_LCRSearchDeathWindow(object):
 
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.verticalLayout = QVBoxLayout()
-        self.verticalLayout.setObjectName(u"verticalLayout")
-
-        self.auto_form = QPushButton(self.centralwidget)
-        self.auto_form.setObjectName(u"auto_form")
-        icon7 = QIcon()
-        icon7.addFile(u"assets/icons/auto.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.auto_form.setIcon(icon7)
-
-        self.verticalLayout.addWidget(self.auto_form)
-
-        self.create_form = QPushButton(self.centralwidget)
-        self.create_form.setObjectName(u"create_form")
-        icon2 = QIcon()
-        icon2.addFile(u"assets/icons/add.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.create_form.setIcon(icon2)
-
-        self.verticalLayout.addWidget(self.create_form)
-
-        self.no_record = QPushButton(self.centralwidget)
-        self.no_record.setObjectName(u"no_record")
-        icon4 = QIcon()
-        icon4.addFile(u"assets/icons/norecord.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.no_record.setIcon(icon4)
-
-        self.verticalLayout.addWidget(self.no_record)
-
-        self.destroyed = QPushButton(self.centralwidget)
-        self.destroyed.setObjectName(u"destroyed")
-        icon5 = QIcon()
-        icon5.addFile(u"assets/icons/destroyed.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.destroyed.setIcon(icon5)
-
-        self.verticalLayout.addWidget(self.destroyed)
-
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.verticalLayout.addItem(self.verticalSpacer)
-
-        self.horizontalLayout_2.addLayout(self.verticalLayout)
 
         self.results_list = QListWidget(self.centralwidget)
         self.results_list.setObjectName(u"results_list")
@@ -144,11 +104,6 @@ class Ui_LCRSearchDeathWindow(object):
 
         self.gridLayout.addWidget(self.regyear_textEdit, 0, 0, 1, 1)
 
-        self.everify_button = QPushButton(self.centralwidget)
-        self.everify_button.setObjectName(u"everify_button")
-
-        self.gridLayout.addWidget(self.everify_button, 0, 3, 1, 1)
-
         LCRSearchDeathWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(LCRSearchDeathWindow)
@@ -160,11 +115,7 @@ class Ui_LCRSearchDeathWindow(object):
         LCRSearchDeathWindow.setWindowTitle(QCoreApplication.translate("LCRSearchDeathWindow", u"MainWindow", None))
         self.search_textEdit.setPlaceholderText("")
         self.search_button.setText("")
-        self.create_form.setText("")
-        self.no_record.setText("")
-        self.destroyed.setText("")
         self.status_label.setText("")
         self.regyear_textEdit.setText("")
         self.regyear_textEdit.setPlaceholderText(QCoreApplication.translate("LCRSearchDeathWindow", u"Enter Reg Year/Book No.", None))
-        self.everify_button.setText(QCoreApplication.translate("LCRSearchDeathWindow", u"PushButton", None))
     # retranslateUi
