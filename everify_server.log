@@ -2363,3 +2363,23 @@ requests.exceptions.HTTPError: 422 Client Error: Unprocessable Entity for url: h
  * Running on http://127.0.0.1:5000
  * Running on http://192.168.254.119:5000
 [2026-10-29 13:27:07,647] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2026-10-29 13:32:17,321] DEBUG in connectionpool: Starting new HTTPS connection (1): api.ipify.org:443
+[2026-10-29 13:32:18,172] DEBUG in connectionpool: https://api.ipify.org:443 "GET /?format=text HTTP/1.1" 200 12
+[2026-10-29 13:32:18,174] INFO in app: Server Public IP: 216.247.25.8
+[2026-10-29 13:32:18,408] DEBUG in __init__: CACHEDIR=C:\Users\ThisPC\.matplotlib
+[2026-10-29 13:32:18,410] DEBUG in font_manager: Using fontManager instance from C:\Users\ThisPC\.matplotlib\fontlist-v390.json
+[2026-10-29 13:32:18,849] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.254.119:5000
+[2026-10-29 13:32:18,850] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2026-10-29 13:33:33,055] DEBUG in connectionpool: Starting new HTTPS connection (1): api.ipify.org:443
+[2026-10-29 13:33:33,814] DEBUG in connectionpool: https://api.ipify.org:443 "GET /?format=text HTTP/1.1" 200 12
+[2026-10-29 13:33:33,816] INFO in app: Server Public IP: 216.247.25.8
+[2026-10-29 13:33:34,016] DEBUG in __init__: CACHEDIR=C:\Users\ThisPC\.matplotlib
+[2026-10-29 13:33:34,018] DEBUG in font_manager: Using fontManager instance from C:\Users\ThisPC\.matplotlib\fontlist-v390.json
+[2026-10-29 13:33:34,421] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.254.119:5000
+[2026-10-29 13:33:34,422] INFO in _internal: [33mPress CTRL+C to quit[0m

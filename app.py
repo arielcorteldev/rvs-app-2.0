@@ -1212,7 +1212,7 @@ class MainWindow(QMainWindow):
             if birth is None or not birth.isVisible():
                 birth = SearchBirthWindow(self.current_user, parent=self, main_window=self)
                 # Apply customizations when first creating
-                birth.setWindowTitle('Search Live Birth')
+                birth.setWindowTitle('Search LCR Live Birth')
                 birth.setParent(self)
                 birth.setWindowFlag(Qt.Window)
                 self.windows['birth'] = birth
@@ -1241,7 +1241,7 @@ class MainWindow(QMainWindow):
             death = self.windows.get('death')
             if death is None or not death.isVisible():
                 death = SearchDeathWindow(self.current_user, parent=self, main_window=self)
-                death.setWindowTitle('Search Death')
+                death.setWindowTitle('Search LCR Death')
                 # death.setStyleSheet("""
                 #     QMainWindow {
                 #         background-color: #FFFFFF;
@@ -1279,7 +1279,7 @@ class MainWindow(QMainWindow):
             marriage = self.windows.get('marriage')
             if marriage is None or not marriage.isVisible():
                 marriage = SearchMarriageWindow(self.current_user, parent=self, main_window=self)
-                marriage.setWindowTitle('Search Marriage')
+                marriage.setWindowTitle('Search LCR Marriage')
                 marriage.setParent(self)
                 marriage.setWindowFlag(Qt.Window)
                 self.windows['marriage'] = marriage

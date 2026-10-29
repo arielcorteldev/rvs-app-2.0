@@ -20,7 +20,7 @@ from ui.LCR_Search_Marriage_Window import Ui_LCRSearchMarriageWindow
 from utilities.audit_logger import AuditLogger
 from utilities.db_config import POSTGRES_CONFIG
 
-from utilities.stylesheets import search_button_style, everify_button_style, button_style, message_box_style
+from utilities.stylesheets import search_button_style, message_box_style
 
 # Base class for searching PDF records
 class SearchWindowBase(QMainWindow):
