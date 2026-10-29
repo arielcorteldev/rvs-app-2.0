@@ -876,7 +876,7 @@ class MainWindow(QMainWindow):
         
         self.is_sidebar_expanded = True
         self.verify_button.setText("  Verify Records")
-        self.filename_search_button.setText("  Search Files")
+        self.filename_search_button.setText("  Search LCR Files")
         self.everify_button.setText("  eVerify")
         self.release_button.setText("  Releasing")
         self.other_features_button.setText("  Other Features")
